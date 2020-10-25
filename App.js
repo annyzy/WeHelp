@@ -4,8 +4,19 @@ import { Header, SearchBar, Divider } from 'react-native-elements'
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { SafeAreaView } from 'react-navigation';
+import { GoogleSignin, GoogleSigninButton } from '@react-native-community/google-signin'
+
+
 import { styles } from './styles';
 import { Login } from './login';
+
+//916471448464-g2luhl4r3qn0kbqr37i0g872dpsh7tfo.apps.googleusercontent.com
+//secret = bQiLTDyfWmi1etMzr6jXesHw
+
+GoogleSignin.configure({
+  webClientId: '916471448464-g2luhl4r3qn0kbqr37i0g872dpsh7tfo.apps.googleusercontent.com',
+  offlineAccess : true
+})
 
 function HomeScreen() {
     var keyword;
