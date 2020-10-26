@@ -25,6 +25,7 @@
     },
     "android": {
       "package": "com.wehelp.androidpackage"
-    }
+    },
+    "description": ""
   }
 }

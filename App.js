@@ -4,19 +4,13 @@ import { Header, SearchBar, Divider } from 'react-native-elements'
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { SafeAreaView } from 'react-navigation';
-import { GoogleSignin, GoogleSigninButton } from '@react-native-community/google-signin'
+//import { GoogleSignin, GoogleSigninButton } from '@react-native-community/google-signin'
+import * as Google from 'expo-google-app-auth'
 
 
 import { styles } from './styles';
-import { Login } from './login';
+import { LoginPage } from './LoginPage';
 
-//916471448464-g2luhl4r3qn0kbqr37i0g872dpsh7tfo.apps.googleusercontent.com
-//secret = bQiLTDyfWmi1etMzr6jXesHw
-
-GoogleSignin.configure({
-  webClientId: '916471448464-g2luhl4r3qn0kbqr37i0g872dpsh7tfo.apps.googleusercontent.com',
-  offlineAccess : true
-})
 
 function HomeScreen() {
     var keyword;
@@ -30,7 +24,7 @@ function HomeScreen() {
       lightTheme="true"
       platform='default'
       round='true'
-      cancelButtonProps={{disabled:"falese"}}
+      cancelButtonProps={{disabled:"false"}}
       onChangeText = {keyword}
       />
       <View style={styles.randomStyle}>
@@ -100,24 +94,38 @@ function UserScreen() {
 const Tab = createBottomTabNavigator();
 
 export default class App extends Component {
+  constructor(props){
+    super(props);
+    this.setUser = this.setUser.bind(this);
+    this.state = {
+      signedIn: false,
+      name: "no name",
+      photoUrl: ""
+    }
+  }
 
-  state = {
-    isLoggedIn: false
+  setUser(_name, _photoUrl) {
+    this.setState({
+      signedIn: true,
+      name: _name,
+      photoUrl: _photoUrl
+    })
   }
 
   render() {
-    
-    if (this.state.isLoggedIn)
-        return <AfterLogin/>;
-    else 
-      return <Login onLoginPress={() => this.setState({isLoggedIn: true})} />;
+    if (this.state.signedIn) {
+      alert("hello " + this.state.name);
+      return <AfterLogin/>;
+    }
+    else {
+      return <LoginPage setUser={this.setUser} />;
+    }
   }
 }
 
-export class AfterLogin extends Component {
 
+export class AfterLogin extends Component {
   render() {
-    console.log("asdasdas");
     return (
       <NavigationContainer>
         <Tab.Navigator>
@@ -131,24 +139,3 @@ export class AfterLogin extends Component {
    );
   }
 }
-
-// export default function App() {
-//   return (
-//     <View style={ {x:0, y:0}}>
-//       <StatusBar barStyle='default' />
-//       <Header
-//         centerComponent={{text: 'WeHelp', style: {fontSize:24, fontWeight:"bold"}}}
-//       />
-//       <SearchBar lightTheme="true" platform='default' round='true' cancelButtonProps={{disabled:"falese"}}/>
-//     </View>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: '#fff',
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//   },
-// });
