@@ -4,14 +4,12 @@ import { PageHeader } from './PageHeader'
 
 export function UserPage() {
     return (
-        <View style={{flex: 1, justifyContent: "space-between"}}>
-        <View>
-            <PageHeader pageName="User" />
-        </View>
-        <View style={{alignItems: "center"}}>
-            <Text>text!</Text>
-        </View>
-        <View></View>
+        <View style={{flex: 1, justifyContent: "space-between", backgroundColor: "white"}}>
+            <PageHeader centerComp={<Text>User</Text>} />
+            <View style={{alignItems: "center"}}>
+                <Text>text!</Text>
+            </View>
+            <View></View>
         </View>
     );
   }

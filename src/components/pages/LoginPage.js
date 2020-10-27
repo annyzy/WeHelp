@@ -1,5 +1,5 @@
 import React, { Component} from "react";
-import { Button, View } from "react-native";
+import { Button, View, Text } from "react-native";
 import { PageHeader } from "./PageHeader"
 import * as Google from 'expo-google-app-auth'
 
@@ -30,8 +30,8 @@ export class LoginPage extends Component {
 
     render() {
         return (
-            <View style={ {flex:1, justifyContent: "space-between"} }>
-                <PageHeader pageName="Login Page" />
+            <View style={ {flex:1, justifyContent: "space-between", backgroundColor: "white"} }>
+                <PageHeader centerComp={<Text>Login Page</Text>} />
                 <Button title="Sign in with Google" onPress={this.signIn}/>
                 <View></View>
             </View>
