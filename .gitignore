@@ -65,7 +65,7 @@ buck-out/
 /ios/Pods/
 
 # Expo
-.expo
+.expo/
 .expo/*
 web-build/
 
