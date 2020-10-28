@@ -24,10 +24,10 @@ export function HomePage() {
                     />
                 </View>
             </View>
-        <View style={{alignItems: "center"}}>
-            <Text>text!</Text>
-        </View>
-        <View></View>
+            <View style={{alignItems: "center"}}>
+                <Text>text!</Text>
+            </View>
+            <View></View>
         </View>
     );
 }

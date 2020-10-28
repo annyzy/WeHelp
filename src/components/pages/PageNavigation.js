@@ -13,16 +13,16 @@ const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
 export class PageNavigation extends Component {
-    render() {
-      return (
-        <NavigationContainer>
-          <Stack.Navigator headerMode="false" mode="modal"> 
-            <Stack.Screen name="Main" component={TabNavigator}/>
-            <Stack.Screen name="Publish" component={PublishPage}/>
-          </Stack.Navigator>
-        </NavigationContainer>
-     );
-    }
+  render() {
+    return (
+      <NavigationContainer>
+        <Stack.Navigator headerMode="false" mode="modal"> 
+          <Stack.Screen name="Main" component={TabNavigator}/>
+          <Stack.Screen name="Publish" component={PublishPage}/>
+        </Stack.Navigator>
+      </NavigationContainer>
+   );
+  }
 }
 
 function TabNavigator({ navigation }) {
