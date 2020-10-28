@@ -28,25 +28,26 @@ function ImagePickerExample() {
       const status = await ImagePicker.requestCameraRollPermissionsAsync();
       if (status !== 'granted') {
         alert('Photo permission is required to upload photos');
+        return false;
+      }
+    }
+    return true;
+  };
+  const pickImage = async () => {
+    let hasPermission = await checkPermission();
+    if (hasPermission) {
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
+  
+      if (!result.cancelled) {
+        setImage(result.uri);
       }
     }
   };
-  const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    if (!result.cancelled) {
-      setImage(result.uri);
-    }
-  };
-
-  useEffect(() => {
-    checkPermission();
-  });
   
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'flex-start' }}>
