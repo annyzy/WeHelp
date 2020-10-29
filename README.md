@@ -21,7 +21,7 @@
   
 | body | return |
 | ------------- | ------------- |
-| func: "signIn" | UID |
+| func="signIn" | UID |
 | email  | coins  |
 |   | icon  |
 |   | rating |
@@ -34,9 +34,22 @@
 
 | body | return |
 | ------------- | ------------- |
-| func: "sendMessage" |  success |
+| func="sendMessage" |  success: boolean |
 | message |   |
 | senderUID  |  |
 | receiverUID |   |
+
+</details>
+
+ <details>
+  <summary>post task **POST**</summary>
+
+| body | return |
+| ------------- | ------------- |
+| func="postTask" |  success: boolean |
+| title |   |
+| description  |  |
+| UID |   |
+| imageArray | |
 
 </details>
