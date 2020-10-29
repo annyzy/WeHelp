@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Platform } from 'react-native';
-import { PageNavigation } from './src/components/pages/PageNavigation'
+import { PageNavigation } from './src/components/pages/PageNavigation';
 import { LoginPage } from './src/components/pages/LoginPage';
 
 export default class App extends Component {
@@ -9,8 +9,8 @@ export default class App extends Component {
     this.setUser = this.setUser.bind(this);
     this.state = {
       signedIn: false,
-      name: "no name",
-      photoUrl: ""
+      name: 'no name',
+      photoUrl: ''
     }
   }
 
@@ -24,7 +24,7 @@ export default class App extends Component {
 
   render() {
     if (this.state.signedIn || Platform.OS == 'web') {
-      alert("hello " + this.state.name);
+      alert('hello ' + this.state.name);
       return <PageNavigation/>;
     }
     else {

@@ -1,30 +1,30 @@
 import React, { useState } from 'react';
 import { View, Button, TextInput, Platform, Image, Alert, TouchableOpacity, Text } from 'react-native';
-import { PageHeader } from './PageHeader'
+import { PageHeader } from './PageHeader';
 import * as ImagePicker from 'expo-image-picker';
 
 export function PublishPage({navigation}) {
   return (
-    <View style={{flex:1, backgroundColor: "white"}}>
+    <View style={{flex:1, backgroundColor: 'white'}}>
         <PageHeader
-            leftComp={<Button title="Back" onPress={() => navigation.goBack()} />}
-            rightComp={<Button title="Publish" onPress={() => navigation.goBack()} />}/>
-        <View style={{flexDirection:"row", justifyContent:"space-between", padding:15}}>
+            leftComp={<Button title='Back' onPress={() => navigation.goBack()} />}
+            rightComp={<Button title='Publish' onPress={() => navigation.goBack()} />}/>
+        <View style={{flexDirection:'row', justifyContent:'space-between', padding:15}}>
           <Text style={{flex:1, fontSize:30}}>Title: </Text>
           <TextInput
-            placeholder="Required"
-            style={{flex:4, fontSize:24,borderBottomWidth:1, borderBottomColor:"black"}}
+            placeholder='Required'
+            style={{flex:4, fontSize:24,borderBottomWidth:1, borderBottomColor:'black'}}
             autoFocus={true}
             multiline={false}
-            clearButtonMode="always"
+            clearButtonMode='always'
             numberOfLines={1}
             enablesReturnKeyAutomatically={true}
           />
         </View>
         <TextInput
-            placeholder="Description"
-            style={{padding:15, fontSize:20, height: "20%",}}
-            clearButtonMode="always"
+            placeholder='Description'
+            style={{padding:15, fontSize:20, height: '20%',}}
+            clearButtonMode='always'
             multiline={true}
             numberOfLines={15}
             enablesReturnKeyAutomatically={true}
@@ -108,8 +108,8 @@ function ImagePickerExample() {
   
   return (
     <View style={{padding:10}}>
-      <View style={{alignSelf:"flex-end"}}>
-        <Button title="Share location" />
+      <View style={{alignSelf:'flex-end'}}>
+        <Button title='Share location' />
       </View>
       <View style={{flexDirection: 'row', justifyContent: 'flex-start'}}>
         {imageArray[0] && 
@@ -132,7 +132,7 @@ function ImagePickerExample() {
             <Image source={{ uri: imageArray[3] }} style={imageStyle}/>
           </TouchableOpacity>
         }
-        { imageCount < 4 &&  <Button title="Select photo" onPress={() => {pickImage(imageCount, true);}} />}
+        { imageCount < 4 &&  <Button title='Select photo' onPress={() => {pickImage(imageCount, true);}} />}
       </View>
     </View>
   );

@@ -1,6 +1,6 @@
-import React from 'react'
-import { View, StatusBar } from 'react-native'
-import { Header } from 'react-native-elements'
+import React from 'react';
+import { View, StatusBar } from 'react-native';
+import { Header } from 'react-native-elements';
 
 export function PageHeader(props) {
     return (
