@@ -1,33 +1,29 @@
 import React from 'react';
-import { View, Text, StatusBar, Image, Platform } from 'react-native';
-import { SearchBar, Header } from 'react-native-elements'
-import { PageHeader } from './PageHeader'
+import { View, Text, StatusBar, Image } from 'react-native';
+import { SearchBar } from 'react-native-elements'
+import Constants from 'expo-constants'
 
 export function HomePage() {
     var keyword;
     return (
         <View style={{flex: 1, justifyContent: "space-between", backgroundColor:"white"}}>
-            <View style={{height:"20%"}}>
-                <StatusBar barStyle="dark-content"/>
-                <View style={{height:"30%"}}></View>
-                <View style={{flexDirection:'row', justifyContent:"space-around", height:"40%", padding:10}}>
-                    <Image source={require('../../../assets/icon.png')} style={{height:"90%", width:"20%"}} resizeMode="center"/>
-                    <SearchBar
-                        inputContainerStyle={{height:"60%"}}
-                        containerStyle={{backgroundColor:"white", width: "85%", height:"70%"}}
-                        round={true}
-                        platform="ios"
-                        clearButtonMode="always"
-                        showCancel={true}
-                        cancelButtonTitle="cancel"
-                        onChangeText = {keyword}
-                    />
-                </View>
+            <StatusBar barStyle="dark-content"/>
+            <View style={{flex:1, flexDirection:'row', justifyContent:"flex-start", alignItems:"center", top:Constants.statusBarHeight}}>
+                <Image source={require('../../../assets/icon.png')} style={{flex:1, top:"1%", height:"100%"}} resizeMode="cover"/>
+                <SearchBar
+                    inputContainerStyle={{height:"65%"}}
+                    containerStyle={{flex:6, backgroundColor:"white"}}
+                    round={true}
+                    platform="ios"
+                    clearButtonMode="always"
+                    showCancel={true}
+                    cancelButtonTitle="cancel"
+                    onChangeText = {keyword}
+                />
             </View>
-            <View style={{alignItems: "center"}}>
+            <View style={{flex:9, justifyContent:"space-around",alignItems: "center"}}>
                 <Text>text!</Text>
             </View>
-            <View></View>
         </View>
     );
 }
