@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { View, Text } from 'react-native';
-import { PageHeader } from './PageHeader';
+import { PageHeader } from '../components/PageHeader';
 import { GiftedChat, Avatar, Bubble, Time } from 'react-native-gifted-chat';
 import { LinearGradient } from 'expo-linear-gradient';
 
@@ -118,7 +118,7 @@ function ChatBox() {
         user: {
           _id: 2,
           name: 'Hello World',
-          avatar: require('../../../assets/icon.png'),
+          avatar: require('../../assets/icon.png'),
         },
       },
     ])
@@ -140,7 +140,7 @@ function ChatBox() {
       user={{
         _id: 1,
         name: 'myID',
-        avatar: require('../../../assets/icon.png'),
+        avatar: require('../../assets/icon.png'),
       }}
     />
   )

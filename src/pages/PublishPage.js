@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { View, Button, TextInput, Platform, Image, Alert, TouchableOpacity, Text } from 'react-native';
-import { PageHeader } from './PageHeader';
-import * as ImagePicker from 'expo-image-picker';
+import { PageHeader } from '../components/PageHeader';
+import * as expoImagePicker from 'expo-image-picker';
 
 export function PublishPage({navigation}) {
   return (
@@ -29,7 +29,7 @@ export function PublishPage({navigation}) {
             numberOfLines={15}
             enablesReturnKeyAutomatically={true}
         />
-        <ImagePickerExample/>
+        <ImagePicker/>
     </View>
   );
 }
@@ -45,15 +45,15 @@ let checkPermission = async () => {
   return true;
 };
 
-function ImagePickerExample() {
+function ImagePicker() {
   const [imageArray, setImageArray] = useState([null, null, null, null]);
   const [imageCount, setImageCount] = useState(0);
 
   const pickImage = useCallback(async (index, incrementCount) => {
     let hasPermission = await checkPermission();
     if (hasPermission) {
-      let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.All,
+      let result = await expoImagePicker.launchImageLibraryAsync({
+        mediaTypes: expoImagePicker.MediaTypeOptions.All,
         allowsEditing: true,
         aspect: [4, 3],
         quality: 1,
