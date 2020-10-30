@@ -50,6 +50,7 @@
 | title |   |
 | description  |  |
 | UID |   |
+| receiverUID |
 | imageArray | |
 
 </details>
