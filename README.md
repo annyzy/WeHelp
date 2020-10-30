@@ -25,7 +25,6 @@
 | email  | coins  |
 |   | icon  |
 |   | rating |
-|   | UID |
 
 </details>
 
