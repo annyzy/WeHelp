@@ -1,6 +1,6 @@
 import React, { Component} from 'react';
 import { Button, View, Text } from 'react-native';
-import { PageHeader } from './PageHeader';
+import { PageHeader } from '../components/PageHeader';
 import * as Google from 'expo-google-app-auth';
 
 export class LoginPage extends Component {

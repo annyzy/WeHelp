@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Platform } from 'react-native';
-import { PageNavigation } from './src/components/pages/PageNavigation';
-import { LoginPage } from './src/components/pages/LoginPage';
+import { PageNavigation } from './src/components/PageNavigation';
+import { LoginPage } from './src/pages/LoginPage';
 
 export default class App extends Component {
   constructor(props){

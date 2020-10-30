@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { View, Button, TextInput, Platform, Image, Alert, TouchableOpacity, Text } from 'react-native';
-import { PageHeader } from './PageHeader';
-import * as ImagePicker from 'expo-image-picker';
+import { PageHeader } from '../components/PageHeader';
+import * as expoImagePicker from 'expo-image-picker';
 
 export function PublishPage({navigation}) {
   return (
@@ -29,30 +29,31 @@ export function PublishPage({navigation}) {
             numberOfLines={15}
             enablesReturnKeyAutomatically={true}
         />
-        <ImagePickerExample/>
+        <ImagePicker/>
     </View>
   );
 }
 
-function ImagePickerExample() {
-  var [imageArray, setImageArray] = useState([null, null, null, null]);
-  var [imageCount, setImageCount] = useState(0);
-
-  let checkPermission = async () => {
-    if (Platform.OS !== 'web') {
-      const status = await ImagePicker.requestCameraRollPermissionsAsync();
-      if (status.accessPrivileges === 'none') {
-        alert('Photo permission is required to upload photos');
-        return false;
-      }
+let checkPermission = async () => {
+  if (Platform.OS !== 'web') {
+    const status = await ImagePicker.requestCameraRollPermissionsAsync();
+    if (status.accessPrivileges === 'none') {
+      alert('Photo permission is required to upload photos');
+      return false;
     }
-    return true;
-  };
-  const pickImage = async (index, incrementCount) => {
+  }
+  return true;
+};
+
+function ImagePicker() {
+  const [imageArray, setImageArray] = useState([null, null, null, null]);
+  const [imageCount, setImageCount] = useState(0);
+
+  const pickImage = useCallback(async (index, incrementCount) => {
     let hasPermission = await checkPermission();
     if (hasPermission) {
-      let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.All,
+      let result = await expoImagePicker.launchImageLibraryAsync({
+        mediaTypes: expoImagePicker.MediaTypeOptions.All,
         allowsEditing: true,
         aspect: [4, 3],
         quality: 1,
@@ -61,15 +62,15 @@ function ImagePickerExample() {
       if (!result.cancelled) {
         let array = Array.from(imageArray);
         array[index] = result.uri;
-        setImageArray(array);
         if(incrementCount) {
           setImageCount(imageCount+1)
         }
+        setImageArray(array);
       }
     }
-  };
+  }, [imageArray]);
 
-  const DeleteImage = async(index) => {
+  const DeleteImage = useCallback(async(index) => {
     let array = Array.from(imageArray);
     let moveForward = false;
     for (let i =0;i < imageCount-1;i++) {
@@ -81,28 +82,33 @@ function ImagePickerExample() {
       }
     }
     array[imageCount-1] = null;
-    setImageArray(array)
     setImageCount(imageCount-1)
-  }
+    setImageArray(array)
+  }, [imageArray]);
 
-  const pressImage = async(index) => {
-    Alert.alert('Image Options',
-    '',
-    [
-      {
-        text: 'Reselect Image',
-        onPress: async() => await pickImage(index, false)
-      },
-      {
-        text: 'Delete Image',
-        onPress: async() => await DeleteImage(index)
-      },
-      { text: 'Cancel',
-        style: 'cancel'
-      }
-    ],
-    { cancelable: true })
-  }
+  const pressImage = useCallback(async(index) => {
+    if(Platform.OS === 'web') {
+      alert('Cannot modify image on web at this point');
+    }
+    else {
+      Alert.alert('Image Options',
+      '',
+      [
+        {
+          text: 'Reselect Image',
+          onPress: async() => await pickImage(index, false)
+        },
+        {
+          text: 'Delete Image',
+          onPress: async() => await DeleteImage(index)
+        },
+        { text: 'Cancel',
+          style: 'cancel'
+        }
+      ],
+      { cancelable: true })
+    }
+  }, [imageArray]);
 
   const imageStyle = { width: 100, height: 100 };
   

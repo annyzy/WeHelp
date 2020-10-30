@@ -9,7 +9,7 @@ export function HomePage() {
         <View style={{flex: 1, justifyContent: 'space-between', backgroundColor:'white'}}>
             <StatusBar barStyle='dark-content'/>
             <View style={{flex:1, flexDirection:'row', justifyContent:'flex-start', alignItems:'center', top:Constants.statusBarHeight}}>
-                <Image source={require('../../../assets/icon.png')} style={{flex:1, top:'1%', height:'100%'}} resizeMode='cover'/>
+                <Image source={require('../../assets/icon.png')} style={{flex:1, top:'1%', height:'100%'}} resizeMode='cover'/>
                 <SearchBar
                     inputContainerStyle={{height:'65%'}}
                     containerStyle={{flex:6, backgroundColor:'white'}}

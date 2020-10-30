@@ -3,11 +3,11 @@ import { View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
-import { HomePage } from './HomePage';
-import { TaskPage } from './TaskPage';
-import { PublishPage } from './PublishPage';
-import { MessagePage } from './MessagePage';
-import { UserPage } from './UserPage';
+import { HomePage } from '../pages/HomePage';
+import { TaskPage } from '../pages/TaskPage';
+import { PublishPage } from '../pages/PublishPage';
+import { MessagePage } from '../pages/MessagePage';
+import { UserPage } from '../pages/UserPage';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
