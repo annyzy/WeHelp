@@ -16,6 +16,7 @@
 5. scan the QR code using your mobile device.
 
 ## Making requests
+ Server: http://34.94.101.183:80/WeHelp/ 
  <details>
   <summary>sign in to server **POST**</summary>
   
