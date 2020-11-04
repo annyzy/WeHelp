@@ -1,34 +1,43 @@
-import React, { Component } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Platform } from 'react-native';
 import { PageNavigation } from './src/components/PageNavigation';
 import { LoginPage } from './src/pages/LoginPage';
 
-export default class App extends Component {
-  constructor(props){
-    super(props);
-    this.setUser = this.setUser.bind(this);
-    this.state = {
-      signedIn: false,
-      name: 'no name',
-      photoUrl: ''
-    }
-  }
+export default function App() {
+  const [user, setUser] = useState({
+    signedIn: false,
+    name: 'no name',
+    photoUrl: ''
+  });
 
-  setUser(_name, _photoUrl) {
-    this.setState({
+  let changeUser = useCallback((newName, newPhotoUrl) => {
+    setUser({
       signedIn: true,
-      name: _name,
-      photoUrl: _photoUrl
+      name: newName,
+      photoUrl: newPhotoUrl
     })
-  }
+  }, []);
 
-  render() {
-    if (this.state.signedIn || Platform.OS == 'web') {
-      alert('hello ' + this.state.name);
-      return <PageNavigation/>;
-    }
-    else {
-      return <LoginPage setUser={this.setUser} />;
-    }
+  if (Platform.OS == 'web') {
+    return <PageNavigation/>;
+  }
+  else if (user.signedIn) {
+    // fetch('http://34.94.101.183:80/WeHelp/', 
+    // {
+    //   method:'POST',
+    //   body: JSON.stringify({
+    //     func:'signIn', email:'1'
+    //   })})
+    //   .then(async (resp)=>{
+    //     let found = await resp.json();
+    //     alert('hello ' + user.name + ' UID:' + found['UID']);
+    //   }).catch(() => {
+    //     alert('Fetch failed');
+    // })
+    alert('hello ' + user.name + ' UID:' + 'NUlL');
+    return <PageNavigation/>;
+  }
+  else {
+    return <LoginPage changeUser={changeUser} />;
   }
 }

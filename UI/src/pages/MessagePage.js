@@ -122,10 +122,10 @@ function ChatBox() {
         },
       },
     ])
-  }, [])
+  }, []);
 
   const onSend = useCallback((messages = []) => 
-    {setMessages((previousMessages) => GiftedChat.append(previousMessages, messages));}, [])
+    {setMessages((previousMessages) => GiftedChat.append(previousMessages, messages));}, []);
 
   return (  
     <GiftedChat
@@ -143,5 +143,5 @@ function ChatBox() {
         avatar: require('../../assets/icon.png'),
       }}
     />
-  )
+  );
 }

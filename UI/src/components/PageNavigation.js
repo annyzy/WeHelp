@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import { View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -12,8 +12,7 @@ import { UserPage } from '../pages/UserPage';
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
-export class PageNavigation extends Component {
-  render() {
+export function PageNavigation() {
     return (
       <NavigationContainer>
         <Stack.Navigator headerMode='false' mode='modal'> 
@@ -22,7 +21,6 @@ export class PageNavigation extends Component {
         </Stack.Navigator>
       </NavigationContainer>
    );
-  }
 }
 
 function TabNavigator({ navigation }) {

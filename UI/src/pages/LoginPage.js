@@ -1,14 +1,10 @@
-import React, { Component} from 'react';
+import React, { useCallback } from 'react';
 import { Button, View, Text } from 'react-native';
 import { PageHeader } from '../components/PageHeader';
 import * as Google from 'expo-google-app-auth';
 
-export class LoginPage extends Component {
-  constructor(props) {
-    super(props);
-  }
-
-  signIn = async () => {
+export function LoginPage (props) {
+  let signIn = useCallback(async () => {
     try {
       const result = await Google.logInAsync({
         androidClientId: '916471448464-s7gervtibhhm4749f6bfe5kv91vqo30f.apps.googleusercontent.com',
@@ -17,22 +13,20 @@ export class LoginPage extends Component {
       })
     
       if (result.type === 'success') {
-        this.props.setUser(result.user.name, result.user.photoUrl);
+        props.changeUser(result.user.name, result.user.photoUrl);
       } else {
         console.log('cancelled')
       }
     } catch (e) {
       console.log('error', e)
     }
-  }
+  }, []);
 
-  render() {
     return (
       <View style={ {flex:1, justifyContent: 'space-between', backgroundColor: 'white'} }>
         <PageHeader centerComp={<Text>Login Page</Text>} />
-        <Button title='Sign in with Google' onPress={this.signIn}/>
+        <Button title='Sign in with Google' onPress={signIn}/>
         <View></View>
       </View>
-    )
-  }
+    );
 }
