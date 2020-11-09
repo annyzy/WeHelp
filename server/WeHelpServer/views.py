@@ -29,3 +29,6 @@ def index(request):
 
     if (body['func'] == 'signIn'):
         return signIn(body['email'], body['icon'])
+
+    # avoid "return none" error, need to change it later
+    return signIn(body['email'], body['icon'])
