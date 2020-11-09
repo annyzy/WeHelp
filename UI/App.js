@@ -22,18 +22,18 @@ export default function App() {
     return <PageNavigation/>;
   }
   else if (user.signedIn) {
-    // fetch('http://34.94.101.183:80/WeHelp/', 
-    // {
-    //   method:'POST',
-    //   body: JSON.stringify({
-    //     func:'signIn', email:'1'
-    //   })})
-    //   .then(async (resp)=>{
-    //     let found = await resp.json();
-    //     alert('hello ' + user.name + ' UID:' + found['UID']);
-    //   }).catch(() => {
-    //     alert('Fetch failed');
-    // })
+    fetch('http://34.94.101.183:80/WeHelp/', 
+    {
+      method:'POST',
+      body: JSON.stringify({
+        func:'signIn', email:'1', icon:photoUrl
+      })})
+      .then(async (resp)=>{
+        let found = await resp.json();
+        alert('hello ' + user.name + ' UID:' + found['UID']);
+      }).catch(() => {
+        alert('Fetch failed');
+    })
     alert('hello ' + user.name + ' UID:' + 'NUlL');
     return <PageNavigation/>;
   }
