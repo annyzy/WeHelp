@@ -18,6 +18,35 @@
    ```
 6. scan the QR code using your mobile device.
 
+
+## How to debug on server
+server logs in /tmp/wehelp.l.log
+if you want to rerun it:
+1. ```shell
+   sudo su
+   ```
+2. check if there is an existing process:
+   ```shell
+   ps -ef | grep python
+   ```
+3. kill this process "python manage.py runserver ..."
+   ```shell
+   kill {pid}
+   ```
+4. ```shell
+   cd /home/yao090222/WeHelp/server
+   ```
+5. ```shell
+   source venv/bin/activate
+   ```
+6. ```shell
+   nohup python runserver 0:80 &>> /tmp/wehelp.l.log &
+   ```
+7. exit imediatly, don't do anything else as root
+   ```shell
+   exit
+   ```
+
 ## Making requests
  Server: http://34.94.101.183:80/WeHelp/ 
  <details>
