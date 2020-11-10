@@ -2,7 +2,8 @@ import React, { useState, useCallback } from 'react';
 import { Platform } from 'react-native';
 import { PageNavigation } from './src/components/PageNavigation';
 import { LoginPage } from './src/pages/LoginPage';
-import { UserContext } from './src/components/UserContext';
+import { UserContext} from './src/components/UserContext';
+import { EventRegister } from 'react-native-event-listeners';
 
 export default function App() {
   const [user, setUser] = useState({
@@ -21,6 +22,13 @@ export default function App() {
     })
   }, []);
 
+  let listener = EventRegister.addEventListener('iconChanged', (newUrl) => {
+    setUser(prev => ({
+      ...prev,
+      photoUrl: newUrl,
+    }));
+  })
+
   if (Platform.OS == 'web') {
     return (
     <UserContext.Provider value={user}>
@@ -31,7 +39,7 @@ export default function App() {
   else if (user.signedIn) {
     return (
       <UserContext.Provider value={user}>
-        <PageNavigation/>
+          <PageNavigation/>
       </UserContext.Provider>
       );  
   }

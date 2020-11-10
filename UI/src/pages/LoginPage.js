@@ -28,7 +28,7 @@ export function LoginPage (props) {
           .then(async (resp)=>{
             let found = await resp.json();
             alert('hello ' + name + ' UID:' + found['UID'] + ' photoUrl:' + found['icon']);
-            props.changeUser(name, found['icon'], email);
+            props.changeUser(name, found['icon'], email, found['UID']);
           }).catch(() => {
             alert('Fetch failed');
         });

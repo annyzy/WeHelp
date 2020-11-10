@@ -1,7 +1,9 @@
-import React, { useContext } from 'react';
-import { View, Text, Image } from 'react-native';
+import React, { useCallback, useContext, useState } from 'react';
+import { View, Text, Image, Platform, Button } from 'react-native';
 import { PageHeader } from '../components/PageHeader';
-import { UserContext } from '../components/UserContext';
+import { UserContext} from '../components/UserContext';
+import { EventRegister } from 'react-native-event-listeners';
+import * as expoImagePicker from 'expo-image-picker';
 
 export function UserPage() {
     const user = useContext(UserContext);
@@ -14,8 +16,63 @@ export function UserPage() {
             }} style={{width:200, height:200, alignSelf:"center"}}/>
             <View style={{alignItems: 'center'}}>
                 <Text>text!</Text>
+                <ImagePicker/>
             </View>
             <View></View>
         </View>
     );
+}
+
+function changeImg() {
+    
+}
+
+let checkPermission = async () => {
+  if (Platform.OS !== 'web') {
+    const status = await expoImagePicker.requestCameraRollPermissionsAsync();
+    if (status.accessPrivileges === 'none') {
+      alert('Photo permission is required to upload photos');
+      return false;
+    }
+  }
+  return true;
+};
+
+function ImagePicker() {
+  const [imageUri, setImage] = useState(null);
+  const user = useContext(UserContext);
+
+  const pickImage = useCallback(async () => {
+    let hasPermission = await checkPermission();
+    if (hasPermission) {
+      let result = await expoImagePicker.launchImageLibraryAsync({
+        mediaTypes: expoImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
+  
+      if (!result.cancelled) {
+        setImage(result.uri);
+
+        //const data = new FormData();
+        //data.append('func', 'changeIcon');
+        //data.append('UID', user.UID);
+        //data.append('image', result.uri);
+        //let res = await fetch('http://34.94.101.183:80/WeHelp/', {
+        //    method: 'POST',
+        //    body: data,
+        //    headers: {
+        //        'Content-Type': 'multipart/form-data',
+        //    },
+        //});
+        //let responseJson = await res.json();
+        //alert(responseJson['URL']);
+
+        EventRegister.emit('iconChanged', result.uri);
+      }
+    }
+  }, []);
+
+  return <Button title='change icon' onPress={() => pickImage()}/>
 }

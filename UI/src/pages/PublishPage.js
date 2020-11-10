@@ -36,7 +36,7 @@ export function PublishPage({navigation}) {
 
 let checkPermission = async () => {
   if (Platform.OS !== 'web') {
-    const status = await ImagePicker.requestCameraRollPermissionsAsync();
+    const status = await expoImagePicker.requestCameraRollPermissionsAsync();
     if (status.accessPrivileges === 'none') {
       alert('Photo permission is required to upload photos');
       return false;
