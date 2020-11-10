@@ -23,7 +23,7 @@ export function LoginPage (props) {
         {
           method:'POST',
           body: JSON.stringify({
-            func:'signIn', email, icon:photoUrl
+            func:'signIn', email:email, icon:photoUrl
           })})
           .then(async (resp)=>{
             let found = await resp.json();
