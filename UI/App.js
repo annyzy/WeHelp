@@ -10,14 +10,16 @@ export default function App() {
     signedIn: false,
     name: 'no name',
     photoUrl: '',
+    UID: -1,
     email: ''
   });
 
-  let changeUser = useCallback((newName, newPhotoUrl, newEmail) => {
+  let changeUser = useCallback((newName, newPhotoUrl, newEmail, newUID) => {
     setUser({
       signedIn: true,
       name: newName,
       photoUrl: newPhotoUrl,
+      UID: newUID,
       email: newEmail
     })
   }, []);
