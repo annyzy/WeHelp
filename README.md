@@ -66,7 +66,7 @@ if you want to rerun it:
 
 | body | return |
 | ------------- | ------------- |
-| func="sendMessage" |  success: boolean |
+| func="sendMessage" |  success: 1/0 |
 | message |   |
 | senderUID  |  |
 | receiverUID |   |
@@ -78,11 +78,23 @@ if you want to rerun it:
 
 | body | return |
 | ------------- | ------------- |
-| func="postTask" |  success: boolean |
+| func="postTask" |  success: 1/0 |
 | title |   |
 | description  |  |
 | UID |   |
 | receiverUID |
 | imageArray | |
+
+</details>
+
+ <details>
+  <summary>post task **POST (multipart/form-data)**</summary>
+
+| body | return |
+| ------------- | ------------- |
+| func="changeIcon" |  success: 1/0 |
+| UID | uri  |
+
+FILES: {'file': filestream}
 
 </details>
