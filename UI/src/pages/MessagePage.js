@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { View, Text, Alert } from 'react-native';
+import { View, Text, Alert, ScrollView } from 'react-native';
 import { ListItem, Avatar } from 'react-native-elements';
 import { PageHeader } from '../components/PageHeader';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -48,6 +48,36 @@ function contactList(props) {
       name: 'Wing',
       avatar: 'https://avatars3.githubusercontent.com/u/22208368?s=400&u=3d3f94c135f0c3b6de1601bce6b24c48ee735a44&v=4',
       comment: 'Hi~'
+    },
+    {
+      name: 'Wing',
+      avatar: 'https://avatars3.githubusercontent.com/u/22208368?s=400&u=3d3f94c135f0c3b6de1601bce6b24c48ee735a44&v=4',
+      comment: 'Hi~'
+    },
+    {
+      name: 'Wing',
+      avatar: 'https://avatars3.githubusercontent.com/u/22208368?s=400&u=3d3f94c135f0c3b6de1601bce6b24c48ee735a44&v=4',
+      comment: 'Hi~'
+    },
+    {
+      name: 'Wing',
+      avatar: 'https://avatars3.githubusercontent.com/u/22208368?s=400&u=3d3f94c135f0c3b6de1601bce6b24c48ee735a44&v=4',
+      comment: 'Hi~'
+    },
+    {
+      name: 'Wing',
+      avatar: 'https://avatars3.githubusercontent.com/u/22208368?s=400&u=3d3f94c135f0c3b6de1601bce6b24c48ee735a44&v=4',
+      comment: 'Hi~'
+    },
+    {
+      name: 'Wing',
+      avatar: 'https://avatars3.githubusercontent.com/u/22208368?s=400&u=3d3f94c135f0c3b6de1601bce6b24c48ee735a44&v=4',
+      comment: 'Hi~'
+    },
+    {
+      name: 'Wing',
+      avatar: 'https://avatars3.githubusercontent.com/u/22208368?s=400&u=3d3f94c135f0c3b6de1601bce6b24c48ee735a44&v=4',
+      comment: 'Hi~'
     }
   ]);
 
@@ -75,6 +105,7 @@ function contactList(props) {
   return (
     <View style={{flex: 1, justifyContent: 'flex-start', backgroundColor: 'white'}}>
       <PageHeader centerComp={<Text>Message</Text>} />
+      <ScrollView>
       {
         contacts.map((user, i) => (
           <ListItem key={i} bottomDivider 
@@ -89,6 +120,7 @@ function contactList(props) {
           </ListItem>
         ))
       }
+      </ScrollView> 
     </View>
   );
 }
