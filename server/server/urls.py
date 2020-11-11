@@ -23,6 +23,7 @@ from WeHelpServer import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('WeHelp/', views.index, name='index')
+    #path('WeHelp/changeIcon/', views.changeIcon, name='changeIcon')
 ]
 
 if settings.DEBUG:
