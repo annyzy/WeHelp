@@ -15,19 +15,33 @@ export default function App() {
   });
 
   let changeUser = useCallback((newName, newPhotoUrl, newEmail, newUID) => {
+    let url;
+    if (newPhotoUrl.startsWith('media')) {
+      url = 'http://34.94.101.183/' + newPhotoUrl;
+    }
+    else {
+      url = newPhotoUrl;
+    }
     setUser({
       signedIn: true,
       name: newName,
-      photoUrl: newPhotoUrl,
+      photoUrl: url,
       UID: newUID,
       email: newEmail
     })
   }, []);
 
   useEffect(() => {EventRegister.addEventListener('iconChanged', (newUrl) => {
+    let url;
+    if (newUrl.startsWith('media')) {
+      url = 'http://34.94.101.183/' + newUrl;
+    }
+    else {
+      url = newUrl;
+    }
     setUser(prev => ({
       ...prev,
-      photoUrl: newUrl,
+      photoUrl: url,
     }));
   })}, []);
 

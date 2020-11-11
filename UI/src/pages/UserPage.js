@@ -55,21 +55,28 @@ function ImagePicker() {
       if (!result.cancelled) {
         setImage(result.uri);
 
-        //const data = new FormData();
-        //data.append('func', 'changeIcon');
-        //data.append('UID', user.UID);
-        //data.append('image', result.uri);
-        //let res = await fetch('http://34.94.101.183:80/WeHelp/', {
-        //    method: 'POST',
-        //    body: data,
-        //    headers: {
-        //        'Content-Type': 'multipart/form-data',
-        //    },
-        //});
-        //let responseJson = await res.json();
-        //alert(responseJson['URL']);
+        //need to add more error handling
+        const data = new FormData();
+        data.append('func', 'changeIcon');
+        data.append('UID', user.UID);
+        data.append('file', {
+          uri: String(result.uri),
+          type: result.type,
+          name: result.uri
+        });
+        let res = await fetch('http://34.94.101.183:80/WeHelp/', {
+            method: 'POST',
+            body: data,
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                //'Accept': 'multipart/form-data',
+                'Accept': 'application/json'
+            },
+        });
+        let responseJson = await res.json();
+        alert(responseJson['uri']);
 
-        EventRegister.emit('iconChanged', result.uri);
+        EventRegister.emit('iconChanged', responseJson['uri']);
       }
     }
   }, []);
