@@ -1,147 +1,54 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React from 'react';
 import { View, Text } from 'react-native';
+import { ListItem, Avatar } from 'react-native-elements';
 import { PageHeader } from '../components/PageHeader';
-import { GiftedChat, Avatar, Bubble, Time } from 'react-native-gifted-chat';
-import { LinearGradient } from 'expo-linear-gradient';
+import { createStackNavigator } from '@react-navigation/stack';
+import { ChatPage } from './ChatPage'
+
+let Stack = createStackNavigator();
 
 export function MessagePage() {
   return (
+    <>
+      <Stack.Navigator headerMode='false'> 
+        <Stack.Screen name='Contacts' component={contactList}/>
+        <Stack.Screen name='ChatBox' component={ChatPage}/>
+      </Stack.Navigator>
+    </>
+  );
+}
+
+function contactList(props) {
+
+  const contacts = [
+    {
+      name: 'Dongyao',
+      avatar: 'https://avatars1.githubusercontent.com/u/23393819?s=400&u=7a3a81849ae6c9ef83bb35c31d6826224f8b6528&v=4',
+      comment: 'Hello!'
+    },
+    {
+      name: 'Wing',
+      avatar: 'https://avatars3.githubusercontent.com/u/22208368?s=400&u=3d3f94c135f0c3b6de1601bce6b24c48ee735a44&v=4',
+      comment: 'Hi~'
+    },
+  ];
+
+  return (
     <View style={{flex: 1, justifyContent: 'flex-start', backgroundColor: 'white'}}>
       <PageHeader centerComp={<Text>Message</Text>} />
-      <View style={{flex:1}}>
-        <View style={{flex:2, borderWidth:2, justifyContent:"center", alignItems:"center"}}>
-          <Text>Map!</Text>
-        </View>
-        <View style={{flex:8}}>
-          <ChatBox/>
-        </View>
-      </View>
-    </View>
-  );
-}
-
-function renderAvatar(props) {
-  return(
-    <Avatar
-      {...props}
-      imageStyle={{
-          left:{
-            bottom:5,
-            borderBottomLeftRadius: 5,
-            borderBottomRightRadius: 5,
-            borderTopLeftRadius: 5,
-            borderTopRightRadius: 5
-          },
-          right:{
-            bottom:5,
-            borderBottomLeftRadius: 5,
-            borderBottomRightRadius: 5,
-            borderTopLeftRadius: 5,
-            borderTopRightRadius: 5
-          }
-      }}
-    />
-  );
-}
-
-function renderBubble(props) {
-  return (
-    <View 
-    style={{
-        borderBottomLeftRadius: 15,
-        borderBottomRightRadius: 15,
-        borderTopLeftRadius: 15,
-        borderTopRightRadius: 15,
-        overflow: 'hidden',
-        }}>
-      <LinearGradient
-        colors={['#5099E1', '#27DAF0']}
-        style={{
-          position: 'absolute',
-          left: 0,
-          right: 0,
-          top: 0,
-          bottom: 0,
-        }}
-      />
-      <Bubble
-          {...props}
-          wrapperStyle={{
-            right: {
-              backgroundColor: 'transparent',
-              marginLeft: 0
-            },
-            left: {
-              backgroundColor: 'transparent',
-              marginRight: 0,
-            }
-          }}
-          textStyle={{
-            right: {
-              color: 'white'
-            },
-            left: {
-              color: 'white'
-            }
-          }}
-        />
-      </View>
-  );
-
-}
-
-function renderTime(props) {
-  return (
-    <Time 
-      {...props}
-      timeTextStyle= {{
-        left: {
-          color: '#fff'
-        },
-        right: {
-          color: '#fff'
-        }
-      }}
-    />
-  );
-}
-
-function ChatBox() {
-  const [messages, setMessages] = useState([]);
-
-  useEffect(() => {
-    setMessages([
       {
-        _id: 1,
-        text: 'Hello World',
-        createdAt: new Date(),
-        user: {
-          _id: 2,
-          name: 'Hello World',
-          avatar: require('../../assets/icon.png'),
-        },
-      },
-    ])
-  }, []);
-
-  const onSend = useCallback((messages = []) => 
-    {setMessages((previousMessages) => GiftedChat.append(previousMessages, messages));}, []);
-
-  return (  
-    <GiftedChat
-      messages={messages}
-      onSend={messages => {onSend(messages)}}
-      alwaysShowSend={true}
-      renderAvatar={renderAvatar}
-      renderBubble={renderBubble}
-      renderTime={renderTime}
-      multiline={true}
-      isLoadingEarlier={true}
-      user={{
-        _id: 1,
-        name: 'myID',
-        avatar: require('../../assets/icon.png'),
-      }}
-    />
+        contacts.map((user, i) => (
+          <ListItem key={i} bottomDivider onPress={() => {
+            props.navigation.navigate('ChatBox', {contactUser: user});
+          }}>
+            <Avatar source={{uri: user.avatar}} />
+            <ListItem.Content>
+              <ListItem.Title>{user.name}</ListItem.Title>
+              <ListItem.Subtitle>{user.comment}</ListItem.Subtitle>
+            </ListItem.Content>
+          </ListItem>
+        ))
+      }
+    </View>
   );
 }

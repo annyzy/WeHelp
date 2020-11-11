@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Platform } from 'react-native';
 import { PageNavigation } from './src/components/PageNavigation';
 import { LoginPage } from './src/pages/LoginPage';
@@ -24,12 +24,12 @@ export default function App() {
     })
   }, []);
 
-  let listener = EventRegister.addEventListener('iconChanged', (newUrl) => {
+  useEffect(() => {EventRegister.addEventListener('iconChanged', (newUrl) => {
     setUser(prev => ({
       ...prev,
       photoUrl: newUrl,
     }));
-  })
+  })}, []);
 
   if (Platform.OS == 'web') {
     return (
