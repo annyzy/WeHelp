@@ -23,10 +23,6 @@ export function UserPage() {
     );
 }
 
-function changeImg() {
-    
-}
-
 let checkPermission = async () => {
   if (Platform.OS !== 'web') {
     const status = await expoImagePicker.requestCameraRollPermissionsAsync();
@@ -61,7 +57,7 @@ function ImagePicker() {
         data.append('UID', user.UID);
         data.append('file', {
           uri: String(result.uri),
-          type: result.type,
+          type: 'image/jpeg',
           name: result.uri
         });
         let res = await fetch('http://34.94.101.183:80/WeHelp/', {
@@ -69,8 +65,11 @@ function ImagePicker() {
             body: data,
             headers: {
                 'Content-Type': 'multipart/form-data',
-                //'Accept': 'multipart/form-data',
-                'Accept': 'application/json'
+                'Accept': 'application/json',
+                //'contentType': false,
+                //'processData': false,
+                //'mimeType': 'multipart/form-data',
+                //'cache-control': 'no-cache',
             },
         });
         let responseJson = await res.json();

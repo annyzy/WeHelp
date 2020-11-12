@@ -1,6 +1,9 @@
 import json
 import requests
 import os
+import random
+import sys
+import traceback
 from requests_toolbelt.multipart import decoder
 
 from django.shortcuts import render
@@ -32,8 +35,8 @@ def changeIcon(request):
     try:
         suffix = str(request.FILES['file']).split('.')[-1]
         UID = request.POST['UID']
-        path = 'media/User/{}/{}.{}'.format(UID,
-                                            date.today().strftime("%Y%m%d"), suffix)
+        path = 'media/User/{}/{}-{:x}.{}'.format(UID,
+                                                 date.today().strftime("%Y%m%d"), random.getrandbits(128), suffix)
         if (not os.path.exists(os.path.dirname(path))):
             os.makedirs(os.path.dirname(path))
         with open(path, 'wb+') as destination:
@@ -44,7 +47,8 @@ def changeIcon(request):
         user.icon = path
         user.save()
         res = {'success': 1, 'uri': path}
-    except:
+    except Exception as e:
+        print(traceback.print_exc())
         res = {'success': 0}
     return JsonResponse(res)
 
