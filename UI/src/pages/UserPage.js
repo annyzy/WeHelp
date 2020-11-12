@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useState } from 'react';
-import { View, Text, Image, Platform, Button } from 'react-native';
+import { View, Text, Image, Platform, TouchableOpacity } from 'react-native';
 import { PageHeader } from '../components/PageHeader';
 import { UserContext} from '../components/UserContext';
 import { EventRegister } from 'react-native-event-listeners';
@@ -11,12 +11,9 @@ export function UserPage() {
     return (
         <View style={{flex: 1, justifyContent: 'space-between', backgroundColor: 'white'}}>
             <PageHeader centerComp={<Text>User</Text>} />
-            <Image source={{
-                uri: user.photoUrl
-            }} style={{width:200, height:200, alignSelf:"center"}}/>
+              <ImagePicker user={user}/>
             <View style={{alignItems: 'center'}}>
-                <Text>text!</Text>
-                <ImagePicker/>
+              <Text>text!</Text>
             </View>
             <View></View>
         </View>
@@ -34,9 +31,8 @@ let checkPermission = async () => {
   return true;
 };
 
-function ImagePicker() {
-  const [imageUri, setImage] = useState(null);
-  const user = useContext(UserContext);
+function ImagePicker(props) {
+  const [imageUri, setImage] = useState(props.user.photoUrl);
 
   const pickImage = useCallback(async () => {
     let hasPermission = await checkPermission();
@@ -53,14 +49,15 @@ function ImagePicker() {
 
         //need to add more error handling
         const data = new FormData();
-        data.append('func', 'changeIcon');
-        data.append('UID', user.UID);
-        data.append('file', {
-          uri: String(result.uri),
-          type: 'image/jpeg',
-          name: result.uri
-        });
-        let res = await fetch('http://34.94.101.183:80/WeHelp/', {
+          data.append('func', 'changeIcon');
+          data.append('UID', props.user.UID);
+          data.append('file', {
+            uri: String(result.uri),
+            type: 'image/jpeg',
+            name: result.uri
+          }
+        );
+        fetch('http://34.94.101.183:80/WeHelp/', {
             method: 'POST',
             body: data,
             headers: {
@@ -71,14 +68,21 @@ function ImagePicker() {
                 //'mimeType': 'multipart/form-data',
                 //'cache-control': 'no-cache',
             },
-        });
-        let responseJson = await res.json();
-        alert(responseJson['uri']);
-
-        EventRegister.emit('iconChanged', responseJson['uri']);
+        })
+        .then(async (res) => {
+          let responseJson = await res.json();
+          EventRegister.emit('iconChanged', responseJson['uri']);
+        })
+        .catch(()=>{alert("Upload Picture Failed");});
       }
     }
   }, []);
 
-  return <Button title='change icon' onPress={() => pickImage()}/>
+  return (
+    <TouchableOpacity onPress={() => {pickImage()}}>
+      <Image source={{
+        uri: imageUri
+      }} style={{width:200, height:200, alignSelf:"center"}}/>
+    </TouchableOpacity>
+  );
 }

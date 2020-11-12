@@ -100,7 +100,7 @@ function ImagePicker() {
         },
         {
           text: 'Delete Image',
-          onPress: async() => await DeleteImage(index)
+          onPress: () => DeleteImage(index)
         },
         { text: 'Cancel',
           style: 'cancel'
