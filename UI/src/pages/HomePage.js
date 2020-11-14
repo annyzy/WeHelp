@@ -82,15 +82,15 @@ export function HomePage() {
                     {
                         users.map((u, i) => {
                             return (
-                                <Card containerStyle={{marginHorizontal: 5, marginVertical:5, padding:5}}>
+                                <Card containerStyle={{marginHorizontal: 5, marginVertical:5, padding:5}} key={i}>
                                     <View style={{height: 280}}>
                                         <View style={{flexDirection:'row', flex: 9}}>
                                             <View style={{flexDirection:'column', justifyContent:'flex-start', flex:1, alignItems:'center'}}>
-                                                <Image source={{uri: u.avatar}} style={{borderWidth:"2", flex:1.2, borderRadius:15, width: '85%'}} resizeMode='cover'/>
+                                                <Image source={{uri: u.avatar}} style={{borderWidth:2, flex:1.2, borderRadius:15, width: '85%'}} resizeMode='cover'/>
                                                 <View style={{flex: 4}}>
-                                                    <Text style={{fontSize:'15', textAlign:'center'}}>{u.name}</Text>
-                                                    <Text style={{fontSize:'15', textAlign:'center'}}>Coin = 0</Text>
-                                                    <Text style={{fontSize:'15', textAlign:'center'}}>rating = 0</Text>
+                                                    <Text style={{fontSize:15, textAlign:'center'}}>{u.name}</Text>
+                                                    <Text style={{fontSize:15, textAlign:'center'}}>Coin = 0</Text>
+                                                    <Text style={{fontSize:15, textAlign:'center'}}>rating = 0</Text>
                                                 </View>
                                             </View>
 
@@ -98,21 +98,21 @@ export function HomePage() {
                                                 <View style={{flex:1}}>
                                                 <Text style={{fontSize: 20, textAlign:'center'}}>Title: my name is {u.name}</Text>
                                                 </View>
-                                                <View style={{flex:8, borderWidth:'2', padding:5, justifyContent:'space-between'}}>
+                                                <View style={{flex:8, padding:10, justifyContent:'space-between'}}>
                                                     <Text style={{flex: 4}}>Text Text Text Text Text Text Text Text Text Text Text</Text>
-                                                    <View style={{flexDirection:'row', justifyContent:'flex-start', flex: 2}}>
-                                                        <Image source={{uri: u.img[0]}} style={{width:"25%"}} resizeMode='contain'/>
-                                                        <Image source={{uri: u.img[1]}} style={{width:"25%"}} resizeMode='contain'/>
-                                                        <Image source={{uri: u.img[2]}} style={{width:"25%"}} resizeMode='contain'/>
-                                                        <Image source={{uri: u.img[3]}} style={{width:"25%"}} resizeMode='contain'/>
+                                                    <View style={{flexDirection:'row',  justifyContent:'flex-start', flex: 2}}>
+                                                        <Image source={{uri: u.img[0]}} style={{width:'25%'}} resizeMode='contain'/>
+                                                        <Image source={{uri: u.img[1]}} style={{width:'25%'}} resizeMode='contain'/>
+                                                        <Image source={{uri: u.img[2]}} style={{width:'25%'}} resizeMode='contain'/>
+                                                        <Image source={{uri: u.img[3]}} style={{width:'25%'}} resizeMode='contain'/>
                                                     </View>
                                                 </View>
-                                                <View style={{flexDirection:'row', justifyContent:"space-between",flex: 1}}>
-                                                    <Text style={{fontSize:'20'}}>0 likes</Text>
+                                                <View style={{flexDirection:'row', justifyContent:'space-between',flex: 1}}>
+                                                    <Text style={{fontSize: 20}}>0 likes</Text>
                                                     <View style={{flexDirection:'row', justifyContent:'flex-end',flex: 9}}>
-                                                        <Text style={{fontSize:'20'}}>❤️</Text>
-                                                        <Text style={{fontSize:'20'}}>💬</Text>
-                                                        <Text style={{fontSize:'20'}}>✅</Text>
+                                                        <Text style={{fontSize:20}}>❤️</Text>
+                                                        <Text style={{fontSize:20}}>💬</Text>
+                                                        <Text style={{fontSize:20}}>✅</Text>
                                                     </View>
                                                 </View>
                                             </View>
