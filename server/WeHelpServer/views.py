@@ -4,7 +4,6 @@ import os
 import random
 import sys
 import traceback
-from requests_toolbelt.multipart import decoder
 
 from django.shortcuts import render
 from django.utils import timezone
@@ -14,6 +13,8 @@ from django.views.decorators.csrf import csrf_exempt
 from datetime import date
 
 from WeHelpServer.models import User
+from WeHelpServer.models import Message
+from WeHelpServer.models import Chat
 
 
 def signIn(body):
@@ -53,6 +54,10 @@ def changeIcon(request):
     return JsonResponse(res)
 
 
+def sendMessage(body):
+    return
+
+
 def upload(request):
     if (request.POST['func'] == 'changeIcon'):
         return changeIcon(request)
@@ -69,6 +74,9 @@ def index(request):
         body = json.loads(request.body)
         if (body['func'] == 'signIn'):
             return signIn(body)
+
+        elif (body['func'] == 'sendMessage'):
+            return sendMessage(body)
 
     # avoid "return none" error, need to change it later
     return signIn(body)
