@@ -8,7 +8,9 @@ class User(models.Model):
     rating = models.FloatField()
     create_date = models.DateTimeField()
     email = models.EmailField()
-    chatList = models.CharField(validators=int_list_validator)
+    name = models.CharField(max_length=64, default='')
+    #chatList = models.CharField(validators=int_list_validator)
+    chatList = models.CharField(max_length=4096, default='')
 
 
 class Message(models.Model):
@@ -18,7 +20,10 @@ class Message(models.Model):
 
 
 class Chat(models.Model):
-    a = models.ForeignKey(User, on_delete=models.CASCADE)
-    b = models.ForeignKey(User, on_delete=models.CASCADE)
+    a = models.ForeignKey(User, on_delete=models.CASCADE,
+                          related_name='user_chat_a')
+    b = models.ForeignKey(User, on_delete=models.CASCADE,
+                          related_name='user_chat_b')
     last_message = models.ForeignKey(Message, on_delete=models.CASCADE)
-    message_list = models.CharField(validator=int_list_validator)
+    #message_list = models.CharField(validator=int_list_validator)
+    message_list = models.CharField(max_length=4096)

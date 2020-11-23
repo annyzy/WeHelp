@@ -10,7 +10,6 @@ from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from datetime import date
 
 from WeHelpServer.models import User
 from WeHelpServer.models import Message
@@ -25,11 +24,122 @@ def signIn(body):
     except ObjectDoesNotExist:
         user = User(coins=10, rating=0,
                     create_date=timezone.now(), email=email,
-                    icon=icon)
+                    icon=icon, name=body['name'])
         user.save()
     res = {'UID': user.id, 'coins': user.coins,
            'icon': user.icon, 'rating': user.rating}
     return JsonResponse(res)
+
+
+def sendMessage(body):
+    # body: {'message', 'senderUID', 'receiverUID'}
+
+    try:
+        message_s = body['message']
+        sender = User.objects.get(id=body['senderUID'])
+        receiver = User.objects.get(id=body['receiverUID'])
+
+        # find the chat for these two user or create one
+        if (Chat.objects.filter(a=sender, b=receiver)):
+            chat = Chat.objects.get(a=sender, b=receiver)
+
+        elif (Chat.objects.filter(a=receiver, b=sender)):
+            chat = Chat.objects.get(a=receiver, b=sender)
+
+        else:
+            chat = Chat(a=sender, b=receiver)
+
+        # construct the message
+        message = Message(sender=sender, message=message_s,
+                          date=timezone.now())
+        message.save()
+
+        # add message to chat
+        if (chat.message_list):
+            new_message_list = chat.message_list.split(
+                ',')
+            new_message_list.append(str(message.id))
+            new_message_list = ','.join(new_message_list)
+        else:
+            new_message_list = str(message.id)
+
+        chat.message_list = new_message_list
+        chat.last_message = message
+
+        # save and response
+        # TODO: send update to receiver via WebSocket
+        chat.save()
+        res = {'success': 1}
+
+    except ObjectDoesNotExist:
+        print(traceback.print_exc())
+        res = {'success': 0}
+    except KeyError:
+        print(traceback.print_exc())
+        res = {'success': 0}
+    except Exception as e:
+        print(traceback.print_exc())
+        res = {'success': 0}
+
+    return JsonResponse(res)
+
+
+def getChatList(body):
+    # body: {'UID'}
+    # return: {'success': 1/0, 'chatList': [{chatID, avatarURL, name, last_message, datetime}*]}
+
+    try:
+        user = User.objects.get(id=body['UID'])
+        chats = user.user_chat_a.all() | user.user_chat_b.all()
+        chats = chats.order_by('-last_message')
+
+        chat_info_list = []
+        for chat in chats:
+            chatID = chat.id
+            if (user == chat.a):
+                user2 = chat.b
+            else:
+                user2 = chat.a
+            avatarURL = user2.icon
+            name = user2.name
+            last_message = chat.last_message.message
+            datetime = chat.last_message.date.strftime("%Y-%m-%d %H:%M:%S")
+            chat_info_list.append(
+                {'chatID': chatID, 'avatarURL': avatarURL,
+                 'name': name, 'last_message': last_message,
+                 'datetime': datetime})
+
+        res = {'success': 1, 'chatList': chat_info_list}
+
+    except ObjectDoesNotExist:
+        print(traceback.print_exc())
+        res = {'success': 0}
+
+    return JsonResponse(res, safe=False)
+
+
+def getMessage(body):
+    # body: {'chatID'}
+    # return: {'success': 1/0, 'messageList': [{UID, message, datetime}]}
+    try:
+        chat = Chat.objects.get(id=body['chatID'])
+        message_list = chat.message_list.split(',')
+        messages = []
+        for m in message_list:
+            messages.append(Message.objects.get(id=int(m)))
+
+        messageList = []
+        for m in messages:
+            messageList.append(
+                {'UID': m.sender.id, 'message': m.message, 'datetime': m.date})
+
+        res = {'success': 1, 'messageList': messageList}
+
+    except ObjectDoesNotExist:
+        print(traceback.print_exc())
+        res = {'success': 0}
+
+    return JsonResponse(res, safe=False)
 
 
 def changeIcon(request):
@@ -37,7 +147,7 @@ def changeIcon(request):
         suffix = str(request.FILES['file']).split('.')[-1]
         UID = request.POST['UID']
         path = 'media/User/{}/{}-{:x}.{}'.format(UID,
-                                                 date.today().strftime("%Y%m%d"), random.getrandbits(128), suffix)
+                                                 timezone.now().strftime("%Y%m%d"), random.getrandbits(128), suffix)
         if (not os.path.exists(os.path.dirname(path))):
             os.makedirs(os.path.dirname(path))
         with open(path, 'wb+') as destination:
@@ -54,15 +164,10 @@ def changeIcon(request):
     return JsonResponse(res)
 
 
-def sendMessage(body):
-    return
-
-
 def upload(request):
     if (request.POST['func'] == 'changeIcon'):
+        # avoid "return none" error, need to change it later
         return changeIcon(request)
-
-    # avoid "return none" error, need to change it later
     return changeIcon(request)
 
 
@@ -77,6 +182,12 @@ def index(request):
 
         elif (body['func'] == 'sendMessage'):
             return sendMessage(body)
+
+        elif (body['func'] == 'getChatList'):
+            return getChatList(body)
+
+        elif (body['func'] == 'getMessage'):
+            return getMessage(body)
 
     # avoid "return none" error, need to change it later
     return signIn(body)
