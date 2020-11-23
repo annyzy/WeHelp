@@ -88,7 +88,7 @@ if you want to rerun it:
 </details>
 
  <details>
-  <summary>post task **POST (multipart/form-data)**</summary>
+  <summary>change user icon **POST (multipart/form-data)**</summary>
 
 | body | return |
 | ------------- | ------------- |
@@ -96,5 +96,25 @@ if you want to rerun it:
 | UID | uri  |
 
 FILES: {'file': filestream}
+
+</details>
+
+ <details>
+  <summary>get chat list **POST**</summary>
+
+| body | return |
+| ------------- | ------------- |
+| func="getChatList" |  success: 1/0 |
+| UID | chatList: [{chatID, avatarURL, name, last_message, datetime}]  |
+
+</details>
+
+ <details>
+  <summary>get messages of a chat **POST**</summary>
+
+| body | return |
+| ------------- | ------------- |
+| func="getMessage" |  success: 1/0 |
+| chatID | messageList: [{UID, message, datetime}]  |
 
 </details>
