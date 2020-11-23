@@ -40,7 +40,7 @@ if you want to rerun it:
    source venv/bin/activate
    ```
 6. ```shell
-   nohup python runserver 0:80 &>> /tmp/wehelp.l.log &
+   nohup python manage.py runserver 0:80 &>> /tmp/wehelp.l.log &
    ```
 7. exit imediatly, don't do anything else as root
    ```shell
