@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, Text, StatusBar, Image, ScrollView, Platform, StyleSheet } from 'react-native';
+import { View, Text, StatusBar, Image, ScrollView, StyleSheet } from 'react-native';
 import { SearchBar, Card } from 'react-native-elements';
-// import { Button } from 'react-native-material-ui';
+import { Button } from 'react-native-material-ui';
 import Constants from 'expo-constants';
 
 export function HomePage() {
@@ -84,22 +84,6 @@ function SearchField() {
     );
 }
 
-// Material button does not support web version in react native.
-// Will remove this at the end since we do not plan to support the web version.
-
-let Button;
-function importMaterialButton() {
-    if (Platform.OS !== 'web') {
-        import('react-native-material-ui').then((module) => {
-            Button = module.Button;
-            // console.log(Button)
-            return true;
-        });
-        return false;
-    }
-}
-importMaterialButton();
-
 function CardField(props) {
     return (
         <Card containerStyle={styles.cardContainer}>
@@ -124,13 +108,10 @@ function CardField(props) {
                         }
                     </View>
                     <View style={styles.buttonView}>
-                    {Platform.OS !== 'web' && Button != null &&
-                    <>
                         <Button text={"❤️ Likes " + props.user.img.length} style={materialButtonStyle}></Button>
                         <Button text="💬 Message" style={materialButtonStyle}></Button>
                         <Button text="✅ Accept" style={{container:{...materialButtonStyle.container, borderRightWidth:0},
                                                         text: materialButtonStyle.text}}></Button>
-                    </>}
                     </View>
                 </View>
             </View>

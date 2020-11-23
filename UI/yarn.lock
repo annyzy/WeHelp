@@ -1504,6 +1504,11 @@
     "xcode" "^2.1.0"
     "xmldom" "0.1.27"
 
+"@freakycoder/react-native-bounceable@^0.1.1":
+  "integrity" "sha512-IbQ7ObbNZOstvf/3NFXq7NVg6PbJB+nLxw+1XsNbeaHYyxq0+6HunBtsTAHw//K1j/R1E2KSyLD6IWFO2qmKOg=="
+  "resolved" "https://registry.npmjs.org/@freakycoder/react-native-bounceable/-/react-native-bounceable-0.1.1.tgz"
+  "version" "0.1.1"
+
 "@hapi/address@^4.0.1":
   "integrity" "sha512-SkszZf13HVgGmChdHo/PxchnSaCJ6cetVqLzyciudzZRT0jcOouIF/Q93mgjw8cce+D+4F4C1Z/WrfFN+O3VHQ=="
   "resolved" "https://registry.npmjs.org/@hapi/address/-/address-4.1.0.tgz"
@@ -14218,6 +14223,26 @@
   "resolved" "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz"
   "version" "16.13.1"
 
+"react-native-androw@0.0.34":
+  "integrity" "sha512-YuW0GxYNzABvPPe6k+JdLUF5CAzKSW5R6IxxA/+fg5gc+4avE1tZgLmnRfNtXJCbW9r90YLYp33S9Uu2pe//fg=="
+  "resolved" "https://registry.npmjs.org/react-native-androw/-/react-native-androw-0.0.34.tgz"
+  "version" "0.0.34"
+
+"react-native-apple-card-views@^2.0.0":
+  "integrity" "sha512-3eH041eWhB/9uiv7u/ccuCI9o64MoWvOT1G/QNgAcn7CPiV4t8pONelK7GPqWkLoRd9Oo79ylhNEG+cP5+zmwg=="
+  "resolved" "https://registry.npmjs.org/react-native-apple-card-views/-/react-native-apple-card-views-2.0.0.tgz"
+  "version" "2.0.0"
+  dependencies:
+    "react-native-androw" "0.0.34"
+    "react-native-apple-header" "^0.1.1"
+    "react-native-linear-gradient" "^2.5.6"
+    "react-native-material-ripple" "^0.9.1"
+
+"react-native-apple-header@^0.1.1":
+  "integrity" "sha512-olhk1icxbmX4p320+iE3NunTQOlqBHMxHp/HcQ3XiUpPzekLPhJKK0r5dZfp80LEdcdxnZKhJMJqq0FquIG/VQ=="
+  "resolved" "https://registry.npmjs.org/react-native-apple-header/-/react-native-apple-header-0.1.1.tgz"
+  "version" "0.1.1"
+
 "react-native-communications@^2.2.1":
   "integrity" "sha1-eIO1ayCgAu63kMET+GFuqGksp5U="
   "resolved" "https://registry.npmjs.org/react-native-communications/-/react-native-communications-2.2.1.tgz"
@@ -14294,6 +14319,13 @@
   "resolved" "https://registry.npmjs.org/react-native-material-design-styles/-/react-native-material-design-styles-0.2.7.tgz"
   "version" "0.2.7"
 
+"react-native-material-ripple@^0.9.1":
+  "integrity" "sha512-dHjARdKoGD3LXwPh2TkURabywM5BfdpKc/AHplJTfBMalhVZ2bc7iJoJmNhNnmT/TZ+B3szL6uV1mO7Pv8zNeA=="
+  "resolved" "https://registry.npmjs.org/react-native-material-ripple/-/react-native-material-ripple-0.9.1.tgz"
+  "version" "0.9.1"
+  dependencies:
+    "prop-types" "^15.5.10"
+
 "react-native-material-ui@^1.30.1":
   "integrity" "sha512-lvcfDMdPRUloVHVNbQR62h2pCoGOlwWEcC5UEzUNlPX7lRZt/A13PLHIj8wSkE4giwg4GZI9LWY0yqCKxsAq/Q=="
   "resolved" "https://registry.npmjs.org/react-native-material-ui/-/react-native-material-ui-1.30.1.tgz"
@@ -14369,7 +14401,7 @@
     "prop-types" "^15.6.0"
     "react-timer-mixin" "^0.13.4"
 
-"react-native@~0.63.3":
+"react-native@*", "react-native@>= 0.55.x", "react-native@>=0.41.2", "react-native@~0.63.3":
   "integrity" "sha512-71wq13uNo5W8QVQnFlnzZ3AD+XgUBYGhpsxysQFW/hJ8GAt/J5o+Bvhy81FXichp6IBDJDh/JgfHH2gNji8dFA=="
   "resolved" "https://registry.npmjs.org/react-native/-/react-native-0.63.3.tgz"
   "version" "0.63.3"
@@ -14417,7 +14449,7 @@
   "resolved" "https://registry.yarnpkg.com/react-timer-mixin/-/react-timer-mixin-0.13.4.tgz"
   "version" "0.13.4"
 
-"react@16.13.1":
+"react@*", "react@>= 16.x.x", "react@16.13.1":
   "integrity" "sha512-YMZQQq32xHLX0bz5Mnibv1/LHb3Sqzngu7xstSM+vrkE5Kzr9xE0yMByK5kMoTK30YVJE61WfbxIFFvfeDKT1w=="
   "resolved" "https://registry.yarnpkg.com/react/-/react-16.13.1.tgz"
   "version" "16.13.1"
