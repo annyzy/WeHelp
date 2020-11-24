@@ -8,11 +8,25 @@ import { EventRegister } from 'react-native-event-listeners';
 export default function App() {
   const [user, setUser] = useState({
     signedIn: false,
-    name: 'no name',
+    name: '',
     photoUrl: '',
     UID: -1,
     email: ''
   });
+
+  const [chatList, setChatLIst] = useState([]);
+  /*
+  chatList = [{
+    'chatID':
+    'avatar':
+    'name': the other user's name
+    'comment': last_message
+    'datetime': datetime of last_message, format in %Y-%m-%d %H:%M:%S
+    'messages': [{'UID', 'message'}*], sorted
+  }*]
+  */
+
+
 
   let changeUser = useCallback((newName, newPhotoUrl, newEmail, newUID) => {
     let url;
@@ -45,16 +59,53 @@ export default function App() {
     }));
   })}, []);
 
+
+  useEffect(() => {EventRegister.addEventListener('refreshChatList', (UID=user.UID) => {
+    if (UID == -1) {
+      alert("uid = -1?");
+      return;
+    }
+    fetch('http://34.94.101.183/WeHelp/', {
+      method: 'POST',
+      body: JSON.stringify({
+        func: 'getChatList', UID: UID
+      })
+    }).then(async (resp) => {
+      let found = await resp.json();
+      //alert(found['chatList'])
+      if (found['success'] == 1) {
+        found['chatList'].map((chat) => {
+          let avatar;
+          if (chat['avatarURL'].startsWith('media')){
+            avatar = 'http://34.94.101.183/' + chat['avatarURL'];
+          }
+          else {
+            avatar = chat['avatarURL'];
+          }
+          setChatLIst(chatList => chatList.concat({
+            name: chat['name'], avatar: avatar, 
+            comment: chat['last_message'], chatID: chat['chatID'], 
+            datetime: chat['datetime'], message: []}));
+        })
+      }
+      else {
+        alert("ERROR: can not load chat list");
+      }
+    }) 
+  })})
+
+  
+
   if (Platform.OS == 'web') {
     return (
-    <UserContext.Provider value={user}>
+    <UserContext.Provider value={[user, chatList]}>
       <PageNavigation/>
     </UserContext.Provider>
     );
   }
   else if (user.signedIn) {
     return (
-      <UserContext.Provider value={user}>
+      <UserContext.Provider value={[user, chatList]}>
           <PageNavigation/>
       </UserContext.Provider>
       );  

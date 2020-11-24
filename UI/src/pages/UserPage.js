@@ -6,7 +6,7 @@ import { EventRegister } from 'react-native-event-listeners';
 import * as expoImagePicker from 'expo-image-picker';
 
 export function UserPage() {
-    const user = useContext(UserContext);
+    const user = useContext(UserContext)[0];
 
     return (
         <View style={{flex: 1, justifyContent: 'space-between', backgroundColor: 'white'}}>

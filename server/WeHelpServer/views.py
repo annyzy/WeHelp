@@ -96,18 +96,21 @@ def getChatList(body):
         chat_info_list = []
         for chat in chats:
             chatID = chat.id
-            if (user == chat.a):
-                user2 = chat.b
-            else:
-                user2 = chat.a
-            avatarURL = user2.icon
-            name = user2.name
-            last_message = chat.last_message.message
-            datetime = chat.last_message.date.strftime("%Y-%m-%d %H:%M:%S")
-            chat_info_list.append(
-                {'chatID': chatID, 'avatarURL': avatarURL,
-                 'name': name, 'last_message': last_message,
-                 'datetime': datetime})
+            try:
+                if (user == chat.a):
+                    user2 = chat.b
+                else:
+                    user2 = chat.a
+                avatarURL = user2.icon
+                name = user2.name
+                last_message = chat.last_message.message
+                datetime = chat.last_message.date.strftime("%Y-%m-%d %H:%M:%S")
+                chat_info_list.append(
+                    {'chatID': chatID, 'avatarURL': avatarURL,
+                     'name': name, 'last_message': last_message,
+                     'datetime': datetime})
+            except:  # avoid deleted users
+                continue
 
         res = {'success': 1, 'chatList': chat_info_list}
 
