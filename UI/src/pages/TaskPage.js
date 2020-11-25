@@ -3,9 +3,9 @@ import Constants from 'expo-constants';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import { AppleCard } from 'react-native-apple-card-views'
 import { createStackNavigator } from '@react-navigation/stack';
-import { PageHeader } from '../components/PageHeader';
 import { TaskDetailPage } from './TaskDetailPage';
-import { UserPage } from './UserPage';
+import { UserDetailPage } from './UserDetailPage';
+import { ChatPage } from './ChatPage';
 
 const Stack = createStackNavigator();
 
@@ -14,7 +14,8 @@ export function TaskPage() {
         <Stack.Navigator headerMode='false'> 
             <Stack.Screen name='TaskMainPage' component={TaskMainPage}/>
             <Stack.Screen name='TaskDetailPage' component={TaskDetailPage}/>
-            <Stack.Screen name='UserDetailPage' component={UserPage}/>
+            <Stack.Screen name='UserDetailPage' component={UserDetailPage}/>
+            <Stack.Screen name='ChatPage' component={ChatPage}/>
         </Stack.Navigator>
     );
 }

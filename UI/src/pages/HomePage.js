@@ -4,7 +4,8 @@ import { SearchBar, Card } from 'react-native-elements';
 import { Button } from 'react-native-material-ui';
 import { createStackNavigator } from '@react-navigation/stack';
 import { TaskDetailPage } from './TaskDetailPage';
-import { UserPage } from './UserPage';
+import { UserDetailPage } from './UserDetailPage';
+import { ChatPage } from './ChatPage';
 import Constants from 'expo-constants';
 
 const Stack = createStackNavigator();
@@ -14,7 +15,8 @@ export function HomePage() {
         <Stack.Navigator headerMode='false'> 
             <Stack.Screen name='HomeMainPage' component={HomeMainPage}/>
             <Stack.Screen name='TaskDetailPage' component={TaskDetailPage}/>
-            <Stack.Screen name='UserDetailPage' component={UserPage}/>
+            <Stack.Screen name='UserDetailPage' component={UserDetailPage}/>
+            <Stack.Screen name='ChatPage' component={ChatPage}/>
         </Stack.Navigator>
     );
 }

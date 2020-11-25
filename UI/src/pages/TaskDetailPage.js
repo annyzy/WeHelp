@@ -8,7 +8,7 @@ export function TaskDetailPage(props) {
   const {user} = props.route.params;
 
     return (
-        <View style={{flex: 1, justifyContent: 'space-around', backgroundColor: 'white'}}>
+        <View style={{flex: 1, justifyContent: 'space-between', backgroundColor: 'white'}}>
             <PageHeader style={{flex: 1}}
                 leftComp={<Button title='Back' onPress={() => props.navigation.goBack()} />}
                 centerComp={<Text style={{fontSize:20}}>{user.name}</Text>}
@@ -18,7 +18,7 @@ export function TaskDetailPage(props) {
                     <TouchableOpacity 
                         style={styles.avatarTouchable}
                         onPress={() => {
-                            props.navigation.navigate('UserDetailPage', {user:props.user});
+                            props.navigation.navigate('UserDetailPage', {user:user});
                         }}>
                         <Image source={{ uri: user.avatar }} style={styles.avatarStyle} resizeMode='cover'/>
                     </TouchableOpacity>
@@ -34,7 +34,7 @@ export function TaskDetailPage(props) {
                     <View style={styles.taskInfoView}>
                         <Text style={styles.taskTitleStyle}>Title: my name is {user.name}</Text>
                         <Text style={styles.taskTextBoxStyle}>Placeholder</Text>
-                        <View style={styles.imageView}>
+                        <View>
                             <View style={styles.imageVerticalView}>
                                 <View style={styles.imageHorizontalView}>
                                     {user.img.length >= 1 && <Image source={{ uri: user.img[0] }} style={styles.imageStyle} />}
@@ -92,9 +92,6 @@ const styles = StyleSheet.create({
     taskTextBoxStyle: {
         padding: 10,
     },
-    imageView: {
-        padding: 5
-    },
     imageVerticalView: {
         flexDirection: 'column',
         justifyContent: 'flex-start'
@@ -104,7 +101,7 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start'
     },
     imageStyle: {
-        width: 200,
+        width: '50%',
         height: 200,
         resizeMode: 'cover'
     },

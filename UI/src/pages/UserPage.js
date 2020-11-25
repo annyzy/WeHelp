@@ -1,21 +1,32 @@
 import React, { useCallback, useContext, useState } from 'react';
-import { View, Text, Image, Platform, TouchableOpacity } from 'react-native';
+import { View, ScrollView, Text, Image, Platform, TouchableOpacity } from 'react-native';
 import { PageHeader } from '../components/PageHeader';
 import { UserContext} from '../components/UserContext';
 import { EventRegister } from 'react-native-event-listeners';
 import * as expoImagePicker from 'expo-image-picker';
+import Constants from 'expo-constants';
 
 export function UserPage() {
     const user = useContext(UserContext)[0];
 
     return (
-        <View style={{flex: 1, justifyContent: 'space-between', backgroundColor: 'white'}}>
+        <View style={{flex: 1, justifyContent: 'flex-start', backgroundColor: 'white'}}>
             <PageHeader centerComp={<Text>User</Text>} />
-              <ImagePicker user={user}/>
-            <View style={{alignItems: 'center'}}>
-              <Text>text!</Text>
-            </View>
-            <View></View>
+            <ScrollView contentContainerStyle={{paddingBottom:Constants.statusBarHeight}}>
+              <View style={{borderBottomWidth: 0.5}}>
+                <ImagePicker user={user}/>
+                <Text style={{fontSize:25, alignSelf: 'center'}}>{user.name}</Text>
+              </View>
+              <Text style={{fontSize:30, padding: 10, borderBottomWidth: 0.5}}>Contributions</Text>
+              
+              <Text style={{fontSize:30, padding: 10, borderBottomWidth: 0.5}}>Ratings</Text>
+
+              <Text style={{fontSize:30, padding: 10, borderBottomWidth: 0.5}}>Current Tasks</Text>
+              
+              <Text style={{fontSize:30, padding: 10, borderBottomWidth: 0.5}}>Past Tasks</Text>
+              
+            </ScrollView>
+
         </View>
     );
 }
@@ -82,7 +93,7 @@ function ImagePicker(props) {
     <TouchableOpacity onPress={() => {pickImage()}}>
       <Image source={{
         uri: imageUri
-      }} style={{width:200, height:200, alignSelf:"center"}}/>
+      }} style={{width:150, height:150, borderRadius:25, alignSelf:"center"}}/>
     </TouchableOpacity>
   );
 }
