@@ -1,10 +1,25 @@
 import React from 'react';
-import { View, Text, StatusBar, Image, ScrollView, StyleSheet } from 'react-native';
+import { View, Text, StatusBar, Image, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import { SearchBar, Card } from 'react-native-elements';
 import { Button } from 'react-native-material-ui';
+import { createStackNavigator } from '@react-navigation/stack';
+import { TaskDetailPage } from './TaskDetailPage';
+import { UserPage } from './UserPage';
 import Constants from 'expo-constants';
 
+const Stack = createStackNavigator();
+
 export function HomePage() {
+    return (
+        <Stack.Navigator headerMode='false'> 
+            <Stack.Screen name='HomeMainPage' component={HomeMainPage}/>
+            <Stack.Screen name='TaskDetailPage' component={TaskDetailPage}/>
+            <Stack.Screen name='UserDetailPage' component={UserPage}/>
+        </Stack.Navigator>
+    );
+}
+
+function HomeMainPage(props) {
     const users = [
         {
             name: 'Dongyao',
@@ -55,11 +70,13 @@ export function HomePage() {
     return (
         <View style={{flex: 1, justifyContent: 'space-between', backgroundColor:'white'}}>
             <StatusBar barStyle='dark-content'/>
-            <SearchField/>
+            <View style={{flex:1, flexDirection:'row', justifyContent:'flex-start', alignItems:'center', top:Constants.statusBarHeight}}>
+                <SearchField/>
+            </View>
             <View style={{flex: 8, top:Constants.statusBarHeight}}>
                 <ScrollView contentContainerStyle={{paddingBottom:Constants.statusBarHeight}}>
                     {users.map((u, i) => {
-                        return(<CardField user={u} key={i}/>)
+                        return(<CardField user={u} key={i} navigation={props.navigation}/>)
                     })}
                 </ScrollView>
             </View>
@@ -69,7 +86,7 @@ export function HomePage() {
 
 function SearchField() {
     return(
-        <View style={{flex:1, flexDirection:'row', justifyContent:'flex-start', alignItems:'center', top:Constants.statusBarHeight}}>
+        <>
             <Image source={require('../../assets/icon.png')} style={{flex:1, top:'1%', height:'100%'}} resizeMode='cover'/>
             <SearchBar
                 inputContainerStyle={{height:'65%'}}
@@ -80,7 +97,7 @@ function SearchField() {
                 showCancel={true}
                 cancelButtonTitle='cancel'
             />
-        </View>
+        </>
     );
 }
 
@@ -89,7 +106,13 @@ function CardField(props) {
         <Card containerStyle={styles.cardContainer}>
             <View style={styles.cardContentView}>
                 <View style={styles.userInfoView}>
-                    <Image source={{ uri: props.user.avatar }} style={styles.avatarStyle} resizeMode='cover' />
+                    <TouchableOpacity onPress={() => {
+                            props.navigation.navigate('UserDetailPage', {user:props.user});}}>
+                        <Image source={{ uri: props.user.avatar }}
+                            style={styles.avatarStyle}
+                            resizeMode='cover'
+                        />
+                    </TouchableOpacity>
                     <Text style={{ fontSize: 20, textAlign: 'center'}}>{props.user.name}</Text>
                     <Text style={{ fontSize: 10, textAlign: 'center', top: 10}}>⭐️⭐️⭐️⭐️⭐️</Text>
                     <Text style={{ fontSize: 15, textAlign: 'center', top: 20}}>👏🏻 5</Text>
@@ -98,11 +121,16 @@ function CardField(props) {
                 <View style={styles.taskInfoView}>
                     <Text style={styles.taskTitleStyle}>Title: my name is {props.user.name}</Text>
                     <View style={styles.taskDescriptionView}>
-                        <Text style={styles.taskTextBoxStyle}>Placeholder</Text>
+                        <Text 
+                            style={styles.taskTextBoxStyle}
+                            onPress={() => { props.navigation.navigate('TaskDetailPage', {user:props.user});} }
+                        >
+                            Placeholder
+                        </Text>
                         {props.user.img.length != 0 && 
                             <View style={styles.imageView}>
                                 {props.user.img.map((image, i) => {
-                                    return (<Image source={{ uri: image }} style={styles.imageStyle} resizeMode='contain' key={i} />);
+                                    return (<Image source={{ uri: image }} style={styles.imageStyle} key={i} />);
                                 })}
                             </View>
                         }
@@ -168,7 +196,7 @@ const styles = StyleSheet.create({
     },
     imageStyle: {
         width: '25%',
-        resizeMode: 'cover'
+        resizeMode: 'contain'
     },
     buttonView: {
         flexDirection: 'row',
