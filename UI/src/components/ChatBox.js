@@ -8,51 +8,7 @@ export function ChatBox(props) {
     const user = useContext(UserContext)[0];
     const chat = props.chat;
 
-    //parse in chat messages into GiftChat message style
-    const parsedMessages = useCallback(() => {
-      //setMessages([
-      //  {
-      //    _id: 1, //messageid
-      //    text: chat.comment,
-      //    createdAt: chat.datetime,
-      //    user: { // sender info
-      //      _id: 
-      //      name: 
-      //      avatar:
-      //    }
-      //  },
-      //])
-      //TODO: move this to app.js
-      console.log(chat['messages']);
-      let u;
-      let messages = [];
-      chat['messages'].map((m, i) => {
-        if (m['UID'] == user.UID) { //this message is sent by login user
-          u = {
-            _id: user.UID,
-            name: user.name,
-            avatar: user.photoUrl
-          }
-        }
-        else { //this message is sent by someone else
-          u = {
-            _id: m['UID'],
-            name: chat['name'],
-            avatar: chat['avatar']
-          }
-        }
-        messages.push({
-          _id: i,
-          text: m['message'],
-          //createdAt: m['datetime'],
-          user: u
-        });
-      });
-      console.log(messages);
-      return messages;
-    }, [chat['messages']]);
-
-    //change this to event trigger
+    //change this to event trigger to update chat and send post request to server
     const onSend = useCallback((messages = []) => 
       {setMessages((previousMessages) => GiftedChat.append(previousMessages, messages));}, []);
   
