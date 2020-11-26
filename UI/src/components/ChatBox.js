@@ -1,28 +1,64 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useContext } from 'react';
 import { View } from 'react-native';
 import { GiftedChat, Avatar, Bubble, Time } from 'react-native-gifted-chat';
 import { LinearGradient } from 'expo-linear-gradient';
+import { UserContext } from './UserContext';
   
 export function ChatBox(props) {
-    const [messages, setMessages] = useState([]);
+    const user = useContext(UserContext)[0];
+    const chat = props.chat;
 
-    useEffect(() => {
-      setMessages([
-        {
-          _id: 1,
-          text: props.contactUser.comment,
-          createdAt: new Date(),
-          user: props.contactUser
-        },
-      ])
-    }, []);
-  
+    //parse in chat messages into GiftChat message style
+    const parsedMessages = useCallback(() => {
+      //setMessages([
+      //  {
+      //    _id: 1, //messageid
+      //    text: chat.comment,
+      //    createdAt: chat.datetime,
+      //    user: { // sender info
+      //      _id: 
+      //      name: 
+      //      avatar:
+      //    }
+      //  },
+      //])
+      //TODO: move this to app.js
+      console.log(chat['messages']);
+      let u;
+      let messages = [];
+      chat['messages'].map((m, i) => {
+        if (m['UID'] == user.UID) { //this message is sent by login user
+          u = {
+            _id: user.UID,
+            name: user.name,
+            avatar: user.photoUrl
+          }
+        }
+        else { //this message is sent by someone else
+          u = {
+            _id: m['UID'],
+            name: chat['name'],
+            avatar: chat['avatar']
+          }
+        }
+        messages.push({
+          _id: i,
+          text: m['message'],
+          //createdAt: m['datetime'],
+          user: u
+        });
+      });
+      console.log(messages);
+      return messages;
+    }, [chat['messages']]);
+
+    //change this to event trigger
     const onSend = useCallback((messages = []) => 
       {setMessages((previousMessages) => GiftedChat.append(previousMessages, messages));}, []);
   
     return (  
       <GiftedChat
-        messages={messages}
+        messages={chat['messages']}
         onSend={messages => {onSend(messages)}}
         alwaysShowSend={true}
         renderAvatar={renderAvatar}
@@ -30,10 +66,15 @@ export function ChatBox(props) {
         renderTime={renderTime}
         multiline={true}
         isLoadingEarlier={true}
-        user={{
-          _id: 1,
-          name: 'myID',
-          avatar: require('../../assets/icon.png'),
+        //user={{
+        //  _id: user.UID,
+        //  name: user.name,
+        //  avatar: user.photoUrl,
+        //}}
+        user = {{
+            _id: user.UID,
+            name: user.name,
+            avatar: user.photoUrl
         }}
       />
     );

@@ -5,14 +5,15 @@ import { PageHeader } from '../components/PageHeader';
 import { createStackNavigator } from '@react-navigation/stack';
 import { ChatPage } from './ChatPage'
 import { UserContext } from '../components/UserContext';
+import { EventRegister } from 'react-native-event-listeners';
 
 let Stack = createStackNavigator();
 
 export function MessagePage() {
-  const chatList = useContext(UserContext)[1];
+  const [user, chatList] = useContext(UserContext);
 
   return (
-    <UserContext.Provider value={chatList}>
+    <UserContext.Provider value={[user, chatList]}>
       <Stack.Navigator headerMode='false'> 
         <Stack.Screen name='Contacts' component={ChatList}/>
         <Stack.Screen name='ChatBox' component={ChatPage}/>
@@ -45,21 +46,24 @@ function ChatList(props) {
 
 
 
-  const chatList = useContext(UserContext);
+  const [user, chatList] = useContext(UserContext);
   return (
     <View style={{flex: 1, justifyContent: 'flex-start', backgroundColor: 'white'}}>
       <PageHeader centerComp={<Text>Message</Text>} />
       <ScrollView>
       {
-        chatList.map((user, i) => (
+        chatList.map((chat, i) => (
           <ListItem key={i} bottomDivider 
-          onPress={() => {props.navigation.navigate('ChatBox', {contactUser: user});}}
+          onPress={() => {
+            EventRegister.emit('refreshChat', chat['chatID']);
+            props.navigation.navigate('ChatBox', {chat: chat});
+          }}
           //onLongPress={()=> {removeContact(i);}}
           >
-            <Avatar source={{uri: user.avatar}} />
+            <Avatar source={{uri: chat.avatar}} />
             <ListItem.Content>
-              <ListItem.Title>{user.name}</ListItem.Title>
-              <ListItem.Subtitle>{user.comment}</ListItem.Subtitle>
+              <ListItem.Title>{chat.name}</ListItem.Title>
+              <ListItem.Subtitle>{chat.comment}</ListItem.Subtitle>
             </ListItem.Content>
           </ListItem>
         ))

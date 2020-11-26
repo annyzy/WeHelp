@@ -14,9 +14,10 @@ export default function App() {
     email: ''
   });
 
-  const [chatList, setChatLIst] = useState([]);
+  const [chatList, setChatList] = useState([]);
   /*
   chatList = [{
+    'updating': 
     'chatID':
     'avatar':
     'name': the other user's name
@@ -60,6 +61,79 @@ export default function App() {
   })}, []);
 
 
+  EventRegister.addEventListener('refreshChat', useCallback((chatID) => {
+    //find chatID
+    let chat_index = -1;
+    chatList.map((chat, i) => {
+      if (chat['chatID'] == chatID) {
+        chat_index = i;
+      }
+    })
+    if (chat_index == -1) {
+      //alert("ERROR: invalid chat " + chatID);
+      return;
+    }
+    else{
+      //only refresh if the chat has no messages
+      if (chatList[chat_index]['messages'].length == 0) {
+        if (chatList[chat_index]['updating']) {
+          return;
+        }
+        else {
+          //fetch chat messages and store into chatList[i]['messages']
+          //fetch results:
+          //{'success', 'messageList': [{'UID', 'message', 'datetime'}]}
+          let u;
+          setChatList(chatList => {
+            chatList[chat_index]['updating'] = true;
+            return chatList;
+          })
+          fetch('http://34.94.101.183/WeHelp/', {
+            method: 'POST',
+            body: JSON.stringify({
+              func: 'getMessage', chatID: chatID
+            })
+          }).then(async (resp) => {
+            let found = await resp.json();
+            if (found['success'] == 1) {
+              found['messageList'].map((m, i) => {
+                //parse message to GiftChat style
+                if (m['UID'] == user.UID){
+                  u = {
+                    _id: user.UID,
+                    avatar: user.photoUrl,
+                    name: user.name
+                  }
+                }
+                else {
+                  u = {
+                    _id: m['UID'],
+                    avatar: chatList[chat_index]['avatar'],
+                    name: chatList[chat_index]['name'],
+                  }
+                }
+                setChatList(chatList => {
+                  chatList[chat_index]['messages'] = chatList[chat_index]['messages'].concat({
+                    _id: i + 1,
+                    text: m['message'],
+                    user: u
+                  });
+                  chatList[chat_index]['updating'] = false;
+                  return chatList;
+                })
+              })
+            }
+            else {
+              alert("ERROR: can not load chat " + chatID);
+            }
+            console.log(chatList[chat_index]['messages']);
+          })
+        }
+      }
+    }
+  },[chatList]));
+
+
   useEffect(() => {EventRegister.addEventListener('refreshChatList', (UID=user.UID) => {
     if (UID == -1) {
       alert("uid = -1?");
@@ -82,10 +156,12 @@ export default function App() {
           else {
             avatar = chat['avatarURL'];
           }
-          setChatLIst(chatList => chatList.concat({
+          setChatList(chatList => chatList.concat({
             name: chat['name'], avatar: avatar, 
             comment: chat['last_message'], chatID: chat['chatID'], 
-            datetime: chat['datetime'], message: []}));
+            datetime: chat['datetime'], messages: [],
+            updating: false,
+          }));
         })
       }
       else {
