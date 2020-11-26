@@ -5,6 +5,7 @@ import { UserContext} from '../components/UserContext';
 import { EventRegister } from 'react-native-event-listeners';
 import * as expoImagePicker from 'expo-image-picker';
 import Constants from 'expo-constants';
+import CalendarHeatmap from 'react-native-calendar-heatmap';
 
 export function UserPage() {
     const user = useContext(UserContext)[0];
@@ -18,7 +19,17 @@ export function UserPage() {
                 <Text style={{fontSize:25, alignSelf: 'center'}}>{user.name}</Text>
               </View>
               <Text style={{fontSize:30, padding: 10, borderBottomWidth: 0.5}}>Contributions</Text>
-              
+              <CalendarHeatmap
+                endDate={new Date()}
+                numDays={120}
+                colorArray={["#eee", "#5099E1"]}
+                values={[
+                  { date: '2020-11-01' },
+                  { date: '2020-11-02' },
+                  { date: '2020-11-22' },
+                  { date: '2020-11-25' },
+                ]}
+              />
               <Text style={{fontSize:30, padding: 10, borderBottomWidth: 0.5}}>Ratings</Text>
 
               <Text style={{fontSize:30, padding: 10, borderBottomWidth: 0.5}}>Current Tasks</Text>
