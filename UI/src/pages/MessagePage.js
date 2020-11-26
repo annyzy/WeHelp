@@ -10,15 +10,11 @@ import { EventRegister } from 'react-native-event-listeners';
 let Stack = createStackNavigator();
 
 export function MessagePage() {
-  const [user, chatList] = useContext(UserContext);
-
   return (
-    <UserContext.Provider value={[user, chatList]}>
-      <Stack.Navigator headerMode='false'> 
-        <Stack.Screen name='Contacts' component={ChatList}/>
-        <Stack.Screen name='ChatBox' component={ChatPage}/>
-      </Stack.Navigator>
-    </UserContext.Provider>
+    <Stack.Navigator headerMode='false'> 
+      <Stack.Screen name='Contacts' component={ChatList}/>
+      <Stack.Screen name='ChatPage' component={ChatPage}/>
+    </Stack.Navigator>
   );
 }
 
@@ -47,6 +43,7 @@ function ChatList(props) {
 
 
   const [user, chatList] = useContext(UserContext);
+  
   return (
     <View style={{flex: 1, justifyContent: 'flex-start', backgroundColor: 'white'}}>
       <PageHeader centerComp={<Text>Message</Text>} />
@@ -56,7 +53,7 @@ function ChatList(props) {
           <ListItem key={i} bottomDivider 
           onPress={() => {
             EventRegister.emit('refreshChat', chat['chatID']);
-            props.navigation.navigate('ChatBox', {chat: chat});
+            props.navigation.navigate('ChatPage', {chatIndex: i});
           }}
           //onLongPress={()=> {removeContact(i);}}
           >

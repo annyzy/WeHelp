@@ -1,22 +1,24 @@
-import React from 'react';
+import React, { useState, useContext } from 'react';
 import { View, Text, Button } from 'react-native';
 import { PageHeader } from '../components/PageHeader';
 import { ChatBox } from '../components/ChatBox'
+import { UserContext } from '../components/UserContext';
 
 export function ChatPage(props) {
-    const {chat} = props.route.params;
+    const [chatIndex, setChatIndex] = useState(props.route.params["chatIndex"]);
+    const [user, chatList] = useContext(UserContext);
 
     return (
         <View style={{flex: 1, justifyContent: 'flex-start', backgroundColor: 'white'}}>
             <PageHeader 
                 leftComp={<Button title='Back' onPress={() => props.navigation.goBack()} />}
-                centerComp={<Text>{chat.name}</Text>} />
+                centerComp={<Text>{chatList[chatIndex].name}</Text>} />
             <View style={{flex:1}}>
                 <View style={{flex:2, borderWidth:2, justifyContent:"center", alignItems:"center"}}>
                     <Text>Map!</Text>
                 </View>
                 <View style={{flex:8}}>
-                    <ChatBox chat={chat}/>
+                    <ChatBox chatIndex={chatIndex}/>
                 </View>
             </View>
         </View>

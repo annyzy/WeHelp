@@ -1,32 +1,26 @@
-import React, { useState, useCallback, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
 import { View } from 'react-native';
 import { GiftedChat, Avatar, Bubble, Time } from 'react-native-gifted-chat';
 import { LinearGradient } from 'expo-linear-gradient';
 import { UserContext } from './UserContext';
   
 export function ChatBox(props) {
-    const user = useContext(UserContext)[0];
-    const chat = props.chat;
+    const [user, chatList] = useContext(UserContext);
 
     //change this to event trigger to update chat and send post request to server
-    const onSend = useCallback((messages = []) => 
-      {setMessages((previousMessages) => GiftedChat.append(previousMessages, messages));}, []);
-  
+    const onSend = useCallback((newMessage = []) => 
+      {setMessages((previousMessages) => GiftedChat.append(previousMessages, newMessage));}, []);
+
     return (  
       <GiftedChat
-        messages={chat['messages']}
-        onSend={messages => {onSend(messages)}}
+        messages={chatList[props.chatIndex]['messages']}
+        onSend={newMessage => {onSend(newMessage)}}
         alwaysShowSend={true}
         renderAvatar={renderAvatar}
         renderBubble={renderBubble}
         renderTime={renderTime}
         multiline={true}
         isLoadingEarlier={true}
-        //user={{
-        //  _id: user.UID,
-        //  name: user.name,
-        //  avatar: user.photoUrl,
-        //}}
         user = {{
             _id: user.UID,
             name: user.name,

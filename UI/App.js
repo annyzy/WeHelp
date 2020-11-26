@@ -119,7 +119,7 @@ export default function App() {
                     user: u
                   });
                   chatList[chat_index]['updating'] = false;
-                  return chatList;
+                  return [...chatList];
                 })
               })
             }
@@ -174,14 +174,14 @@ export default function App() {
 
   if (Platform.OS == 'web') {
     return (
-    <UserContext.Provider value={[user, chatList]}>
+    <UserContext.Provider value={[user, [...chatList]]}>
       <PageNavigation/>
     </UserContext.Provider>
     );
   }
   else if (user.signedIn) {
     return (
-      <UserContext.Provider value={[user, chatList]}>
+      <UserContext.Provider value={[user, [...chatList]]}>
           <PageNavigation/>
       </UserContext.Provider>
       );  
