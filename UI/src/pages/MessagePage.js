@@ -6,6 +6,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { ChatPage } from './ChatPage'
 import { UserContext } from '../components/UserContext';
 import { EventRegister } from 'react-native-event-listeners';
+import { UserPage } from './UserPage';
+import { UserDetailPage } from './UserDetailPage';
 
 let Stack = createStackNavigator();
 
@@ -14,6 +16,7 @@ export function MessagePage() {
     <Stack.Navigator headerMode='false'> 
       <Stack.Screen name='Contacts' component={ChatList}/>
       <Stack.Screen name='ChatPage' component={ChatPage}/>
+      <Stack.Screen name='UserDetailPage' component={UserPage}/>
     </Stack.Navigator>
   );
 }
@@ -57,7 +60,8 @@ function ChatList(props) {
           }}
           //onLongPress={()=> {removeContact(i);}}
           >
-            <Avatar source={{uri: chat.avatar}} />
+            <Avatar source={{uri: chat.avatar}} 
+                    onPress={() => {props.navigation.navigate('UserDetailPage', {userUID: 8})}}/>
             <ListItem.Content>
               <ListItem.Title>{chat.name}</ListItem.Title>
               <ListItem.Subtitle>{chat.comment}</ListItem.Subtitle>

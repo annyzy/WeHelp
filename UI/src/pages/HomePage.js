@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { View, Text, StatusBar, Image, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import { SearchBar, Card } from 'react-native-elements';
 import { Button } from 'react-native-material-ui';
@@ -24,53 +24,8 @@ export function HomePage() {
 }
 
 function HomeMainPage(props) {
-    const users = [
-        {
-            name: 'Dongyao',
-            avatar: 'https://avatars1.githubusercontent.com/u/23393819?s=400&u=7a3a81849ae6c9ef83bb35c31d6826224f8b6528&v=4',
-            description: 'HelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHello',
-            img: ['https://avatars1.githubusercontent.com/u/23393819?s=400&u=7a3a81849ae6c9ef83bb35c31d6826224f8b6528&v=4',
-                'https://avatars1.githubusercontent.com/u/23393819?s=400&u=7a3a81849ae6c9ef83bb35c31d6826224f8b6528&v=4',
-                'https://avatars1.githubusercontent.com/u/23393819?s=400&u=7a3a81849ae6c9ef83bb35c31d6826224f8b6528&v=4',
-                'https://avatars1.githubusercontent.com/u/23393819?s=400&u=7a3a81849ae6c9ef83bb35c31d6826224f8b6528&v=4']
-        },
-        {
-            name: 'Wing',
-            avatar: 'https://avatars3.githubusercontent.com/u/22208368?s=400&u=3d3f94c135f0c3b6de1601bce6b24c48ee735a44&v=4',
-            description: 'HelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHello',
-            img: ['https://avatars1.githubusercontent.com/u/23393819?s=400&u=7a3a81849ae6c9ef83bb35c31d6826224f8b6528&v=4']
-         },
-         {
-            name: 'Dongyao',
-            avatar: 'https://avatars1.githubusercontent.com/u/23393819?s=400&u=7a3a81849ae6c9ef83bb35c31d6826224f8b6528&v=4',
-            description: 'HelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHello',
-            img: ['https://avatars1.githubusercontent.com/u/23393819?s=400&u=7a3a81849ae6c9ef83bb35c31d6826224f8b6528&v=4',
-                'https://avatars1.githubusercontent.com/u/23393819?s=400&u=7a3a81849ae6c9ef83bb35c31d6826224f8b6528&v=4',
-                'https://avatars1.githubusercontent.com/u/23393819?s=400&u=7a3a81849ae6c9ef83bb35c31d6826224f8b6528&v=4',
-                'https://avatars1.githubusercontent.com/u/23393819?s=400&u=7a3a81849ae6c9ef83bb35c31d6826224f8b6528&v=4']
-        },
-        {
-            name: 'Wing',
-            avatar: 'https://avatars3.githubusercontent.com/u/22208368?s=400&u=3d3f94c135f0c3b6de1601bce6b24c48ee735a44&v=4',
-            description: 'HelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHello',
-            img: []
-         },
-         {
-            name: 'Dongyao',
-            avatar: 'https://avatars1.githubusercontent.com/u/23393819?s=400&u=7a3a81849ae6c9ef83bb35c31d6826224f8b6528&v=4',
-            description: 'HelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHello',
-            img: ['https://avatars1.githubusercontent.com/u/23393819?s=400&u=7a3a81849ae6c9ef83bb35c31d6826224f8b6528&v=4',
-                'https://avatars1.githubusercontent.com/u/23393819?s=400&u=7a3a81849ae6c9ef83bb35c31d6826224f8b6528&v=4',
-                'https://avatars1.githubusercontent.com/u/23393819?s=400&u=7a3a81849ae6c9ef83bb35c31d6826224f8b6528&v=4']
-        },
-        {
-            name: 'Wing',
-            avatar: 'https://avatars3.githubusercontent.com/u/22208368?s=400&u=3d3f94c135f0c3b6de1601bce6b24c48ee735a44&v=4',
-            description: 'HelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHello',
-            img: ['https://avatars1.githubusercontent.com/u/23393819?s=400&u=7a3a81849ae6c9ef83bb35c31d6826224f8b6528&v=4',
-                'https://avatars1.githubusercontent.com/u/23393819?s=400&u=7a3a81849ae6c9ef83bb35c31d6826224f8b6528&v=4']
-         },
-       ]
+    const [user, chatList, taskList] = useContext(UserContext);
+
     return (
         <View style={{flex: 1, justifyContent: 'space-between', backgroundColor:'white'}}>
             <StatusBar barStyle='dark-content'/>
@@ -79,8 +34,8 @@ function HomeMainPage(props) {
             </View>
             <View style={{flex: 8, top:Constants.statusBarHeight}}>
                 <ScrollView contentContainerStyle={{paddingBottom:Constants.statusBarHeight}}>
-                    {users.map((u, i) => {
-                        return(<CardField user={u} key={i} navigation={props.navigation}/>)
+                    {taskList.map((t, i) => {
+                        return(<CardField task={t} key={i} navigation={props.navigation}/>)
                     })}
                 </ScrollView>
             </View>
@@ -106,41 +61,43 @@ function SearchField() {
 }
 
 function CardField(props) {
+    const [user, chatList, taskList] = useContext(UserContext);
+
     return (
         <Card containerStyle={styles.cardContainer}>
             <View style={styles.cardContentView}>
                 <View style={styles.userInfoView}>
                     <TouchableOpacity onPress={() => {
-                            props.navigation.navigate('UserDetailPage', {user:props.user});}}>
-                        <Image source={{ uri: props.user.avatar }}
+                            props.navigation.navigate('UserDetailPage', {userUID:props.task});}}>
+                        <Image source={{ uri: props.task.avatar }}
                             style={styles.avatarStyle}
                             resizeMode='cover'
                         />
                     </TouchableOpacity>
-                    <Text style={{ fontSize: 20, textAlign: 'center'}}>{props.user.name}</Text>
+                    <Text style={{ fontSize: 20, textAlign: 'center'}}>{props.task.publisher}</Text>
                     <Text style={{ fontSize: 10, textAlign: 'center', top: 10}}>⭐️⭐️⭐️⭐️⭐️</Text>
                     <Text style={{ fontSize: 15, textAlign: 'center', top: 20}}>👏🏻 5</Text>
                 </View>
 
                 <View style={styles.taskInfoView}>
-                    <Text style={styles.taskTitleStyle}>Title: my name is {props.user.name}</Text>
+                    <Text style={styles.taskTitleStyle}>{props.task.title}</Text>
                     <View style={styles.taskDescriptionView}>
                         <Text 
                             style={styles.taskTextBoxStyle}
-                            onPress={() => { props.navigation.navigate('TaskDetailPage', {user:props.user});} }
+                            onPress={() => { props.navigation.navigate('TaskDetailPage', {task:props.task});} }
                         >
-                            Placeholder
+                            {props.task.description}
                         </Text>
-                        {props.user.img.length != 0 && 
+                        {props.task.img.length != 0 && 
                             <View style={styles.imageView}>
-                                {props.user.img.map((image, i) => {
+                                {props.task.img.map((image, i) => {
                                     return (<Image source={{ uri: image }} style={styles.imageStyle} key={i} />);
                                 })}
                             </View>
                         }
                     </View>
                     <View style={styles.buttonView}>
-                        <Button text={"❤️ Likes " + props.user.img.length} style={materialButtonStyle}/>
+                        <Button text={"❤️ Likes " + props.task.img.length} style={materialButtonStyle}/>
                         <Button text="💬 Message" style={materialButtonStyle}
                                 onPress={() => {
                                     EventRegister.emit('refreshChat', 7);
@@ -148,7 +105,7 @@ function CardField(props) {
                         />
                         <Button text="✅ Accept" style={{container:{...materialButtonStyle.container, borderRightWidth:0},
                                                         text: materialButtonStyle.text}}
-                                                onPress={() => { props.navigation.navigate('TaskDetailPage', {user:props.user});} }
+                                                onPress={() => { props.navigation.navigate('TaskDetailPage', {task:props.task});} }
                         />
                     </View>
                 </View>

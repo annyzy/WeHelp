@@ -21,6 +21,7 @@ export function ChatBox(props) {
         renderTime={renderTime}
         multiline={true}
         isLoadingEarlier={true}
+        onPressAvatar={() => {props.navigation.navigate('UserDetailPage', {userUID: 8})}}
         user = {{
             _id: user.UID,
             name: user.name,

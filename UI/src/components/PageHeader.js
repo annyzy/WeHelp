@@ -7,6 +7,9 @@ export function PageHeader(props) {
         <View>
             <StatusBar barStyle='dark-content' />
             <Header
+                leftContainerStyle={{flex:3.3333}}
+                centerContainerStyle={{flex:3.3333}}
+                rightContainerStyle={{ flex:3.3333}}
                 containerStyle={{
                     backgroundColor: 'white',
                     justifyContent: 'space-between',

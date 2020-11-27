@@ -6,25 +6,25 @@ import { Button as MaterialButton } from 'react-native-material-ui';
 import { EventRegister } from 'react-native-event-listeners';
 
 export function TaskDetailPage(props) {
-  const {user} = props.route.params;
+  const {task} = props.route.params;
 
     return (
         <View style={{flex: 1, justifyContent: 'space-between', backgroundColor: 'white'}}>
             <PageHeader style={{flex: 1}}
                 leftComp={<Button title='Back' onPress={() => props.navigation.goBack()} />}
-                centerComp={<Text style={{fontSize:20}}>{user.name}</Text>}
+                centerComp={<Text style={{fontSize:20}}>{task.publisher}</Text>}
             />
             <View style={{flex: 9}}>
                 <View style={styles.userInfoView}>
                     <TouchableOpacity 
                         style={styles.avatarTouchable}
                         onPress={() => {
-                            props.navigation.navigate('UserDetailPage', {user:user});
+                            props.navigation.navigate('UserDetailPage', {userUID: task});
                         }}>
-                        <Image source={{ uri: user.avatar }} style={styles.avatarStyle} resizeMode='cover'/>
+                        <Image source={{ uri: task.avatar }} style={styles.avatarStyle} resizeMode='cover'/>
                     </TouchableOpacity>
                     <View style={styles.userRatingView}>
-                        <Text style={{ fontSize: 20, textAlign: 'center'}}>{user.name}</Text>
+                        <Text style={{ fontSize: 20, textAlign: 'center'}}>{task.publisher}</Text>
                         <View style={{flexDirection: "row", justifyContent:'space-between', width: "90%"}}>
                             <Text style={{ fontSize: 15 }}>⭐️⭐️⭐️⭐️⭐️</Text>
                             <Text style={{ fontSize: 15 }}>👏🏻 5</Text>
@@ -33,23 +33,23 @@ export function TaskDetailPage(props) {
                 </View>
                 <ScrollView contentContainerStyle={{paddingBottom:Constants.statusBarHeight}}>            
                     <View style={styles.taskInfoView}>
-                        <Text style={styles.taskTitleStyle}>Title: my name is {user.name}</Text>
-                        <Text style={styles.taskTextBoxStyle}>Placeholder</Text>
+                        <Text style={styles.taskTitleStyle}>{task.title}</Text>
+                        <Text style={styles.taskTextBoxStyle}>{task.description}</Text>
                         <View>
                             <View style={styles.imageVerticalView}>
                                 <View style={styles.imageHorizontalView}>
-                                    {user.img.length >= 1 && <Image source={{ uri: user.img[0] }} style={styles.imageStyle} />}
-                                    {user.img.length >= 2 &&<Image source={{ uri: user.img[1] }} style={styles.imageStyle} />}
+                                    {task.img.length >= 1 && <Image source={{ uri: task.img[0] }} style={styles.imageStyle} />}
+                                    {task.img.length >= 2 &&<Image source={{ uri: task.img[1] }} style={styles.imageStyle} />}
                                 </View>
                                 <View style={styles.imageHorizontalView}>
-                                    {user.img.length >= 3 &&<Image source={{ uri: user.img[2] }} style={styles.imageStyle} />}
-                                    {user.img.length >= 4 && <Image source={{ uri: user.img[3] }} style={styles.imageStyle} />}
+                                    {task.img.length >= 3 &&<Image source={{ uri: task.img[2] }} style={styles.imageStyle} />}
+                                    {task.img.length >= 4 && <Image source={{ uri: task.img[3] }} style={styles.imageStyle} />}
                                 </View>
                             </View>
                         </View>
 
                         <View style={styles.buttonView}>
-                            <MaterialButton text={"❤️ Likes " + user.img.length} style={materialButtonStyle}/>
+                            <MaterialButton text={"❤️ Likes " + task.img.length} style={materialButtonStyle}/>
                             <MaterialButton text="💬 Message" style={materialButtonStyle}
                                             onPress={() => {
                                                 EventRegister.emit('refreshChat', 7);

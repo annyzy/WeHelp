@@ -1,5 +1,4 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { Platform } from 'react-native';
 import { PageNavigation } from './src/components/PageNavigation';
 import { LoginPage } from './src/pages/LoginPage';
 import { UserContext} from './src/components/UserContext';
@@ -26,6 +25,42 @@ export default function App() {
     'messages': [{'UID', 'message'}*], sorted
   }*]
   */
+
+  const [taskList, setTaskList] = useState([
+    {
+        publisher: 'Dongyao',
+        publisherUID: 7,
+        taskID: 0,
+        avatar: 'https://avatars1.githubusercontent.com/u/23393819?s=400&u=7a3a81849ae6c9ef83bb35c31d6826224f8b6528&v=4',
+        title: 'none',
+        description: 'HelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHello',
+        img: ['https://avatars1.githubusercontent.com/u/23393819?s=400&u=7a3a81849ae6c9ef83bb35c31d6826224f8b6528&v=4',
+            'https://avatars1.githubusercontent.com/u/23393819?s=400&u=7a3a81849ae6c9ef83bb35c31d6826224f8b6528&v=4',
+            'https://avatars1.githubusercontent.com/u/23393819?s=400&u=7a3a81849ae6c9ef83bb35c31d6826224f8b6528&v=4',
+            'https://avatars1.githubusercontent.com/u/23393819?s=400&u=7a3a81849ae6c9ef83bb35c31d6826224f8b6528&v=4']
+    },
+    {
+        publisher: 'Wing',
+        publisherUID: 8,
+        taskID:1,
+        avatar: 'https://avatars3.githubusercontent.com/u/22208368?s=400&u=3d3f94c135f0c3b6de1601bce6b24c48ee735a44&v=4',
+        title: 'yes',
+        description: 'HelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHello',
+        img: ['https://avatars1.githubusercontent.com/u/23393819?s=400&u=7a3a81849ae6c9ef83bb35c31d6826224f8b6528&v=4']
+     }
+  ])
+
+  let signOutUser = useCallback(() => {
+    setUser({
+          signedIn: false,
+          name: '',
+          photoUrl: '',
+          UID: -1,
+          email: ''
+        })
+    setChatList([])
+  }, [])
+
  let iconChanged = useCallback((newUrl) => {
       let url;
       if (newUrl.startsWith('media')) {
@@ -149,7 +184,8 @@ export default function App() {
       }
     }
   }, [user, chatList]);
-  
+
+  useEffect(() => {EventRegister.addEventListener('signOutUser', signOutUser)}, []);
   useEffect(() => {EventRegister.addEventListener('iconChanged', iconChanged)}, [user]);
   useEffect(() => {EventRegister.addEventListener('refreshChatList', refreshChatList)}, [user]);
   useEffect(() => {EventRegister.addEventListener('refreshChat', refreshChat)}, [user, chatList]);
@@ -174,7 +210,7 @@ export default function App() {
 
   if (user.signedIn) {
     return (
-      <UserContext.Provider value={[{...user}, [...chatList]]}>
+      <UserContext.Provider value={[{...user}, [...chatList], [...taskList]]}>
           <PageNavigation/>
       </UserContext.Provider>
       );  

@@ -18,7 +18,7 @@ export function ChatPage(props) {
                     <Text>Map!</Text>
                 </View>
                 <View style={{flex:8}}>
-                    <ChatBox chatIndex={chatIndex}/>
+                    <ChatBox chatIndex={chatIndex} navigation={props.navigation}/>
                 </View>
             </View>
         </View>

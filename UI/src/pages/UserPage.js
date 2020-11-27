@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useState } from 'react';
-import { View, ScrollView, Text, Image, Platform, TouchableOpacity } from 'react-native';
+import { View, ScrollView, Text, Image, Platform, TouchableOpacity, Button } from 'react-native';
 import { PageHeader } from '../components/PageHeader';
 import { UserContext} from '../components/UserContext';
 import { EventRegister } from 'react-native-event-listeners';
@@ -7,12 +7,17 @@ import * as expoImagePicker from 'expo-image-picker';
 import Constants from 'expo-constants';
 import CalendarHeatmap from 'react-native-calendar-heatmap';
 
-export function UserPage() {
+export function UserPage(props) {
     const user = useContext(UserContext)[0];
 
     return (
         <View style={{flex: 1, justifyContent: 'flex-start', backgroundColor: 'white'}}>
-            <PageHeader centerComp={<Text>User</Text>} />
+            <PageHeader 
+              leftComp={<Button title='Back' onPress={() => props.navigation.goBack()} />}
+              centerComp={<Text>User</Text>} 
+              rightComp={<Button title={"Sign Out"}
+                          onPress={() => {EventRegister.emit('signOutUser')}}/>}
+            />
             <ScrollView contentContainerStyle={{paddingBottom:Constants.statusBarHeight}}>
               <View style={{borderBottomWidth: 0.5}}>
                 <ImagePicker user={user}/>
