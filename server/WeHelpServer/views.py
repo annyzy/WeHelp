@@ -103,12 +103,13 @@ def getChatList(body):
                     user2 = chat.a
                 avatarURL = user2.icon
                 name = user2.name
+                UID = user2.id
                 last_message = chat.last_message.message
                 datetime = chat.last_message.date.strftime("%Y-%m-%d %H:%M:%S")
                 chat_info_list.append(
                     {'chatID': chatID, 'avatarURL': avatarURL,
                      'name': name, 'last_message': last_message,
-                     'datetime': datetime})
+                     'datetime': datetime, 'UID': UID})
             except:  # avoid deleted users
                 continue
 
