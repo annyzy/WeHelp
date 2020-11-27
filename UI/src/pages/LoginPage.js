@@ -1,7 +1,6 @@
 import React, { useCallback } from 'react';
 import { Button, View, Text } from 'react-native';
 import { PageHeader } from '../components/PageHeader';
-import { EventRegister } from 'react-native-event-listeners';
 import * as Google from 'expo-google-app-auth';
 
 export function LoginPage (props) {
@@ -30,7 +29,6 @@ export function LoginPage (props) {
             let found = await resp.json();
             alert('hello ' + name + ' UID:' + found['UID'] + ' photoUrl:' + found['icon']);
             props.changeUser(name, found['icon'], email, found['UID']);
-            EventRegister.emit('refreshChatList', found['UID']);
           }).catch(() => {
             alert('Fetch failed');
         });

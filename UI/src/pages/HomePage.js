@@ -5,8 +5,10 @@ import { Button } from 'react-native-material-ui';
 import { createStackNavigator } from '@react-navigation/stack';
 import { TaskDetailPage } from './TaskDetailPage';
 import { UserDetailPage } from './UserDetailPage';
+import { UserContext } from '../components/UserContext';
 import { ChatPage } from './ChatPage';
 import Constants from 'expo-constants';
+import { EventRegister } from 'react-native-event-listeners';
 
 const Stack = createStackNavigator();
 
@@ -138,10 +140,16 @@ function CardField(props) {
                         }
                     </View>
                     <View style={styles.buttonView}>
-                        <Button text={"❤️ Likes " + props.user.img.length} style={materialButtonStyle}></Button>
-                        <Button text="💬 Message" style={materialButtonStyle}></Button>
+                        <Button text={"❤️ Likes " + props.user.img.length} style={materialButtonStyle}/>
+                        <Button text="💬 Message" style={materialButtonStyle}
+                                onPress={() => {
+                                    EventRegister.emit('refreshChat', 7);
+                                    props.navigation.navigate('ChatPage', {chatIndex: 0})}}
+                        />
                         <Button text="✅ Accept" style={{container:{...materialButtonStyle.container, borderRightWidth:0},
-                                                        text: materialButtonStyle.text}}></Button>
+                                                        text: materialButtonStyle.text}}
+                                                onPress={() => { props.navigation.navigate('TaskDetailPage', {user:props.user});} }
+                        />
                     </View>
                 </View>
             </View>

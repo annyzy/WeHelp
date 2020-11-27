@@ -3,6 +3,7 @@ import { View, ScrollView, Text, Button, Image, StyleSheet, TouchableOpacity } f
 import { PageHeader } from '../components/PageHeader';
 import Constants from 'expo-constants';
 import { Button as MaterialButton } from 'react-native-material-ui';
+import { EventRegister } from 'react-native-event-listeners';
 
 export function TaskDetailPage(props) {
   const {user} = props.route.params;
@@ -49,7 +50,11 @@ export function TaskDetailPage(props) {
 
                         <View style={styles.buttonView}>
                             <MaterialButton text={"❤️ Likes " + user.img.length} style={materialButtonStyle}/>
-                            <MaterialButton text="💬 Message" style={materialButtonStyle}/>
+                            <MaterialButton text="💬 Message" style={materialButtonStyle}
+                                            onPress={() => {
+                                                EventRegister.emit('refreshChat', 7);
+                                                props.navigation.navigate('ChatPage', {chatIndex: 0});
+                                            }}/>
                             <MaterialButton text="✅ Accept" style={{container:{...materialButtonStyle.container, borderRightWidth:0},
                                                             text: materialButtonStyle.text}}/>
                         </View>

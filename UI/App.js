@@ -26,42 +26,59 @@ export default function App() {
     'messages': [{'UID', 'message'}*], sorted
   }*]
   */
+ let iconChanged = useCallback((newUrl) => {
+      let url;
+      if (newUrl.startsWith('media')) {
+        url = 'http://34.94.101.183/' + newUrl;
+      }
+      else {
+        url = newUrl;
+      }
+      setUser(prev => ({
+        ...prev,
+        photoUrl: url,
+      }));
+    }, [user])
 
-
-
-  let changeUser = useCallback((newName, newPhotoUrl, newEmail, newUID) => {
-    let url;
-    if (newPhotoUrl.startsWith('media')) {
-      url = 'http://34.94.101.183/' + newPhotoUrl;
+  let refreshChatList = useCallback((UID=user.UID) => {
+    if (UID == -1) {
+      alert("uid = -1?");
+      return;
     }
-    else {
-      url = newPhotoUrl;
-    }
-    setUser({
-      signedIn: true,
-      name: newName,
-      photoUrl: url,
-      UID: newUID,
-      email: newEmail
-    })
-  }, []);
+    fetch('http://34.94.101.183/WeHelp/', {
+      method: 'POST',
+      body: JSON.stringify({
+        func: 'getChatList', UID: UID
+      })
+    }).then(async (resp) => {
+      let found = await resp.json();
+      //alert(found['chatList'])
+      newChatList = []
+      if (found['success'] == 1) {
+        found['chatList'].map((chat) => {
+          let avatar;
+          if (chat['avatarURL'].startsWith('media')){
+            avatar = 'http://34.94.101.183/' + chat['avatarURL'];
+          }
+          else {
+            avatar = chat['avatarURL'];
+          }
+          newChatList = newChatList.concat({
+            name: chat['name'], avatar: avatar, 
+            comment: chat['last_message'], chatID: chat['chatID'], 
+            datetime: chat['datetime'], messages: [],
+            updating: false,
+          });
+        })
+        setChatList(newChatList);
+      }
+      else {
+        alert("ERROR: can not load chat list");
+      }
+    }) 
+  }, [user]);
 
-  useEffect(() => {EventRegister.addEventListener('iconChanged', (newUrl) => {
-    let url;
-    if (newUrl.startsWith('media')) {
-      url = 'http://34.94.101.183/' + newUrl;
-    }
-    else {
-      url = newUrl;
-    }
-    setUser(prev => ({
-      ...prev,
-      photoUrl: url,
-    }));
-  })}, []);
-
-
-  EventRegister.addEventListener('refreshChat', useCallback((chatID) => {
+  let refreshChat = useCallback((chatID) => {
     //find chatID
     let chat_index = -1;
     chatList.map((chat, i) => {
@@ -131,57 +148,33 @@ export default function App() {
         }
       }
     }
-  },[chatList]));
-
-
-  useEffect(() => {EventRegister.addEventListener('refreshChatList', (UID=user.UID) => {
-    if (UID == -1) {
-      alert("uid = -1?");
-      return;
-    }
-    fetch('http://34.94.101.183/WeHelp/', {
-      method: 'POST',
-      body: JSON.stringify({
-        func: 'getChatList', UID: UID
-      })
-    }).then(async (resp) => {
-      let found = await resp.json();
-      //alert(found['chatList'])
-      if (found['success'] == 1) {
-        found['chatList'].map((chat) => {
-          let avatar;
-          if (chat['avatarURL'].startsWith('media')){
-            avatar = 'http://34.94.101.183/' + chat['avatarURL'];
-          }
-          else {
-            avatar = chat['avatarURL'];
-          }
-          setChatList(chatList => chatList.concat({
-            name: chat['name'], avatar: avatar, 
-            comment: chat['last_message'], chatID: chat['chatID'], 
-            datetime: chat['datetime'], messages: [],
-            updating: false,
-          }));
-        })
-      }
-      else {
-        alert("ERROR: can not load chat list");
-      }
-    }) 
-  })})
-
+  }, [user, chatList]);
   
+  useEffect(() => {EventRegister.addEventListener('iconChanged', iconChanged)}, [user]);
+  useEffect(() => {EventRegister.addEventListener('refreshChatList', refreshChatList)}, [user]);
+  useEffect(() => {EventRegister.addEventListener('refreshChat', refreshChat)}, [user, chatList]);
 
-  if (Platform.OS == 'web') {
+  let changeUser = useCallback((newName, newPhotoUrl, newEmail, newUID) => {
+    let url;
+    if (newPhotoUrl.startsWith('media')) {
+      url = 'http://34.94.101.183/' + newPhotoUrl;
+    }
+    else {
+      url = newPhotoUrl;
+    }
+    setUser({
+      signedIn: true,
+      name: newName,
+      photoUrl: url,
+      UID: newUID,
+      email: newEmail
+    });
+    refreshChatList(newUID);
+  }, []);
+
+  if (user.signedIn) {
     return (
-    <UserContext.Provider value={[user, [...chatList]]}>
-      <PageNavigation/>
-    </UserContext.Provider>
-    );
-  }
-  else if (user.signedIn) {
-    return (
-      <UserContext.Provider value={[user, [...chatList]]}>
+      <UserContext.Provider value={[{...user}, [...chatList]]}>
           <PageNavigation/>
       </UserContext.Provider>
       );  
