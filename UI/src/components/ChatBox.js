@@ -3,17 +3,19 @@ import { View } from 'react-native';
 import { GiftedChat, Avatar, Bubble, Time } from 'react-native-gifted-chat';
 import { LinearGradient } from 'expo-linear-gradient';
 import { UserContext } from './UserContext';
+import { EventRegister } from 'react-native-event-listeners';
   
 export function ChatBox(props) {
     const [user, chatList] = useContext(UserContext);
+    const chat = props.chat;
 
     //change this to event trigger to update chat and send post request to server
     const onSend = useCallback((newMessage = []) => 
-      {setMessages((previousMessages) => GiftedChat.append(previousMessages, newMessage));}, []);
+      {EventRegister.emit('sendMessage', [newMessage, chat['UID']])}, []);
 
     return (  
       <GiftedChat
-        messages={chatList[props.chatIndex]['messages']}
+        messages={chat['messages']}
         onSend={newMessage => {onSend(newMessage)}}
         alwaysShowSend={true}
         renderAvatar={renderAvatar}

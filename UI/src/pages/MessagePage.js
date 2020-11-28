@@ -55,7 +55,7 @@ function ChatList(props) {
           <ListItem key={i} bottomDivider 
           onPress={() => {
             EventRegister.emit('refreshChat', chat['chatID']);
-            props.navigation.navigate('ChatPage', {chatIndex: i});
+            props.navigation.navigate('ChatPage', {chat: chat});
           }}
           //onLongPress={()=> {removeContact(i);}}
           >
