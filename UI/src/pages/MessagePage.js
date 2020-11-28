@@ -6,7 +6,6 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { ChatPage } from './ChatPage'
 import { UserContext } from '../components/UserContext';
 import { EventRegister } from 'react-native-event-listeners';
-import { UserPage } from './UserPage';
 import { UserDetailPage } from './UserDetailPage';
 
 let Stack = createStackNavigator();
@@ -16,7 +15,7 @@ export function MessagePage() {
     <Stack.Navigator headerMode='false'> 
       <Stack.Screen name='Contacts' component={ChatList}/>
       <Stack.Screen name='ChatPage' component={ChatPage}/>
-      <Stack.Screen name='UserDetailPage' component={UserPage}/>
+      <Stack.Screen name='UserDetailPage' component={UserDetailPage}/>
     </Stack.Navigator>
   );
 }
