@@ -2,8 +2,14 @@ import React, { useState, useCallback } from 'react';
 import { View, Button, TextInput, Platform, Image, Alert, TouchableOpacity, Text } from 'react-native';
 import { PageHeader } from '../components/PageHeader';
 import * as expoImagePicker from 'expo-image-picker';
+import * as expoLocation from 'expo-location';
 
 export function PublishPage({navigation}) {
+  let shareLocation = useCallback(async () => {
+    await checkLocationPermission();
+    await getLoation();
+  }, []);
+  
   return (
     <View style={{flex:1, backgroundColor: 'white'}}>
         <PageHeader
@@ -29,12 +35,15 @@ export function PublishPage({navigation}) {
             numberOfLines={15}
             enablesReturnKeyAutomatically={true}
         />
+        <View style={{alignSelf:'flex-end'}}>
+          <Button title='Share location' onPress={() => shareLocation()} />
+        </View>
         <ImagePicker/>
     </View>
   );
 }
 
-let checkPermission = async () => {
+let checkImagePermission = async () => {
   if (Platform.OS !== 'web') {
     const status = await expoImagePicker.requestCameraRollPermissionsAsync();
     if (status.accessPrivileges === 'none') {
@@ -50,7 +59,7 @@ function ImagePicker() {
   const [imageCount, setImageCount] = useState(0);
 
   const pickImage = useCallback(async (index, incrementCount) => {
-    let hasPermission = await checkPermission();
+    let hasPermission = await checkImagePermission();
     if (hasPermission) {
       let result = await expoImagePicker.launchImageLibraryAsync({
         mediaTypes: expoImagePicker.MediaTypeOptions.All,
@@ -114,9 +123,6 @@ function ImagePicker() {
   
   return (
     <View style={{padding:10}}>
-      <View style={{alignSelf:'flex-end'}}>
-        <Button title='Share location' />
-      </View>
       <View style={{flexDirection: 'row', justifyContent: 'flex-start'}}>
         {imageArray[0] && 
           <TouchableOpacity onPress={()=>{pressImage(0)}}>
@@ -142,4 +148,21 @@ function ImagePicker() {
       </View>
     </View>
   );
+}
+
+let checkLocationPermission = async () => {
+  if (Platform.OS !== 'web') {
+    const {status} = await expoLocation.requestPermissionsAsync();
+    if (status !== 'granted') {
+      alert('Location permission is required');
+      return false;
+    }
+  }
+  return true;
+};
+
+async function getLoation() {
+  let location = await expoLocation.getCurrentPositionAsync({});
+  console.log(location);
+  return location;
 }

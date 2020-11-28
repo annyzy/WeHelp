@@ -1,12 +1,12 @@
 import React from 'react';
-import { View, Dimensions, StyleSheet, Text, Image } from 'react-native';
+import { Dimensions, StyleSheet, Image } from 'react-native';
 import MapView from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 const googleAPI='AIzaSyB_pQCNi4-xUShFFxbe2ctA0DG4aFLNja0';
 
 export function MapObject( props ) {
     const { width, height } = Dimensions.get('window');
-    const latitudeDis = Math.abs(props.destination['latitude'] - props.origin['latitude'])*4;
+    const latitudeDis = Math.abs(props.destination['latitude'] - props.origin['latitude']) + Math.abs(props.destination['longitude'] - props.origin['longitude']);
 
     return (
     <MapView
@@ -14,7 +14,7 @@ export function MapObject( props ) {
         initialRegion={{
             ...props.origin,
             latitudeDelta: latitudeDis,
-            longitudeDelta: latitudeDis * width / height /10,
+            longitudeDelta: latitudeDis * width / height,
         }}
         >
         <MapView.Marker coordinate={props.origin}>

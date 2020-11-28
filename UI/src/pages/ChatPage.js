@@ -8,7 +8,6 @@ import { MapObject } from '../components/MapObject';
 export function ChatPage(props) {
     const {chat} = props.route.params;
 
-
     return (
         <View style={{flex: 1, justifyContent: 'flex-start', backgroundColor: 'white'}}>
             <PageHeader 
@@ -16,7 +15,9 @@ export function ChatPage(props) {
                 centerComp={<Text>{chat.name}</Text>} />
             <View style={{flex:1}}>
                 <View style={{flex:3, borderWidth:2, justifyContent:"center", alignItems:"center"}}>
-                    <MapObject origin={{latitude: 34.0689122, longitude: -118.4478093}} destination={{latitude: 34.067057, longitude: -118.441606}}/>
+                    {/* <MapObject origin={{latitude: 34.0689122, longitude: -118.4478093}} destination={{latitude: 34.067057, longitude: -118.441606}}/> */}
+                    <MapObject origin={{latitude: 37.871789, longitude: -122.259076}} destination={{latitude: 34.067057, longitude: -118.441606}}/>
+
                 </View>
                 <View style={{flex:7}}>
                     <ChatBox chat={chat} navigation={props.navigation}/>
