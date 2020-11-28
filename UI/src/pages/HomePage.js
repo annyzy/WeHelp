@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { View, Text, StatusBar, Image, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
-import { SearchBar, Card } from 'react-native-elements';
+import { SearchBar, Card, Rating } from 'react-native-elements';
 import { Button } from 'react-native-material-ui';
 import { createStackNavigator } from '@react-navigation/stack';
 import { TaskDetailPage } from './TaskDetailPage';
@@ -74,9 +74,16 @@ function CardField(props) {
                             resizeMode='cover'
                         />
                     </TouchableOpacity>
-                    <Text style={{ fontSize: 20, textAlign: 'center'}}>{props.task.publisher}</Text>
-                    <Text style={{ fontSize: 10, textAlign: 'center', top: 10}}>⭐️⭐️⭐️⭐️⭐️</Text>
-                    <Text style={{ fontSize: 15, textAlign: 'center', top: 20}}>👏🏻 5</Text>
+                    <Text style={{ fontSize: 15, textAlign: 'center'}}>{props.task.publisher}</Text>
+                    <Rating
+                        type='heart'
+                        readonly
+                        ratingCount={5}
+                        imageSize={18}
+                        showRating
+                        showReadOnlyText={false}
+                    />
+                    <Text style={{ fontSize: 20, textAlign: 'center', top: 20}}>👏🏻 5</Text>
                 </View>
 
                 <View style={styles.taskInfoView}>

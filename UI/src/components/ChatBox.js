@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useContext } from 'react';
-import { View } from 'react-native';
+import { View, Keyboard } from 'react-native';
 import { GiftedChat, Avatar, Bubble, Time } from 'react-native-gifted-chat';
 import { LinearGradient } from 'expo-linear-gradient';
 import { UserContext } from './UserContext';
@@ -16,7 +16,9 @@ export function ChatBox(props) {
     return (  
       <GiftedChat
         messages={chat['messages']}
-        onSend={newMessage => {onSend(newMessage)}}
+        onSend={newMessage => {
+          Keyboard.dismiss();
+          onSend(newMessage)}}
         alwaysShowSend={true}
         renderAvatar={renderAvatar}
         renderBubble={renderBubble}

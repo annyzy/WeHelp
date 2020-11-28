@@ -1,5 +1,6 @@
 import React, { useCallback, useContext, useState } from 'react';
 import { View, ScrollView, Text, Image, Platform, TouchableOpacity, Button } from 'react-native';
+import { Rating } from 'react-native-elements';
 import { PageHeader } from '../components/PageHeader';
 import { UserContext} from '../components/UserContext';
 import { EventRegister } from 'react-native-event-listeners';
@@ -19,28 +20,41 @@ export function UserPage(props) {
                           onPress={() => {EventRegister.emit('signOutUser')}}/>}
             />
             <ScrollView contentContainerStyle={{paddingBottom:Constants.statusBarHeight}}>
-              <View style={{borderBottomWidth: 0.5}}>
+              <View style={{borderBottomWidth: 0.5, flexDirection:'row', justifyContent:'space-around'}}>
+                <View>
                 <ImagePicker user={user}/>
                 <Text style={{fontSize:25, alignSelf: 'center'}}>{user.name}</Text>
+                </View>
+                <View style={{alignSelf:'flex-end', padding:5}}>
+                  <Rating
+                    type='heart'
+                    readonly
+                    ratingCount={5}
+                    imageSize={18}
+                    showRating
+                    showReadOnlyText={false}
+                  />
+                  <Text style={{ fontSize: 20, textAlign: 'center'}}>👏🏻 5</Text>
+                </View>
               </View>
-              <Text style={{fontSize:30, padding: 10, borderBottomWidth: 0.5}}>Contributions</Text>
-              <CalendarHeatmap
-                endDate={new Date()}
-                numDays={120}
-                colorArray={["#eee", "#5099E1"]}
-                values={[
-                  { date: '2020-11-01' },
-                  { date: '2020-11-02' },
-                  { date: '2020-11-22' },
-                  { date: '2020-11-25' },
-                ]}
-              />
-              <Text style={{fontSize:30, padding: 10, borderBottomWidth: 0.5}}>Ratings</Text>
+              <View style={{top:20}}>
+                <Text style={{fontSize:30, padding: 10, borderBottomWidth: 0.5}}>Contributions</Text>
+                <CalendarHeatmap
+                  endDate={new Date()}
+                  numDays={120}
+                  colorArray={["#eee", "#5099E1"]}
+                  values={[
+                    { date: '2020-11-01' },
+                    { date: '2020-11-02' },
+                    { date: '2020-11-22' },
+                    { date: '2020-11-25' },
+                  ]}
+                />
 
-              <Text style={{fontSize:30, padding: 10, borderBottomWidth: 0.5}}>Current Tasks</Text>
-              
-              <Text style={{fontSize:30, padding: 10, borderBottomWidth: 0.5}}>Past Tasks</Text>
-              
+                <Text style={{fontSize:30, padding: 10, borderBottomWidth: 0.5}}>Current Tasks</Text>
+                
+                <Text style={{fontSize:30, padding: 10, borderBottomWidth: 0.5}}>Past Tasks</Text>
+              </View>
             </ScrollView>
 
         </View>

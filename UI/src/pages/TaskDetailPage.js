@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import { View, ScrollView, Text, Button, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { Rating } from 'react-native-elements';
 import { PageHeader } from '../components/PageHeader';
 import Constants from 'expo-constants';
 import { Button as MaterialButton } from 'react-native-material-ui';
@@ -25,12 +26,21 @@ export function TaskDetailPage(props) {
                         }}>
                         <Image source={{ uri: task.avatar }} style={styles.avatarStyle} resizeMode='cover'/>
                     </TouchableOpacity>
-                    <View style={styles.userRatingView}>
-                        <Text style={{ fontSize: 20, textAlign: 'center'}}>{task.publisher}</Text>
-                        <View style={{flexDirection: "row", justifyContent:'space-between', width: "90%"}}>
-                            <Text style={{ fontSize: 15 }}>⭐️⭐️⭐️⭐️⭐️</Text>
-                            <Text style={{ fontSize: 15 }}>👏🏻 5</Text>
-                        </View>
+                    
+                        <View style={{flexDirection: "row", justifyContent:'space-between', width: "85%"}}>
+                            <View style={styles.userRatingView}>
+                                <Text style={{ fontSize: 20, textAlign: 'center'}}>{task.publisher}</Text>
+                                <Text style={{ fontSize: 20 }}>👏🏻 5</Text>
+                            </View>
+                            <Rating
+                                style={{flex:4}}
+                                type='heart'
+                                readonly
+                                ratingCount={5}
+                                imageSize={18}
+                                showRating
+                                showReadOnlyText={false}
+                            />
                     </View>
                 </View>
                 <ScrollView contentContainerStyle={{paddingBottom:Constants.statusBarHeight}}>            
@@ -75,8 +85,9 @@ const styles = StyleSheet.create({
     },
     userRatingView: {
         flex: 6,
+        justifyContent: 'space-evenly',
         alignItems:'flex-start',
-        left: 20
+        left: 20,
     },
     avatarTouchable: {
         flex: 1,
