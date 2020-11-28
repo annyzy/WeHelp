@@ -101,7 +101,7 @@ function CardField(props) {
                         <Button text="💬 Message" style={materialButtonStyle}
                                 onPress={() => {
                                     EventRegister.emit('refreshChat', 7);
-                                    props.navigation.navigate('ChatPage', {chatIndex: 0})}}
+                                    props.navigation.navigate('ChatPage', {chat: chatList[0]})}}
                         />
                         <Button text="✅ Accept" style={{container:{...materialButtonStyle.container, borderRightWidth:0},
                                                         text: materialButtonStyle.text}}

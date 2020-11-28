@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { View, ScrollView, Text, Button, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { PageHeader } from '../components/PageHeader';
 import Constants from 'expo-constants';
 import { Button as MaterialButton } from 'react-native-material-ui';
 import { EventRegister } from 'react-native-event-listeners';
+import { UserContext } from '../components/UserContext';
 
 export function TaskDetailPage(props) {
   const {task} = props.route.params;
+  const [user, chatList, taskList] = useContext(UserContext);
 
     return (
         <View style={{flex: 1, justifyContent: 'space-between', backgroundColor: 'white'}}>
@@ -53,7 +55,7 @@ export function TaskDetailPage(props) {
                             <MaterialButton text="💬 Message" style={materialButtonStyle}
                                             onPress={() => {
                                                 EventRegister.emit('refreshChat', 7);
-                                                props.navigation.navigate('ChatPage', {chatIndex: 0});
+                                                props.navigation.navigate('ChatPage', {chat: chatList[0]});
                                             }}/>
                             <MaterialButton text="✅ Accept" style={{container:{...materialButtonStyle.container, borderRightWidth:0},
                                                             text: materialButtonStyle.text}}/>
