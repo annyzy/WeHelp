@@ -66,46 +66,8 @@ export default function App() {
  }
 ])
 
-  let changeUser = useCallback((newName, newPhotoUrl, newEmail, newUID) => {
-    let url;
-    if (newPhotoUrl.startsWith('media')) {
-      url = 'http://34.94.101.183/' + newPhotoUrl;
-    }
-    else {
-      url = newPhotoUrl;
-    }
-    setUser({
-      signedIn: true,
-      name: newName,
-      photoUrl: url,
-      UID: newUID,
-      email: newEmail
-    });
-    refreshChatList(newUID);
-  }, []);
-  let signOutUser = useCallback(() => {
-    setUser({
-          signedIn: false,
-          name: '',
-          photoUrl: '',
-          UID: -1,
-          email: ''
-        })
-    setChatList([])
-  }, [])
-  let iconChanged = useCallback((newUrl) => {
-    let url;
-    if (newUrl.startsWith('media')) {
-      url = 'http://34.94.101.183/' + newUrl;
-    }
-    else {
-      url = newUrl;
-    }
-    setUser(prev => ({
-      ...prev,
-      photoUrl: url,
-    }));
-  }, [])
+  const [socket, setSocket] = useState();
+
   let sendMessage = useCallback(([newMessage, receiverUID]) => {
     //console.log(chatList)
     // --- find chat
@@ -180,6 +142,7 @@ export default function App() {
 
     }
   }, [user, chatList])
+
   let refreshChatList = useCallback((UID=user.UID) => {
     if (UID == -1) {
       alert("uid = -1?");
@@ -217,6 +180,7 @@ export default function App() {
       }
     }) 
   }, []);
+
   let refreshChat = useCallback((chatID) => {
     //find chatID
     let chat_index = -1;
@@ -282,12 +246,107 @@ export default function App() {
             else {
               alert("ERROR: can not load chat " + chatID);
             }
-            //console.log(chatList[chat_index]['messages']);
+            console.log(chatList);
           })
         }
       }
     }
   }, [user, chatList]);
+
+  let processNewChat = useCallback((newChat) => {
+    let chat_index = -1;
+    chatList.forEach((chat, i) => {
+      if (chat['chatID'] == newChat['chatID']) {
+        chat_index = i;
+      }
+    })
+    if (chat_index == -1) {
+      let newChatList = chatList;
+      let avatar;
+      if (newChat['avatarURL'].startsWith('media')){
+        avatar = 'http://34.94.101.183/' + newChat['avatarURL'];
+      }
+      else {
+        avatar = newChat['avatarURL'];
+      }
+      newChatList = newChatList.concat({
+          name: newChat['name'], avatar: avatar, 
+          comment: newChat['message'], chatID: newChat['chatID'], 
+          datetime: newChat['datetime'], messages: [newChat['message']],
+          updating: false, UID: newChat['UID']
+      });
+      setChatList(newChatList);
+      chat_index = chatList.length-1;
+    }
+
+    let u;
+    if (newChat['UID'] == user.UID){
+        u = {
+          _id: user.UID,
+          avatar: user.photoUrl,
+          name: user.name
+        }
+      }
+    else {
+      u = {
+        _id: m['UID'],
+        avatar: chatList[chat_index]['avatar'],
+        name: chatList[chat_index]['name'],
+      }
+    }
+    setChatList(chatList => {
+      chatList[chat_index]['messages'].unshift({
+        _id: i + 1,
+        text: newChat['message'],
+        user: u
+      });
+      chatList[chat_index]['updating'] = false;
+      return [...chatList];
+    })
+  }, [user, chatList]);
+
+  let changeUser = useCallback((newName, newPhotoUrl, newEmail, newUID) => {
+    let url;
+    if (newPhotoUrl.startsWith('media')) {
+      url = 'http://34.94.101.183/' + newPhotoUrl;
+    }
+    else {
+      url = newPhotoUrl;
+    }
+    setUser({
+      signedIn: true,
+      name: newName,
+      photoUrl: url,
+      UID: newUID,
+      email: newEmail
+    });
+    refreshChatList(newUID);
+  }, []);
+
+  let signOutUser = useCallback(() => {
+    setUser({
+          signedIn: false,
+          name: '',
+          photoUrl: '',
+          UID: -1,
+          email: ''
+        })
+    setChatList([])
+  }, [])
+
+  let iconChanged = useCallback((newUrl) => {
+    let url;
+    if (newUrl.startsWith('media')) {
+      url = 'http://34.94.101.183/' + newUrl;
+    }
+    else {
+      url = newUrl;
+    }
+    setUser(prev => ({
+      ...prev,
+      photoUrl: url,
+    }));
+  }, [])
 
   useEffect(() => {EventRegister.addEventListener('signOutUser', signOutUser)}, []);
   useEffect(() => {EventRegister.addEventListener('iconChanged', iconChanged)}, []);
@@ -296,22 +355,32 @@ export default function App() {
     return function cleanup() {
       EventRegister.removeEventListener(sendMessageListener);
     }
-  }, [user, chatList])
-  useEffect(() => {
-    const refreshChatListListener = EventRegister.addEventListener('refreshChatList', refreshChatList)
-
-    return function cleanup() {
-      EventRegister.removeEventListener(refreshChatListListener);
-    }
-  }, [user])
-  useEffect(() => {
-    const refreshChatListener = EventRegister.addEventListener('refreshChat', refreshChat)
-    return function cleanup() {
-      EventRegister.removeEventListener(refreshChatListener);
-    }
   }, [user, chatList]);
   
+  // useEffect(() => {
+  //   const refreshChatListListener = EventRegister.addEventListener('refreshChatList', refreshChatList)
+
+  //   return function cleanup() {
+  //     EventRegister.removeEventListener(refreshChatListListener);
+  //   }
+  // }, [user])
+  // useEffect(() => {
+  //   const refreshChatListener = EventRegister.addEventListener('refreshChat', refreshChat)
+  //   return function cleanup() {
+  //     EventRegister.removeEventListener(refreshChatListener);
+  //   }
+  // }, [user, chatList]);
+  
+  useEffect(() => {
+    const socket = new WebSocket("ws://34.94.101.183/ws/WeHelp/"+user.UID.toString());
+    setSocket(socket);
+    socket.onmessage = processNewChat;
+  }, []);
+
   if (user.signedIn) {
+    chatList.forEach((chat) => {
+      refreshChat(chat['chatID']);
+    })
     return (
       <UserContext.Provider value={[{...user}, [...chatList], [...taskList]]}>
           <PageNavigation/>
