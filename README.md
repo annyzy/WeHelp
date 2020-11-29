@@ -113,7 +113,7 @@ FILES: {'file': filestream}
 | body | return |
 | ------------- | ------------- |
 | func="getChatList" |  success: 1/0 |
-| UID | chatList: [{chatID, avatarURL, name, last_message, datetime}]  |
+| UID | chatList: [{chatID, avatarURL, name, last_message, datetime, UID}]  |
 
 </details>
 
