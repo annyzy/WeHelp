@@ -48,7 +48,7 @@ if you want to rerun it:
    sudo systemctl start docker
    sudo docker run -p 6379:6379 -d redis:5
    ```
-8. run the daphne server
+8. run the server
    ```shell
    nohup daphne server.asgi:application -p 80 -b 0 &> /tmp/wehelp.l.log &
    ```
