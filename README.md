@@ -27,9 +27,9 @@ if you want to rerun it:
    ```
 2. check if there is an existing process:
    ```shell
-   ps -ef | grep python
+   ps -ef | grep daphne
    ```
-3. kill this process "python manage.py runserver ..."
+3. kill this process "daphne server.asgi:application ..."
    ```shell
    kill {pid}
    ```
@@ -39,13 +39,21 @@ if you want to rerun it:
 5. ```shell
    source venv/bin/activate
    ```
-6. ```shell
-   nohup python manage.py runserver 0:80 &>> /tmp/wehelp.l.log &
-   ```
-7. exit imediatly, don't do anything else as root
+6. make sure docker is running redis on port 6379
    ```shell
-   exit
+   sudo lsof -i -P -n | grep LISTEN
    ```
+7. if not:
+   ```shell
+   sudo systemctl start docker
+   sudo docker run -p 6379:6379 -d redis:5
+   ```
+8. run the daphne server
+   ```shell
+   nohup daphne server.asgi:application -p 80 -b 0 &> /tmp/wehelp.l.log &
+   ```
+9. exit imediatly, don't do anything else as root
+
 
 ## Making requests
  Server: http://34.94.101.183:80/WeHelp/ 
