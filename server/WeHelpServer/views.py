@@ -5,6 +5,10 @@ import random
 import sys
 import traceback
 
+import channels.layers
+
+from asgiref.sync import async_to_sync
+
 from django.shortcuts import render
 from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist
@@ -69,6 +73,30 @@ def sendMessage(body):
         # save and response
         # TODO: send update to receiver via WebSocket
         chat.save()
+
+        # send update to receiver
+        channel_layer = channels.layers.get_channel_layer()
+        event = {
+            'type': 'chat.message',
+            'chatID': chat.id,
+            'avatar': sender.icon,
+            'name': sender.name,
+            'UID': sender.id,
+            'datetime': message.date.strftime("%Y-%m-%d %H:%M:%S"),
+            'message': message.message
+        }
+        async_to_sync(channel_layer.group_send)(str(receiver.id), event)
+
+        # async_to_sync(channel_layer.group_send)(str(7), {
+        #    'type': 'chat.message',
+        #    'chatID': 1,
+        #    'avatar': 'haha.jpg',
+        #    'name': 'wstester',
+        #    'UID': '8',
+        #    'datetime': timezone.now().strftime("%Y-%m-%d %H:%M:%S"),
+        #    'message': 'shuai bu shuai'
+        # })
+
         res = {'success': 1}
 
     except ObjectDoesNotExist:
@@ -135,7 +163,7 @@ def getMessage(body):
         messageList = []
         for m in messages:
             messageList.append(
-                {'UID': m.sender.id, 'message': m.message, 'datetime': m.date})
+                {'UID': m.sender.id, 'message': m.message, 'datetime': m.date.strftime("%Y-%m-%d %H:%M:%S")})
 
         res = {'success': 1, 'messageList': messageList}
 

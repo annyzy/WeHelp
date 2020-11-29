@@ -10,13 +10,18 @@ https://docs.djangoproject.com/en/3.0/howto/deployment/wsgi/
 import os
 
 from django.core.wsgi import get_wsgi_application
+from channels.auth import AuthMiddlewareStack
+from channels.routing import ProtocolTypeRouter, URLRouter
+
+import WeHelpServer.routing
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'server.settings')
 
-application = get_wsgi_application()
-
-#sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '../WeHelpServer'))
-
-#from apps import WeHelpServer as application
-
-
+application = ProtocolTypeRouter({
+    # "http": get_wsgi_application(),
+    "websocket": AuthMiddlewareStack(
+        URLRouter(
+            WeHelpServer.routing.websocket_urlpatterns
+        )
+    ),
+})
