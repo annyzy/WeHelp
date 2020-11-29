@@ -35,7 +35,7 @@ function HomeMainPage(props) {
             <View style={{flex: 8, top:Constants.statusBarHeight}}>
                 <ScrollView contentContainerStyle={{paddingBottom:Constants.statusBarHeight}}>
                     {taskList.map((t, i) => {
-                        return(<CardField task={t} key={i} navigation={props.navigation}/>)
+                        return(!t['isCompleted'] && <CardField task={t} key={i} navigation={props.navigation}/>)
                     })}
                 </ScrollView>
             </View>
@@ -110,7 +110,7 @@ function CardField(props) {
                                     EventRegister.emit('refreshChat', 7);
                                     props.navigation.navigate('ChatPage', {chat: chatList[0]})}}
                         />
-                        <Button text="✅ Accept" style={{container:{...materialButtonStyle.container, borderRightWidth:0},
+                        <Button text="🔥 More" style={{container:{...materialButtonStyle.container, borderRightWidth:0},
                                                         text: materialButtonStyle.text}}
                                                 onPress={() => { props.navigation.navigate('TaskDetailPage', {task:props.task});} }
                         />

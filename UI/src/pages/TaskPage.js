@@ -30,11 +30,11 @@ function TaskMainPage(props) {
                 <ScrollView contentContainerStyle={{paddingBottom:Constants.statusBarHeight}}>
                     <Text style={{fontSize:30, padding: 10}}>Current Tasks</Text>
                     {taskList.map((t, i) => {
-                        return <TaskCard task={t} key={i} navigation={props.navigation}/>
+                        return (!t['isCompleted'] && <TaskCard task={t} key={i} navigation={props.navigation}/>);
                     })}
                     <Text style={{fontSize:30, padding: 10}}>Past Tasks</Text>
                     {taskList.map((t, i) => {
-                        return <TaskCard task={t} key={i} navigation={props.navigation}/>
+                        return (t['isCompleted'] && <TaskCard task={t} key={i} navigation={props.navigation}/>);
                     })}
                 </ScrollView>
             </View>

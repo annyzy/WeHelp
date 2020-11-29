@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { View, ScrollView, Text, Button, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { Rating } from 'react-native-elements';
 import { PageHeader } from '../components/PageHeader';
@@ -6,13 +6,31 @@ import Constants from 'expo-constants';
 import { Button as MaterialButton } from 'react-native-material-ui';
 import { EventRegister } from 'react-native-event-listeners';
 import { UserContext } from '../components/UserContext';
+import Modal from 'react-native-modal';
 
 export function TaskDetailPage(props) {
   const {task} = props.route.params;
   const [user, chatList, taskList] = useContext(UserContext);
+  const [isMyTask, setIsMyTask] = useState(task['publisherUID'] === user['UID']);
+  const [isAcceptedTask, setIsAcceptedTask] = useState(task['receiverUID'] === user['UID']);
+  const [isCompleted, setIsCompleted] = useState(task['isCompleted']);
+  const [isModalVisiable, setIsModalVisiable] = useState(false);
 
     return (
         <View style={{flex: 1, justifyContent: 'space-between', backgroundColor: 'white'}}>
+            <Modal isVisible={isModalVisiable}
+                    onBackdropPress={() => setIsModalVisiable(false)}>
+                    <View style={{backgroundColor:'white', height: '20%', justifyContent:'space-around'}}>
+                        <Rating
+                            type='heart'
+                            ratingCount={5}
+                            imageSize={30}
+                            startingValue={0}
+                            showRating
+                        />
+                        <Button title='Confirm' onPress={() => setIsModalVisiable(false)}/>
+                    </View>
+            </Modal>
             <PageHeader style={{flex: 1}}
                 leftComp={<Button title='Back' onPress={() => props.navigation.goBack()} />}
                 centerComp={<Text style={{fontSize:20}}>{task.publisher}</Text>}
@@ -61,14 +79,28 @@ export function TaskDetailPage(props) {
                         </View>
 
                         <View style={styles.buttonView}>
-                            <MaterialButton text={"❤️ Likes " + task.img.length} style={materialButtonStyle}/>
+                            <MaterialButton text={"👍 Rate"} style={materialButtonStyle}
+                                            onPress={() => {setIsModalVisiable(true)}}/>
                             <MaterialButton text="💬 Message" style={materialButtonStyle}
                                             onPress={() => {
                                                 EventRegister.emit('refreshChat', 7);
                                                 props.navigation.navigate('ChatPage', {chat: chatList[0]});
                                             }}/>
-                            <MaterialButton text="✅ Accept" style={{container:{...materialButtonStyle.container, borderRightWidth:0},
-                                                            text: materialButtonStyle.text}}/>
+                            {isAcceptedTask && <MaterialButton text="👌 Done" 
+                                    style={{container:{...materialButtonStyle.container, borderRightWidth:0},
+                                            text: materialButtonStyle.text}}
+                                    onPress={() => {props.navigation.goBack()}}
+                                    disabled={isCompleted}
+                            />}
+                            {isMyTask && <MaterialButton text="❌ Cancel" 
+                                    style={{container:{...materialButtonStyle.container, borderRightWidth:0},
+                                            text: materialButtonStyle.text}}
+                                    onPress={() => {props.navigation.goBack()}}   
+                                    disabled={isCompleted}             
+                            />}
+                            {!isMyTask && !isAcceptedTask && <MaterialButton text="✅ Accept" style={{container:{...materialButtonStyle.container, borderRightWidth:0},
+                                                            text: materialButtonStyle.text}}
+                                                            disabled={isCompleted}/>}
                         </View>
                     </View>
             </ScrollView>
@@ -134,6 +166,6 @@ const styles = StyleSheet.create({
 })
 
 const materialButtonStyle = {
-    container: {borderRightWidth: 1, height: '100%'},
+    container: {flex:3, borderRightWidth: 1, height: '100%'},
     text: {fontSize: 12, right: 8}
 }
