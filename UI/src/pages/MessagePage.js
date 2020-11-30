@@ -60,7 +60,7 @@ function ChatList(props) {
   
   return (
     <View style={{flex: 1, justifyContent: 'flex-start', backgroundColor: 'white'}}>
-      <PageHeader centerComp={<Text>Message</Text>} />
+      <PageHeader centerComp={<Text style={{fontSize: 18, fontWeight: "bold"}}>Message</Text>} />
       <ScrollView
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />

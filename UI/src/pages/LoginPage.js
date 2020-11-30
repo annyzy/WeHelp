@@ -43,7 +43,7 @@ export function LoginPage (props) {
 
     return (
       <View style={ {flex:1, justifyContent: 'space-between', backgroundColor: 'white'} }>
-        <PageHeader centerComp={<Text>Login Page</Text>} />
+        <PageHeader centerComp={<Text style={{fontSize: 18, fontWeight: "bold"}}>Login Page</Text>} />
         <Button title='Sign in with Google' onPress={signIn}/>
         <View></View>
       </View>
