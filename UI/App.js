@@ -257,12 +257,12 @@ export default function App() {
     console.log("received message: " + newMessage['message']);
     console.log('chat list length: ' + chatList.length);
 
-    let avatar;
+    let new_avatar;
     if (newMessage['avatar'].startsWith('media')){
-      avatar = 'http://34.94.101.183/' + newMessage['avatar'];
+      new_avatar = 'http://34.94.101.183/' + newMessage['avatar'];
     }
     else {
-      avatar = newMessage['avatar'];
+      new_avatar = newMessage['avatar'];
     }
 
     let chat_index = -1;
@@ -276,7 +276,7 @@ export default function App() {
     if (chat_index == -1) {
       setChatList(chatList => {
         chatList.unshift({
-            name: newMessage['name'], avatar: avatar, 
+            name: newMessage['name'], avatar: new_avatar, 
             comment: newMessage['message'], chatID: newMessage['chatID'], 
             datetime: newMessage['datetime'], 
             updating: false, UID: newMessage['UID'],
@@ -302,7 +302,7 @@ export default function App() {
     let u;
     u = {
       _id: newMessage['UID'],
-      avatar: avatar,
+      avatar: new_avatar,
       name: newMessage['name'],
     }
     let m = {
@@ -335,12 +335,9 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    if(user.signedIn) {
-      const socket = new WebSocket("ws://34.94.101.183/ws/WeHelp/" + user.UID.toString() + "/");
-      if (socket == 0) {
-        socket.close(0);
-      }
-      setSocket(socket);
+    if(user.signedIn && !socket) {
+      const new_socket = new WebSocket("ws://34.94.101.183/ws/WeHelp/" + user.UID.toString() + "/");
+      setSocket(new_socket);
     }
   }, [user])
 
@@ -348,7 +345,7 @@ export default function App() {
     if(socket) {
       socket.onmessage = processNewMessage;
     }
-  }, [user, chatList])
+  }, [chatList, socket])
 
   let signOutUser = useCallback(() => {
     setUser({
@@ -359,9 +356,11 @@ export default function App() {
           email: ''
         })
     setChatList([]);
-    socket.close(0);
-    setSocket(0);
-  }, [])
+    if(socket) {
+      socket.close();
+      setSocket();
+    }
+  }, [socket])
 
   let iconChanged = useCallback((newUrl) => {
     let url;
@@ -377,7 +376,7 @@ export default function App() {
     }));
   }, [])
 
-  useEffect(() => {EventRegister.addEventListener('signOutUser', signOutUser)}, []);
+  useEffect(() => {EventRegister.addEventListener('signOutUser', signOutUser)}, [socket]);
   useEffect(() => {EventRegister.addEventListener('iconChanged', iconChanged)}, []);
   useEffect(() => {
     const sendMessageListener = EventRegister.addEventListener('sendMessage', sendMessage)
