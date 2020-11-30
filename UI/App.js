@@ -253,7 +253,7 @@ export default function App() {
   }, [user, chatList]);
 
   let processNewMessage = useCallback((event) => {
-    newMessage = JSON.parse(event.data);
+    let newMessage = JSON.parse(event.data);
     console.log("received message: " + newMessage['message']);
     console.log('chat list length: ' + chatList.length);
 
@@ -332,12 +332,20 @@ export default function App() {
       email: newEmail
     });
     refreshChatList(newUID);
-
-    const socket = new WebSocket("ws://34.94.101.183/ws/WeHelp/" + newUID.toString() + "/");
-    setSocket(socket);
-    socket.onmessage = processNewMessage;
-    
   }, []);
+
+  useEffect(() => {
+    if(user.signedIn) {
+      const socket = new WebSocket("ws://34.94.101.183/ws/WeHelp/" + user.UID.toString() + "/");
+      setSocket(socket);
+    }
+  }, [user])
+
+  useEffect(() => {
+    if(socket) {
+      socket.onmessage = processNewMessage;
+    }
+  }, [user, chatList])
 
   let signOutUser = useCallback(() => {
     setUser({
