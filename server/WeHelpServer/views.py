@@ -15,9 +15,20 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
+from django.core.files.uploadedfile import SimpleUploadedFile
+from django.core.exceptions import ValidationError
+
+
 from WeHelpServer.models import User
 from WeHelpServer.models import Message
 from WeHelpServer.models import Chat
+from WeHelpServer.models import Post, Images
+from WeHelpServer.form import PostForm, ImageForm
+
+from django.forms import modelformset_factory
+
+from django.http import HttpResponseRedirect
+
 
 
 def signIn(body):
@@ -203,6 +214,34 @@ def upload(request):
         return changeIcon(request)
     return changeIcon(request)
 
+def sendPost(request):
+    ImageFormSet = modelformset_factory(Images, form=ImageForm, extra=4)
+    ifsubmit = False
+    if request.method == 'POST':
+        postForm = PostForm(request.POST, request.FILES)
+        formset = ImageFormSet(request.POST, request.FILES, queryset=Images.objects.none())
+        if postForm.isValid() and formset.isValid():
+            #do something
+            # cd = form.cleaned_data
+            post_form = postForm.save(commit=False)
+            post_form.user = request.user
+            post_form.save()
+
+            for form in formset.cleaned_data:
+                # prevent crashes from not uploading all photos
+                if form:
+                    image = form['image']
+                    photo = Images(post=post_form, image=image)
+                    photo.save()
+
+            return HttpResponseRedirect("/")
+        else:
+            print(postForm.errors, formset.errors)
+    else:
+        postForm = PostForm()
+        formset = ImageFormSet(queryset=Images.objects.none())
+    return render(request, 'PageNavigation.js', {'postForm': postForm, 'formset': formset})
+
 
 @csrf_exempt
 def index(request):
@@ -221,6 +260,8 @@ def index(request):
 
         elif (body['func'] == 'getMessage'):
             return getMessage(body)
+        elif (body['func'] == 'sendPost'):
+            return sendPost(body)
 
         elif (body['func'] == 'getUser'):
             return getUser(body)
