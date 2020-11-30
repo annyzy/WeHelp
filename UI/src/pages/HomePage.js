@@ -92,16 +92,17 @@ function CardField(props) {
                             resizeMode='cover'
                         />
                     </TouchableOpacity>
-                    <Text style={{ fontSize: 15, textAlign: 'center'}}>{props.task.publisher}</Text>
+                    <Text style={{fontSize: 15, textAlign: 'center'}}>{props.task.publisher}</Text>
                     <Rating
+                        style={{imageSize: 15, top:20}}
                         type='heart'
                         readonly
                         ratingCount={5}
-                        imageSize={18}
+                        imageSize={15}
                         showRating
                         showReadOnlyText={false}
                     />
-                    <Text style={{ fontSize: 20, textAlign: 'center', top: 20}}>👏🏻 5</Text>
+                    <Text style={{ fontSize: 15, textAlign: 'center', top: 40}}>👏🏻 5</Text>
                 </View>
 
                 <View style={styles.taskInfoView}>

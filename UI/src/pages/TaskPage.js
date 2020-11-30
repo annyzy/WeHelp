@@ -45,11 +45,11 @@ function TaskMainPage(props) {
                         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
                     }
                 >
-                    <Text style={{fontSize:30, padding: 10}}>Current Tasks</Text>
+                    <Text style={{fontSize:23, padding: 10, top:10}}>Current Tasks</Text>
                     {taskList.map((t, i) => {
                         return (!t['isCompleted'] && <TaskCard task={t} key={i} navigation={props.navigation}/>);
                     })}
-                    <Text style={{fontSize:30, padding: 10}}>Past Tasks</Text>
+                    <Text style={{fontSize:23, padding: 10, top:10}}>Past Tasks</Text>
                     {taskList.map((t, i) => {
                         return (t['isCompleted'] && <TaskCard task={t} key={i} navigation={props.navigation}/>);
                     })}
