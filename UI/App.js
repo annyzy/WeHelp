@@ -74,7 +74,6 @@ export default function App() {
 
     let chat_index = -1;
     chatList.forEach((chat, i) => {
-      console.log(chat['UID']);
       if (chat['UID'] == receiverUID) {
         chat_index = i;
       }
@@ -89,9 +88,9 @@ export default function App() {
       //move this chat to top
       if (chat_index != 0) {
         setChatList(chatList => {
-          let tmp = chatList[chat_index];
-          chatList[chat_index] = chatList[0];
-          chatList[0] = tmp;
+          chatList = [chatList[chat_index]]
+                     .concat(chatList.slice(0, chat_index))
+                     .concat(chatList.slice(chat_index + 1));
           return [...chatList];
         })
       }
@@ -110,7 +109,7 @@ export default function App() {
             avatar: user.photoUrl,
           }
         });
-        return chatList;
+        return [...chatList];
       });
 
       //send to server
@@ -206,7 +205,7 @@ export default function App() {
           let u;
           setChatList(chatList => {
             chatList[chat_index]['updating'] = true;
-            return chatList;
+            return [...chatList];
           })
           fetch('http://34.94.101.183/WeHelp/', {
             method: 'POST',
@@ -216,7 +215,7 @@ export default function App() {
           }).then(async (resp) => {
             let found = await resp.json();
             if (found['success'] == 1) {
-              found['messageList'].map((m, i) => {
+              found['messageList'].forEach((m, i) => {
                 //parse message to GiftChat style
                 if (m['UID'] == user.UID){
                   u = {
@@ -246,64 +245,76 @@ export default function App() {
             else {
               alert("ERROR: can not load chat " + chatID);
             }
-            console.log(chatList);
+            //console.log(chatList);
           })
         }
       }
     }
   }, [user, chatList]);
 
-  let processNewChat = useCallback((newChat) => {
+  let processNewMessage = useCallback((event) => {
+    newMessage = JSON.parse(event.data);
+    console.log("received message: " + newMessage['message']);
+    console.log('chat list length: ' + chatList.length);
+
+    let avatar;
+    if (newMessage['avatar'].startsWith('media')){
+      avatar = 'http://34.94.101.183/' + newMessage['avatar'];
+    }
+    else {
+      avatar = newChat['avatar'];
+    }
+
     let chat_index = -1;
     chatList.forEach((chat, i) => {
-      if (chat['chatID'] == newChat['chatID']) {
+      if (chat['chatID'] == newMessage['chatID']) {
         chat_index = i;
       }
     })
+    console.log(chat_index);
+    //create a new chat if not exist
     if (chat_index == -1) {
-      let newChatList = chatList;
-      let avatar;
-      if (newChat['avatarURL'].startsWith('media')){
-        avatar = 'http://34.94.101.183/' + newChat['avatarURL'];
-      }
-      else {
-        avatar = newChat['avatarURL'];
-      }
-      newChatList = newChatList.concat({
-          name: newChat['name'], avatar: avatar, 
-          comment: newChat['message'], chatID: newChat['chatID'], 
-          datetime: newChat['datetime'], messages: [newChat['message']],
-          updating: false, UID: newChat['UID']
-      });
-      setChatList(newChatList);
-      chat_index = chatList.length-1;
+      setChatList(chatList => {
+        chatList.unshift({
+            name: newMessage['name'], avatar: avatar, 
+            comment: newMessage['message'], chatID: newMessage['chatID'], 
+            datetime: newMessage['datetime'], 
+            updating: false, UID: newMessage['UID'],
+            messages: [],
+        });
+        return [...chatList];
+      })
+      chat_index = 0;
     }
 
-    let u;
-    if (newChat['UID'] == user.UID){
-        u = {
-          _id: user.UID,
-          avatar: user.photoUrl,
-          name: user.name
-        }
-      }
-    else {
-      u = {
-        _id: m['UID'],
-        avatar: chatList[chat_index]['avatar'],
-        name: chatList[chat_index]['name'],
-      }
+    //move it to top as newest chat
+    if (chat_index != 0) {
+      setChatList(chatList => {
+        chatList = [chatList[chat_index]]
+                      .concat(chatList.slice(0, chat_index))
+                      .concat(chatList.slice(chat_index + 1));
+        return [...chatList];
+      })
     }
+
+
+    //if (chatList[0]['messages'].length == 0) {return;}
+    let u;
+    u = {
+      _id: newMessage['UID'],
+      avatar: newMessage['avatar'],
+      name: newMessage['name'],
+    }
+    let m = {
+      _id: chatList[0]['messages'].length + 1,
+      text: newMessage['message'],
+      user: u
+    };
     setChatList(chatList => {
-      chatList[chat_index]['messages'].unshift({
-        _id: i + 1,
-        text: newChat['message'],
-        user: u
-      });
-      chatList[chat_index]['updating'] = false;
+      chatList[0]['messages'].unshift(m);
       return [...chatList];
-    })
-  }, [user, chatList]);
+    });
+  }, [chatList]);
 
   let changeUser = useCallback((newName, newPhotoUrl, newEmail, newUID) => {
     let url;
@@ -321,6 +332,11 @@ export default function App() {
       email: newEmail
     });
     refreshChatList(newUID);
+
+    const socket = new WebSocket("ws://34.94.101.183/ws/WeHelp/" + newUID.toString() + "/");
+    setSocket(socket);
+    socket.onmessage = processNewMessage;
+    
   }, []);
 
   let signOutUser = useCallback(() => {
@@ -331,7 +347,9 @@ export default function App() {
           UID: -1,
           email: ''
         })
-    setChatList([])
+    setChatList([]);
+    socket.close(0);
+    setSocket(0);
   }, [])
 
   let iconChanged = useCallback((newUrl) => {
@@ -364,25 +382,18 @@ export default function App() {
   //     EventRegister.removeEventListener(refreshChatListListener);
   //   }
   // }, [user])
-  // useEffect(() => {
-  //   const refreshChatListener = EventRegister.addEventListener('refreshChat', refreshChat)
-  //   return function cleanup() {
-  //     EventRegister.removeEventListener(refreshChatListener);
-  //   }
-  // }, [user, chatList]);
+
+   useEffect(() => {
+     const refreshChatListener = EventRegister.addEventListener('refreshChat', refreshChat)
+     return function cleanup() {
+       EventRegister.removeEventListener(refreshChatListener);
+     }
+   }, [user, chatList]);
   
-  useEffect(() => {
-    const socket = new WebSocket("ws://34.94.101.183/ws/WeHelp/"+user.UID.toString());
-    setSocket(socket);
-    socket.onmessage = processNewChat;
-  }, []);
 
   if (user.signedIn) {
-    chatList.forEach((chat) => {
-      refreshChat(chat['chatID']);
-    })
     return (
-      <UserContext.Provider value={[{...user}, [...chatList], [...taskList]]}>
+      <UserContext.Provider value={[{...user}, chatList, [...taskList]]}>
           <PageNavigation/>
       </UserContext.Provider>
       );  
