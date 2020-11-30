@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { View, ScrollView, Text, Image, Button } from 'react-native';
+import { View, ScrollView, Text, Image, Button, RefreshControl } from 'react-native';
 import { Rating } from 'react-native-elements';
 import { PageHeader } from '../components/PageHeader';
 import Constants from 'expo-constants';
@@ -7,9 +7,23 @@ import CalendarHeatmap from 'react-native-calendar-heatmap';
 import { UserContext } from '../components/UserContext';
 import { UserPage } from './UserPage';
 
+const wait = (timeout) => {
+  return new Promise(resolve => {
+    setTimeout(resolve, timeout);
+  });
+}
+
 export function UserDetailPage(props) {
     const {userUID} = props.route.params;
     const [user, chatList, taskList] = useContext(UserContext);
+
+    const [refreshing, setRefreshing] = React.useState(false);
+    const onRefresh = React.useCallback(() => {
+      setRefreshing(true);
+
+      wait(2000).then(() => setRefreshing(false));
+    }, []);
+
     if(userUID === user.UID) {
       return <UserPage navigation={props.navigation}/>;
     }
@@ -21,7 +35,12 @@ export function UserDetailPage(props) {
             <PageHeader 
                 leftComp={<Button title='Back' onPress={() => props.navigation.goBack()} />}
                 centerComp={<Text>{userUID.publisher}</Text>} />
-            <ScrollView contentContainerStyle={{paddingBottom:Constants.statusBarHeight}}>
+            <ScrollView 
+              contentContainerStyle={{paddingBottom:Constants.statusBarHeight}}
+              refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+              }
+            >
             <View style={{borderBottomWidth: 0.5, flexDirection:'row', justifyContent:'space-around'}}>
                 <View>
                   <Image source={{

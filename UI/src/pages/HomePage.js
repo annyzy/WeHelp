@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { View, Text, StatusBar, Image, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StatusBar, Image, ScrollView, StyleSheet, TouchableOpacity, RefreshControl } from 'react-native';
 import { SearchBar, Card, Rating } from 'react-native-elements';
 import { Button } from 'react-native-material-ui';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -11,6 +11,12 @@ import Constants from 'expo-constants';
 import { EventRegister } from 'react-native-event-listeners';
 
 const Stack = createStackNavigator();
+
+const wait = (timeout) => {
+    return new Promise(resolve => {
+      setTimeout(resolve, timeout);
+    });
+}
 
 export function HomePage() {
     return (
@@ -25,6 +31,13 @@ export function HomePage() {
 
 function HomeMainPage(props) {
     const [user, chatList, taskList] = useContext(UserContext);
+    const [refreshing, setRefreshing] = React.useState(false);
+
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true);
+
+        wait(2000).then(() => setRefreshing(false));
+    }, []);
 
     return (
         <View style={{flex: 1, justifyContent: 'space-between', backgroundColor:'white'}}>
@@ -33,7 +46,12 @@ function HomeMainPage(props) {
                 <SearchField/>
             </View>
             <View style={{flex: 8, top:Constants.statusBarHeight}}>
-                <ScrollView contentContainerStyle={{paddingBottom:Constants.statusBarHeight}}>
+                <ScrollView 
+                    contentContainerStyle={{paddingBottom:Constants.statusBarHeight}}
+                    refreshControl={
+                        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                    }    
+                >
                     {taskList.map((t, i) => {
                         return(!t['isCompleted'] && <CardField task={t} key={i} navigation={props.navigation}/>)
                     })}

@@ -17,7 +17,7 @@ const wait = (timeout) => {
 const styles = StyleSheet.create({
   border: {
     borderBottomColor: '#D3D3D3',
-    borderBottomWidth: 12,    
+    borderBottomWidth: 12, 
   }, 
 })
 

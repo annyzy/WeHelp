@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useContext } from 'react';
-import { View, Text, Alert, ScrollView } from 'react-native';
+import { View, Text, Alert, ScrollView, RefreshControl } from 'react-native';
 import { ListItem, Avatar } from 'react-native-elements';
 import { PageHeader } from '../components/PageHeader';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -9,6 +9,11 @@ import { EventRegister } from 'react-native-event-listeners';
 import { UserDetailPage } from './UserDetailPage';
 
 let Stack = createStackNavigator();
+const wait = (timeout) => {
+  return new Promise(resolve => {
+    setTimeout(resolve, timeout);
+  });
+}
 
 export function MessagePage() {
   return (
@@ -45,11 +50,22 @@ function ChatList(props) {
 
 
   const [user, chatList] = useContext(UserContext);
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+
+    wait(2000).then(() => setRefreshing(false));
+  }, []);
   
   return (
     <View style={{flex: 1, justifyContent: 'flex-start', backgroundColor: 'white'}}>
       <PageHeader centerComp={<Text>Message</Text>} />
-      <ScrollView>
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
       {
         chatList.map((chat, i) => (
           <ListItem key={i} bottomDivider 

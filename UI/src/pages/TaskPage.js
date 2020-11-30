@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import Constants from 'expo-constants';
-import { View, Text, ScrollView, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, RefreshControl } from 'react-native';
 import { AppleCard } from 'react-native-apple-card-views'
 import { createStackNavigator } from '@react-navigation/stack';
 import { TaskDetailPage } from './TaskDetailPage';
@@ -9,6 +9,11 @@ import { ChatPage } from './ChatPage';
 import { UserContext } from '../components/UserContext';
 
 const Stack = createStackNavigator();
+const wait = (timeout) => {
+    return new Promise(resolve => {
+      setTimeout(resolve, timeout);
+    });
+}
 
 export function TaskPage() {
     return (
@@ -23,11 +28,23 @@ export function TaskPage() {
 
 function TaskMainPage(props) {
     const [user, chatList, taskList] = useContext(UserContext);
+    const [refreshing, setRefreshing] = React.useState(false);
+
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true);
+
+        wait(2000).then(() => setRefreshing(false));
+    }, []);
 
     return (
         <View style={{flex: 1, justifyContent: 'space-between', backgroundColor: 'white'}}>
             <View style={{flex: 8, top:Constants.statusBarHeight}}>
-                <ScrollView contentContainerStyle={{paddingBottom:Constants.statusBarHeight}}>
+                <ScrollView 
+                    contentContainerStyle={{paddingBottom:Constants.statusBarHeight}}
+                    refreshControl={
+                        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                    }
+                >
                     <Text style={{fontSize:30, padding: 10}}>Current Tasks</Text>
                     {taskList.map((t, i) => {
                         return (!t['isCompleted'] && <TaskCard task={t} key={i} navigation={props.navigation}/>);

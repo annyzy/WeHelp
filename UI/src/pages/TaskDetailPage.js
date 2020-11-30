@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { View, ScrollView, Text, Button, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, ScrollView, Text, Button, Image, StyleSheet, TouchableOpacity, RefreshControl } from 'react-native';
 import { Rating } from 'react-native-elements';
 import { PageHeader } from '../components/PageHeader';
 import Constants from 'expo-constants';
@@ -8,13 +8,25 @@ import { EventRegister } from 'react-native-event-listeners';
 import { UserContext } from '../components/UserContext';
 import Modal from 'react-native-modal';
 
+const wait = (timeout) => {
+    return new Promise(resolve => {
+      setTimeout(resolve, timeout);
+    });
+}
+
 export function TaskDetailPage(props) {
-  const {task} = props.route.params;
-  const [user, chatList, taskList] = useContext(UserContext);
-  const [isMyTask, setIsMyTask] = useState(task['publisherUID'] === user['UID']);
-  const [isAcceptedTask, setIsAcceptedTask] = useState(task['receiverUID'] === user['UID']);
-  const [isCompleted, setIsCompleted] = useState(task['isCompleted']);
-  const [isModalVisiable, setIsModalVisiable] = useState(false);
+    const {task} = props.route.params;
+    const [user, chatList, taskList] = useContext(UserContext);
+    const [isMyTask, setIsMyTask] = useState(task['publisherUID'] === user['UID']);
+    const [isAcceptedTask, setIsAcceptedTask] = useState(task['receiverUID'] === user['UID']);
+    const [isCompleted, setIsCompleted] = useState(task['isCompleted']);
+    const [isModalVisiable, setIsModalVisiable] = useState(false);
+    const [refreshing, setRefreshing] = React.useState(false);
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true);
+
+        wait(2000).then(() => setRefreshing(false));
+    }, []);
 
     return (
         <View style={{flex: 1, justifyContent: 'space-between', backgroundColor: 'white'}}>
@@ -61,7 +73,12 @@ export function TaskDetailPage(props) {
                             />
                     </View>
                 </View>
-                <ScrollView contentContainerStyle={{paddingBottom:Constants.statusBarHeight}}>            
+                <ScrollView 
+                    contentContainerStyle={{paddingBottom:Constants.statusBarHeight}}
+                    refreshControl={
+                        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                    }
+                >            
                     <View style={styles.taskInfoView}>
                         <Text style={styles.taskTitleStyle}>{task.title}</Text>
                         <Text style={styles.taskTextBoxStyle}>{task.description}</Text>
