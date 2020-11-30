@@ -262,7 +262,7 @@ export default function App() {
       avatar = 'http://34.94.101.183/' + newMessage['avatar'];
     }
     else {
-      avatar = newChat['avatar'];
+      avatar = newMessage['avatar'];
     }
 
     let chat_index = -1;
@@ -302,7 +302,7 @@ export default function App() {
     let u;
     u = {
       _id: newMessage['UID'],
-      avatar: newMessage['avatar'],
+      avatar: avatar,
       name: newMessage['name'],
     }
     let m = {
@@ -337,6 +337,9 @@ export default function App() {
   useEffect(() => {
     if(user.signedIn) {
       const socket = new WebSocket("ws://34.94.101.183/ws/WeHelp/" + user.UID.toString() + "/");
+      if (socket == 0) {
+        socket.close(0);
+      }
       setSocket(socket);
     }
   }, [user])
