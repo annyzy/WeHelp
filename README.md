@@ -158,7 +158,7 @@ FILES: {'file': filestream}
    Execute the following command under the directory where contains README.md
    
    ```shell
-   documentation readme UI/app.js UI/src/pages/* UI/src/components/* -s "Documentation for Front-end" -g
+   documentation readme UI/app.js UI/src/pages/* UI/src/components/* -s "Front-end API" -g
    ```
 
-## Documentation for Front-end
+## Front-end API
