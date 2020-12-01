@@ -25,13 +25,39 @@ def signIn(body):
         email = body['email']
         icon = body['icon']
         user = User.objects.get(email=email)
+        now = timezone.now()
+
+        # get one coin if login after 4 hours
+        if ((now - user.last_freecoin).seconds > 3600 * 4):
+            user.coins = user.coins + 1
+            user.last_freecoin = now
+            user.save()
+
     except ObjectDoesNotExist:
         user = User(coins=10, rating=0,
                     create_date=timezone.now(), email=email,
-                    icon=icon, name=body['name'])
+                    icon=icon, name=body['name'],
+                    last_freecoin=timezone.now()
+                    )
         user.save()
     res = {'UID': user.id, 'coins': user.coins,
-           'icon': user.icon, 'rating': user.rating}
+           'icon': user.icon, 'rating': user.rating,
+           'num_rating': user.num_rating}
+    return JsonResponse(res)
+
+
+def getUser(body):
+    #body: {'UID'}
+
+    try:
+        user = User.objects.get(id=body['UID'])
+
+        res = {'avatar': user.icon, 'coins': user.coins,
+               'rating': user.rating, 'name': user.name,
+               'num_rating': user.num_rating}
+    except ObjectDoesNotExist:
+        res = {'success': 0}
+
     return JsonResponse(res)
 
 
@@ -52,26 +78,14 @@ def sendMessage(body):
 
         else:
             chat = Chat(a=sender, b=receiver)
+            chat.save()
 
         # construct the message
         message = Message(sender=sender, message=message_s,
-                          date=timezone.now())
+                          date=timezone.now(), chat=chat)
         message.save()
 
-        # add message to chat
-        if (chat.message_list):
-            new_message_list = chat.message_list.split(
-                ',')
-            new_message_list.append(str(message.id))
-            new_message_list = ','.join(new_message_list)
-        else:
-            new_message_list = str(message.id)
-
-        chat.message_list = new_message_list
         chat.last_message = message
-
-        # save and response
-        # TODO: send update to receiver via WebSocket
         chat.save()
 
         # send update to receiver
@@ -86,16 +100,6 @@ def sendMessage(body):
             'message': message.message
         }
         async_to_sync(channel_layer.group_send)(str(receiver.id), event)
-
-        # async_to_sync(channel_layer.group_send)(str(7), {
-        #    'type': 'chat.message',
-        #    'chatID': 1,
-        #    'avatar': 'haha.jpg',
-        #    'name': 'wstester',
-        #    'UID': '8',
-        #    'datetime': timezone.now().strftime("%Y-%m-%d %H:%M:%S"),
-        #    'message': 'shuai bu shuai'
-        # })
 
         res = {'success': 1}
 
@@ -155,10 +159,7 @@ def getMessage(body):
     # return: {'success': 1/0, 'messageList': [{UID, message, datetime}]}
     try:
         chat = Chat.objects.get(id=body['chatID'])
-        message_list = chat.message_list.split(',')
-        messages = []
-        for m in message_list:
-            messages.append(Message.objects.get(id=int(m)))
+        messages = chat.chat_message.all()
 
         messageList = []
         for m in messages:
@@ -220,6 +221,9 @@ def index(request):
 
         elif (body['func'] == 'getMessage'):
             return getMessage(body)
+
+        elif (body['func'] == 'getUser'):
+            return getUser(body)
 
     # avoid "return none" error, need to change it later
     return signIn(body)
