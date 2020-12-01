@@ -130,11 +130,13 @@ FILES: {'file': filestream}
 ## How to Generate Documentation in JavaScript
 
 1. Install documentation.js using npm
+
    ```shell
    npm install -g documentation
    ```
 
-2. Writing your documentaion in each js file:
+2. Write your documentaion in each js file following this format:
+
    ```javascript
    /**
     * 
@@ -152,7 +154,9 @@ FILES: {'file': filestream}
    ```
 
 3. Generate the documentations and append them to README.md
-   In the directory where contains README.md
+
+   Execute the following command under the directory where contains README.md
+   
    ```shell
    documentation readme UI/app.js UI/src/pages/* UI/src/components/* -s "React Native Component Doc" -g
    ```
