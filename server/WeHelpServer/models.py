@@ -1,6 +1,5 @@
 from django.db import models
 #from django.core.validators import int_list_validator
-from django.template.defaultfilters import slugify
 
 
 class User(models.Model):
@@ -32,26 +31,16 @@ class Chat(models.Model):
     last_message = models.ForeignKey(
         Message, on_delete=models.CASCADE, related_name='message_chat')
     #message_list = models.CharField(validator=int_list_validator)
-<<<<<<< HEAD
-=======
-    message_list = models.CharField(max_length=4096)
 
 
-class Post(models.Model):
-    user = models.ForeignKey(User)
-    title = models.CharField(lable = 'Please put your request title here.', max_lenth=512)
-    body = models.CharField(lable = 'Your content here.', max_length=4000)
-    #pictures = forms.ImageField(max_length=4095)
-
-
-def get_image_filename(instance, filename):
-    title = instance.post.title
-    slug = slugify(title)
-    return "post_images/%s-%s" % (slug, filename)
-
-
-class Images(models.Model):
-    post = models.ForeignKey(Post, default=None)
-    image = models.ImageField(upload_to=get_image_filename, verbose_name='Image')
-
->>>>>>> post tasks
+class Task(models.Model):
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='publish_task')
+    title = models.CharField(max_length=128)
+    body = models.CharField(max_length=4096)
+    acceptor = models.ForeignKey(
+        User, on_delete=models.DO_NOTHING, related_name='accept_task')
+    images = models.CharField(max_length=4096)
+    datetime = models.DateTimeField()
+    active = models.BooleanField()
+    cost = models.IntegerField()

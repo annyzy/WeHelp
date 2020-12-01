@@ -1,9 +1,9 @@
 import requests
 import json
 
-url = 'http://localhost:8000/WeHelp/'
-files = {'file': open('/home/dliang/WeHelp/server/test/dog.jpg', 'rb')}
-body = {'func': 'changeIcon', 'UID': 10}
+url = 'http://34.94.101.183/WeHelp/'
+files = {'file': open('/home/dliang/WeHelp/server/test/cat.png', 'rb')}
+body = {'func': 'changeIcon', 'UID': 2}
 
 response = requests.post(url, data=body, files=files)
 
