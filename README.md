@@ -126,3 +126,35 @@ FILES: {'file': filestream}
 | chatID | messageList: [{UID, message, datetime}]  |
 
 </details>
+
+## How to Generate Documentation in JavaScript
+
+1. Install documentation.js using npm
+   ```shell
+   npm install -g documentation
+   ```
+
+2. Writing your documentaion in each js file:
+   ```javascript
+   /**
+    * 
+    * Description of the function body
+    *
+    * @export
+    * @param {type} param1 Description of param1
+    * @param {type} param2 Description of param2
+    * @return {number} Description of return value
+    */
+   export function template(param1, param2) {
+      let ret;
+      return ret;
+   }
+   ```
+
+3. Generate the documentations and append them to README.md
+   In the directory where contains README.md
+   ```shell
+   documentation readme UI/app.js UI/src/pages/* UI/src/components/* -s "React Native Component Doc" -g
+   ```
+
+## React Native Component Doc
