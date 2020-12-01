@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { Button, View, Text } from 'react-native';
+import { Button, View, Text, Image } from 'react-native';
 import { PageHeader } from '../components/PageHeader';
 import * as Google from 'expo-google-app-auth';
 
@@ -44,6 +44,7 @@ export function LoginPage (props) {
     return (
       <View style={ {flex:1, justifyContent: 'space-between', backgroundColor: 'white'} }>
         <PageHeader centerComp={<Text style={{fontSize: 18, fontWeight: "bold"}}>Login Page</Text>} />
+        <Image source={require('../../assets/icon.png')} style={ {alignSelf: 'center'} }/>
         <Button title='Sign in with Google' onPress={signIn}/>
         <View></View>
       </View>
