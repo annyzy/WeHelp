@@ -31,3 +31,16 @@ class Chat(models.Model):
     last_message = models.ForeignKey(
         Message, on_delete=models.CASCADE, related_name='message_chat')
     #message_list = models.CharField(validator=int_list_validator)
+
+
+class Task(models.Model):
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='publish_task')
+    title = models.CharField(max_length=128)
+    body = models.CharField(max_length=4096)
+    acceptor = models.ForeignKey(
+        User, on_delete=models.DO_NOTHING, related_name='accept_task')
+    images = models.CharField(max_length=4096)
+    datetime = models.DateTimeField()
+    active = models.BooleanField()
+    cost = models.IntegerField()
