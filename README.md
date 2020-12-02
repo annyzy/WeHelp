@@ -22,7 +22,7 @@
 
 server logs in /tmp/wehelp.l.log
 if you want to rerun it:
-1. \```shell
+1\. \```shell
    sudo su
 
     2. check if there is an existing process:
@@ -222,7 +222,7 @@ FILES: {'file': filestream}
 
 ### App
 
-[UI/app.js:17-646](https://github.com/dliang090222/WeHelp/blob/196844bb551c6c9cd5f8254eee5b1dd25ee7f5de/UI/app.js#L17-L646 "Source code on GitHub")
+[UI/app.js:17-646](https://github.com/dliang090222/WeHelp/blob/036cf21c70d348e0c01bee1703f3b34c0c16f7ef/UI/app.js#L17-L646 "Source code on GitHub")
 
 App.js acts as a subject in the Observer Pattern to receive and process data from the server.
 There are multiple EventListener and Websocket to listen to the new messages, new tasks, and new users events from the server.
@@ -237,7 +237,7 @@ Returns **Component** => Render LoginPage component or PageNavigation component 
 
 ### ChatBox
 
-[UI/src/components/ChatBox.js:30-58](https://github.com/dliang090222/WeHelp/blob/196844bb551c6c9cd5f8254eee5b1dd25ee7f5de/UI/src/components/ChatBox.js#L30-L58 "Source code on GitHub")
+[UI/src/components/ChatBox.js:30-58](https://github.com/dliang090222/WeHelp/blob/036cf21c70d348e0c01bee1703f3b34c0c16f7ef/UI/src/components/ChatBox.js#L30-L58 "Source code on GitHub")
 
 ChatBox imports react-native-gifted-chat. 
 It will rerender and update new messages as soon as chatList in App.js updates and chatPage is notified.
@@ -263,7 +263,7 @@ Returns **Component** => Render a ChatBox Component
 
 ### MapObject
 
-[UI/src/components/MapObject.js:19-68](https://github.com/dliang090222/WeHelp/blob/196844bb551c6c9cd5f8254eee5b1dd25ee7f5de/UI/src/components/MapObject.js#L19-L68 "Source code on GitHub")
+[UI/src/components/MapObject.js:19-68](https://github.com/dliang090222/WeHelp/blob/036cf21c70d348e0c01bee1703f3b34c0c16f7ef/UI/src/components/MapObject.js#L19-L68 "Source code on GitHub")
 
 Shows a map. origin is the current user's location, destination is the target user's location.
 If both origin and destination are not null, the map will draw the route between the origin and destination.
@@ -278,7 +278,7 @@ Returns **Component** => Render a MapObject Component
 
 ### PageHeader
 
-[UI/src/components/PageHeader.js:16-34](https://github.com/dliang090222/WeHelp/blob/196844bb551c6c9cd5f8254eee5b1dd25ee7f5de/UI/src/components/PageHeader.js#L16-L34 "Source code on GitHub")
+[UI/src/components/PageHeader.js:16-34](https://github.com/dliang090222/WeHelp/blob/036cf21c70d348e0c01bee1703f3b34c0c16f7ef/UI/src/components/PageHeader.js#L16-L34 "Source code on GitHub")
 
 A customized page header is used across most of the pages in this application.
 
@@ -293,7 +293,7 @@ Returns **Component** => Render a PageHeader Component with leftComp, centerComp
 
 ### PageNavigation
 
-[UI/src/components/PageNavigation.js:25-34](https://github.com/dliang090222/WeHelp/blob/196844bb551c6c9cd5f8254eee5b1dd25ee7f5de/UI/src/components/PageNavigation.js#L25-L34 "Source code on GitHub")
+[UI/src/components/PageNavigation.js:25-34](https://github.com/dliang090222/WeHelp/blob/036cf21c70d348e0c01bee1703f3b34c0c16f7ef/UI/src/components/PageNavigation.js#L25-L34 "Source code on GitHub")
 
 A navigation container contains stack and tab navigation logic.
 It is the fundamental navigation logic of this application 
@@ -307,7 +307,7 @@ Returns **Component** => Render a PageNavigation component with tab bar and page
 
 ### UserContext
 
-[UI/src/components/UserContext.js:8-8](https://github.com/dliang090222/WeHelp/blob/196844bb551c6c9cd5f8254eee5b1dd25ee7f5de/UI/src/components/UserContext.js#L8-L8 "Source code on GitHub")
+[UI/src/components/UserContext.js:8-8](https://github.com/dliang090222/WeHelp/blob/036cf21c70d348e0c01bee1703f3b34c0c16f7ef/UI/src/components/UserContext.js#L8-L8 "Source code on GitHub")
 
 A global context that is used to pass user, chatList, taskList in App.js to all observer pages.
 As soon as this UserContext in App.js changes, all children use this UserContext will rerender.
@@ -316,7 +316,7 @@ Type: Context
 
 ### ChatPage
 
-[UI/src/pages/ChatPage.js:29-62](https://github.com/dliang090222/WeHelp/blob/196844bb551c6c9cd5f8254eee5b1dd25ee7f5de/UI/src/pages/ChatPage.js#L29-L62 "Source code on GitHub")
+[UI/src/pages/ChatPage.js:29-62](https://github.com/dliang090222/WeHelp/blob/036cf21c70d348e0c01bee1703f3b34c0c16f7ef/UI/src/pages/ChatPage.js#L29-L62 "Source code on GitHub")
 
 ChatPage will is an extended page of HomePage, TaskDetailPage, and MessagePage.
 It shows the MapObject and ChatBox for interactive user chatting experience.
@@ -340,7 +340,7 @@ Returns **Component** => Render a ChatPage Component that consists of a MapObjec
 
 ### checkLocationPermission
 
-[UI/src/pages/ChatPage.js:70-79](https://github.com/dliang090222/WeHelp/blob/196844bb551c6c9cd5f8254eee5b1dd25ee7f5de/UI/src/pages/ChatPage.js#L70-L79 "Source code on GitHub")
+[UI/src/pages/ChatPage.js:70-79](https://github.com/dliang090222/WeHelp/blob/036cf21c70d348e0c01bee1703f3b34c0c16f7ef/UI/src/pages/ChatPage.js#L70-L79 "Source code on GitHub")
 
 It will check whether the application is allowed to acess location in the device.
 
@@ -352,7 +352,7 @@ Returns **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 ### HomePage
 
-[UI/src/pages/HomePage.js:22-31](https://github.com/dliang090222/WeHelp/blob/196844bb551c6c9cd5f8254eee5b1dd25ee7f5de/UI/src/pages/HomePage.js#L22-L31 "Source code on GitHub")
+[UI/src/pages/HomePage.js:22-31](https://github.com/dliang090222/WeHelp/blob/036cf21c70d348e0c01bee1703f3b34c0c16f7ef/UI/src/pages/HomePage.js#L22-L31 "Source code on GitHub")
 
 HomePage create the basic stack navigation logic in the HomePage section
 and render the contents of HomeMainPage, TaskDetailPage, UserDetailPage, and ChatPage.
@@ -366,7 +366,7 @@ Returns **Component** => Render a HomePage Component with navigation logic
 
 ### HomeMainPage
 
-[UI/src/pages/HomePage.js:43-84](https://github.com/dliang090222/WeHelp/blob/196844bb551c6c9cd5f8254eee5b1dd25ee7f5de/UI/src/pages/HomePage.js#L43-L84 "Source code on GitHub")
+[UI/src/pages/HomePage.js:43-84](https://github.com/dliang090222/WeHelp/blob/036cf21c70d348e0c01bee1703f3b34c0c16f7ef/UI/src/pages/HomePage.js#L43-L84 "Source code on GitHub")
 
 HomeMainPage mainly consists of taskCard as child components to show available tasks information.
 HomeMainPage is one of the observer under the subject App.js in the Observer Pattern.
@@ -381,7 +381,7 @@ Returns **Component** => Render a HomeMainPage Component with scorllView consist
 
 ### SearchField
 
-[UI/src/pages/HomePage.js:93-108](https://github.com/dliang090222/WeHelp/blob/196844bb551c6c9cd5f8254eee5b1dd25ee7f5de/UI/src/pages/HomePage.js#L93-L108 "Source code on GitHub")
+[UI/src/pages/HomePage.js:93-108](https://github.com/dliang090222/WeHelp/blob/036cf21c70d348e0c01bee1703f3b34c0c16f7ef/UI/src/pages/HomePage.js#L93-L108 "Source code on GitHub")
 
 (Incompleted) SearchField lines up our app logo and a search bar that will search and return specific task card by keyword.
 
@@ -393,7 +393,7 @@ Returns **Component** => Render a logo lined up with a searchBar Component
 
 ### CardField
 
-[UI/src/pages/HomePage.js:133-207](https://github.com/dliang090222/WeHelp/blob/196844bb551c6c9cd5f8254eee5b1dd25ee7f5de/UI/src/pages/HomePage.js#L133-L207 "Source code on GitHub")
+[UI/src/pages/HomePage.js:133-207](https://github.com/dliang090222/WeHelp/blob/036cf21c70d348e0c01bee1703f3b34c0c16f7ef/UI/src/pages/HomePage.js#L133-L207 "Source code on GitHub")
 
 CardField will render the task information based on the task object passed by HomeMainPage,
 and render the buttons to redirect to other pages corresponding to that specific task.
@@ -422,7 +422,7 @@ Returns **Component** => Render a Card component of the task
 
 ### LoginPage
 
-[UI/src/pages/LoginPage.js:14-60](https://github.com/dliang090222/WeHelp/blob/196844bb551c6c9cd5f8254eee5b1dd25ee7f5de/UI/src/pages/LoginPage.js#L14-L60 "Source code on GitHub")
+[UI/src/pages/LoginPage.js:14-60](https://github.com/dliang090222/WeHelp/blob/036cf21c70d348e0c01bee1703f3b34c0c16f7ef/UI/src/pages/LoginPage.js#L14-L60 "Source code on GitHub")
 
 LoginPage is a page component that contains a button which will invokes the Google App Auth API
 to acquire user information from user's Google account.
@@ -437,7 +437,7 @@ Returns **Component** => Render a LoginPage to redirect the user to login using 
 
 ### MessagePage
 
-[UI/src/pages/MessagePage.js:23-31](https://github.com/dliang090222/WeHelp/blob/196844bb551c6c9cd5f8254eee5b1dd25ee7f5de/UI/src/pages/MessagePage.js#L23-L31 "Source code on GitHub")
+[UI/src/pages/MessagePage.js:23-31](https://github.com/dliang090222/WeHelp/blob/036cf21c70d348e0c01bee1703f3b34c0c16f7ef/UI/src/pages/MessagePage.js#L23-L31 "Source code on GitHub")
 
 MessagePage has a child componet ChatList which is one of the observer under the subject App.js.
 It will be notified if there are new message from other users.
@@ -452,7 +452,7 @@ Returns **Component** => Render a MessagPage component with navigation logic
 
 ### ChatList
 
-[UI/src/pages/MessagePage.js:40-107](https://github.com/dliang090222/WeHelp/blob/196844bb551c6c9cd5f8254eee5b1dd25ee7f5de/UI/src/pages/MessagePage.js#L40-L107 "Source code on GitHub")
+[UI/src/pages/MessagePage.js:40-107](https://github.com/dliang090222/WeHelp/blob/036cf21c70d348e0c01bee1703f3b34c0c16f7ef/UI/src/pages/MessagePage.js#L40-L107 "Source code on GitHub")
 
 ChatList is an observer and a child component of MessagePage that will render a list of previous contacted user.
 
@@ -464,7 +464,7 @@ Returns **Component** => Render a ChatList component where each item of the list
 
 ### PublishPage
 
-[UI/src/pages/PublishPage.js:18-80](https://github.com/dliang090222/WeHelp/blob/196844bb551c6c9cd5f8254eee5b1dd25ee7f5de/UI/src/pages/PublishPage.js#L18-L80 "Source code on GitHub")
+[UI/src/pages/PublishPage.js:18-80](https://github.com/dliang090222/WeHelp/blob/036cf21c70d348e0c01bee1703f3b34c0c16f7ef/UI/src/pages/PublishPage.js#L18-L80 "Source code on GitHub")
 
 PublishPage is not an observer as other pages. However, it will collect the new task inputs from the user.
 Then, it will publish the new task and a new post request to the server. 
@@ -478,7 +478,7 @@ Returns **Component** => Render a PublishPage component with imagePicker and but
 
 ### publish
 
-[UI/src/pages/PublishPage.js:92-140](https://github.com/dliang090222/WeHelp/blob/196844bb551c6c9cd5f8254eee5b1dd25ee7f5de/UI/src/pages/PublishPage.js#L92-L140 "Source code on GitHub")
+[UI/src/pages/PublishPage.js:92-140](https://github.com/dliang090222/WeHelp/blob/036cf21c70d348e0c01bee1703f3b34c0c16f7ef/UI/src/pages/PublishPage.js#L92-L140 "Source code on GitHub")
 
 It will encapsulate the new task inputs and send a post request to the server to update the taskList.
 
@@ -494,7 +494,7 @@ Returns **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 ### checkImagePermission
 
-[UI/src/pages/PublishPage.js:148-157](https://github.com/dliang090222/WeHelp/blob/196844bb551c6c9cd5f8254eee5b1dd25ee7f5de/UI/src/pages/PublishPage.js#L148-L157 "Source code on GitHub")
+[UI/src/pages/PublishPage.js:148-157](https://github.com/dliang090222/WeHelp/blob/036cf21c70d348e0c01bee1703f3b34c0c16f7ef/UI/src/pages/PublishPage.js#L148-L157 "Source code on GitHub")
 
 It will check whether the application is allowed to acess image library in the device.
 
@@ -506,7 +506,7 @@ Returns **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 ### ImagePicker
 
-[UI/src/pages/PublishPage.js:165-261](https://github.com/dliang090222/WeHelp/blob/196844bb551c6c9cd5f8254eee5b1dd25ee7f5de/UI/src/pages/PublishPage.js#L165-L261 "Source code on GitHub")
+[UI/src/pages/PublishPage.js:165-261](https://github.com/dliang090222/WeHelp/blob/036cf21c70d348e0c01bee1703f3b34c0c16f7ef/UI/src/pages/PublishPage.js#L165-L261 "Source code on GitHub")
 
 ImagePicker is a helper component that generates four TouchableOpacity that allow user to upload up to four images for the new task.
 
@@ -518,7 +518,7 @@ Returns **Component** => Render a ImagePicker to help user to upload up to four 
 
 ### TaskDetailPage
 
-[UI/src/pages/TaskDetailPage.js:35-180](https://github.com/dliang090222/WeHelp/blob/196844bb551c6c9cd5f8254eee5b1dd25ee7f5de/UI/src/pages/TaskDetailPage.js#L35-L180 "Source code on GitHub")
+[UI/src/pages/TaskDetailPage.js:35-180](https://github.com/dliang090222/WeHelp/blob/036cf21c70d348e0c01bee1703f3b34c0c16f7ef/UI/src/pages/TaskDetailPage.js#L35-L180 "Source code on GitHub")
 
 TaskDetailPage is a extended page that can be called by other pages to show more detail information for one task object.
 
@@ -546,7 +546,7 @@ Returns **Component** => Render a TaskDetailPage to show the details of one task
 
 ### TaskPage
 
-[UI/src/pages/TaskPage.js:22-31](https://github.com/dliang090222/WeHelp/blob/196844bb551c6c9cd5f8254eee5b1dd25ee7f5de/UI/src/pages/TaskPage.js#L22-L31 "Source code on GitHub")
+[UI/src/pages/TaskPage.js:22-31](https://github.com/dliang090222/WeHelp/blob/036cf21c70d348e0c01bee1703f3b34c0c16f7ef/UI/src/pages/TaskPage.js#L22-L31 "Source code on GitHub")
 
 TaskPage contains the basic navigation logic to jump between differnt taskDetailPage and chatPage.
 
@@ -558,7 +558,7 @@ Returns **Component** => Render a TaskPage with navigation logic
 
 ### TaskMainPage
 
-[UI/src/pages/TaskPage.js:41-82](https://github.com/dliang090222/WeHelp/blob/196844bb551c6c9cd5f8254eee5b1dd25ee7f5de/UI/src/pages/TaskPage.js#L41-L82 "Source code on GitHub")
+[UI/src/pages/TaskPage.js:41-82](https://github.com/dliang090222/WeHelp/blob/036cf21c70d348e0c01bee1703f3b34c0c16f7ef/UI/src/pages/TaskPage.js#L41-L82 "Source code on GitHub")
 
 TaskMainPage is an observer under the subject of App.js. It contains a list of cards of tasks.
 As soon as taskList changed in App.js, the TaskMainPage will rerender its card of the tasks.
@@ -571,7 +571,7 @@ Returns **Component** => Render a TaskMainPage with ScrollView consisting of car
 
 ### TaskCard
 
-[UI/src/pages/TaskPage.js:107-122](https://github.com/dliang090222/WeHelp/blob/196844bb551c6c9cd5f8254eee5b1dd25ee7f5de/UI/src/pages/TaskPage.js#L107-L122 "Source code on GitHub")
+[UI/src/pages/TaskPage.js:107-122](https://github.com/dliang090222/WeHelp/blob/036cf21c70d348e0c01bee1703f3b34c0c16f7ef/UI/src/pages/TaskPage.js#L107-L122 "Source code on GitHub")
 
 TaskCard will render the task information based on the task object passed by HomeMainPage similar to CardField but with different styles.
 
@@ -599,7 +599,7 @@ Returns **Component** => Render a TaskCard that is correspoinding to one task.
 
 ### UserDetailPage
 
-[UI/src/pages/UserDetailPage.js:18-129](https://github.com/dliang090222/WeHelp/blob/196844bb551c6c9cd5f8254eee5b1dd25ee7f5de/UI/src/pages/UserDetailPage.js#L18-L129 "Source code on GitHub")
+[UI/src/pages/UserDetailPage.js:18-129](https://github.com/dliang090222/WeHelp/blob/036cf21c70d348e0c01bee1703f3b34c0c16f7ef/UI/src/pages/UserDetailPage.js#L18-L129 "Source code on GitHub")
 
 Show the user's detail information by sending post request and fetch the user data from the server.
 
@@ -613,7 +613,7 @@ Returns **Component** => Render a UserDetailPage to show the details of the user
 
 ### getUser
 
-[UI/src/pages/UserDetailPage.js:138-165](https://github.com/dliang090222/WeHelp/blob/196844bb551c6c9cd5f8254eee5b1dd25ee7f5de/UI/src/pages/UserDetailPage.js#L138-L165 "Source code on GitHub")
+[UI/src/pages/UserDetailPage.js:138-165](https://github.com/dliang090222/WeHelp/blob/036cf21c70d348e0c01bee1703f3b34c0c16f7ef/UI/src/pages/UserDetailPage.js#L138-L165 "Source code on GitHub")
 
 Send a post request to the sever to acquire the user object by userUID.
 
@@ -625,7 +625,7 @@ Returns **{user: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Refe
 
 ### UserPage
 
-[UI/src/pages/UserPage.js:19-94](https://github.com/dliang090222/WeHelp/blob/196844bb551c6c9cd5f8254eee5b1dd25ee7f5de/UI/src/pages/UserPage.js#L19-L94 "Source code on GitHub")
+[UI/src/pages/UserPage.js:19-94](https://github.com/dliang090222/WeHelp/blob/036cf21c70d348e0c01bee1703f3b34c0c16f7ef/UI/src/pages/UserPage.js#L19-L94 "Source code on GitHub")
 
 Show the information of current login user.
 
