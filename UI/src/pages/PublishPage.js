@@ -108,7 +108,7 @@ function publish(title, description, cost, images, userUID) {
   images.forEach((img, i) => {
     if(img != null) {
       count++;
-      data.append('file'+i.toString(), {
+      data.append(i.toString(), {
         uri: img.uri,
         type: 'image/jpeg',
         name: img.uri
