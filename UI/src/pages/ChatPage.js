@@ -37,7 +37,7 @@ export function ChatPage(props) {
             <PageHeader 
                 leftComp={<Button title='Back' onPress={() => props.navigation.goBack()} />}
                 centerComp={<Text>{chat.name}</Text>}
-                rightComp={<Button title='Share Location' onPress={async () => {
+                rightComp={<Button title='My Location' onPress={async () => {
                     if(checkLocationPermission()) {
                         setLoading(true);
                         let location = await expoLocation.getCurrentPositionAsync({});
