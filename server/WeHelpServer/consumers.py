@@ -60,5 +60,5 @@ class ClientConsumer(WebsocketConsumer):
             'datetime': event['datetime'],
             'longtitude': event['longtitude'],
             'latitude': event['latitude'],
-            'func': 'message'
+            'func': 'location'
         }))
