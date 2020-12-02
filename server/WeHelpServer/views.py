@@ -20,7 +20,7 @@ from WeHelpServer.models import User, Message, Chat, Task
 
 def signIn(body):
     # body: {'email', 'name', 'icon'}
-    # return: {'UID', 'icon', 'coins', 'rating', 'num_rating', 'publish_count', 'finish_count', 'contributions': ['%Y-%m-%d']}
+    # return: {'UID', 'icon', 'coins', 'rating', 'publish_count', 'finish_count', 'contributions': ['%Y-%m-%d']}
     try:
         email = body['email']
         icon = body['icon']
@@ -48,9 +48,13 @@ def signIn(body):
                     last_freecoin=timezone.now()
                     )
         user.save()
+
+    if (user.num_rating == 0):
+        rating = 0
+    else:
+        rating = user.rating / user.num_rating
     res = {'UID': user.id, 'coins': user.coins,
-           'icon': user.icon, 'rating': user.rating,
-           'num_rating': user.num_rating,
+           'icon': user.icon, 'rating': rating,
            'publish_count': publish_count,
            'finish_count': finish_count,
            'contributions': contributions
@@ -71,9 +75,12 @@ def getUser(body):
         for task in related_tasks:
             contributions.append(task.datetime.strftime("%Y-%m-%d"))
 
+        if (user.num_rating == 0):
+            rating = 0
+        else:
+            rating = user.rating / user.num_rating
         res = {'avatar': user.icon, 'coins': user.coins,
-               'rating': user.rating, 'name': user.name,
-               'num_rating': user.num_rating,
+               'rating': rating, 'name': user.name,
                'publish_count': publish_count,
                'finish_count': finish_count,
                'contributions': contributions
@@ -445,7 +452,7 @@ def deleteTask(body):
 
 
 def finishTask(body):
-    # body: {'UID', 'taskID', 'rating'}
+    # body: {'UID', 'taskID'}
     # return: {'success': 1/0}
     print("finishiTask")
     try:
@@ -454,8 +461,6 @@ def finishTask(body):
 
         if ((user.id == task.user.id) & task.active):
             acceptor = task.acceptor
-            acceptor.rating = acceptor.rating + body['rating']
-            acceptor.num_rating = acceptor.num_rating + 1
             acceptor.coins = acceptor.coins + task.cost
 
             task.active = False
@@ -466,6 +471,25 @@ def finishTask(body):
 
         else:
             res = {'success': 0}
+
+    except Exception as e:
+        print(traceback.print_exc())
+        res = {'success': 0}
+
+    return JsonResponse(res)
+
+
+def sendRating(body):
+    # body: {'UID', 'rating'}
+
+    try:
+        user = User.objects.get(id=body['UID'])
+
+        user.rating = user.rating + body['rating']
+        user.num_rating = user.num_rating + 1
+        user.save()
+
+        res = {'success': 1}
 
     except Exception as e:
         print(traceback.print_exc())
@@ -607,5 +631,9 @@ def index(request):
 
         elif (body['func'] == 'sendLocation'):
             return sendLocation(body)
+
+        elif (body['func'] == 'sendRating'):
+            return sendRating(body)
+
     # avoid "return none" error
     return JsonResponse({'success': 0, 'comment': 'func incorrect'})

@@ -4,7 +4,7 @@ import websockets
 import json
 
 async def hello():
-    uri = "ws://34.94.101.183/ws/WeHelp/7/"
+    uri = "ws://34.94.101.183/ws/WeHelp/2/"
     async with websockets.connect(uri) as websocket:
         body = {'message': 'hahhaha'}
 
