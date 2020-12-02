@@ -12,6 +12,16 @@ import { UserPage } from '../pages/UserPage';
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
+/**
+ *
+ * A navigation container contains stack and tab navigation logic.
+ * It is the fundamental navigation logic of this application 
+ * that connects the HomePage, TaskPage, PublishPage, MessagePage, and UserPage.
+ *
+ * @export
+ * @param {none}
+ * @return {Component} => Render a PageNavigation component with tab bar and page navigation logic for the whole application.
+ */
 export function PageNavigation() {
     return (
       <NavigationContainer>

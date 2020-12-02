@@ -1,7 +1,18 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { View, StatusBar } from 'react-native';
 import { Header } from 'react-native-elements';
 
+/**
+ *
+ * A customized page header is used across most of the pages in this application.
+ *
+ * @export
+ * @param {{leftComp: Component, centerComp: Component, rightComp:Component}} props <br>
+ * 1. props.leftComp
+ * 2. props.centerComp
+ * 3. props.rightComp
+ * @return {Component} => Render a PageHeader Component with leftComp, centerComp, rightComp if applicable
+ */
 export function PageHeader(props) {
     return (
         <View>

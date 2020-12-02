@@ -1,80 +1,113 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, Component } from 'react';
 import { PageNavigation } from './src/components/PageNavigation';
 import { LoginPage } from './src/pages/LoginPage';
 import { UserContext} from './src/components/UserContext';
 import { EventRegister } from 'react-native-event-listeners';
 
+
+/**
+ * App.js acts as a subject in the Observer Pattern to receive and process data from the server.
+ * There are multiple EventListener and Websocket to listen to the new messages, new tasks, and new users events from the server.
+ * As soon as there are new data coming from the server, App.js will notify the observers which are different funtional Pages.
+ * Then, each page will rerender their components using their own methods
+ * @export
+ * @param {none}
+ * @returns {Component} => Render LoginPage component or PageNavigation component based on the user's login status.
+ */
 export default function App() {
+
+   /**
+   *  @private
+   *  @name user
+   *  @type {Object} 
+   *  user = {
+   *           signedIn: boolean,
+   *           name: string,
+   *           photoUrl: string,
+   *           UID: number,
+   *           email: stromg,
+   *           coins: number,
+   *           rating: number,
+   *           publish_count: number,
+   *           finish_count: number,
+   *           contributions: [{'date': datetime}*]
+   *           }
+   */
   const [user, setUser] = useState({
     signedIn: false,
     name: '',
     photoUrl: '',
     UID: -1,
-    email: ''
+    email: '',
+    coins:0,
+    rating:0,
+    publish_count:0,
+    finish_count:0,
+    contributions:[]
   });
 
+
+  /**
+   *  @private
+   *  @name chatList
+   *  @type {Object[]} 
+   *  chatList = [char*]
+   *  chat =  {
+   *           'updating': boolean
+   *           'chatID': number
+   *           'avatar': string
+   *           'name': string, the other user's name
+   *           'UID': number, the other user's UID
+   *           'comment': string, last_message
+   *           'datetime': datetime of last_message, format in %Y-%m-%d %H:%M:%S
+   *           'messages': [{'UID', 'message'}*], sorted
+   *          }
+   */
   const [chatList, setChatList] = useState([]);
-  /*
-  chatList = ['chatID': {
-    'updating': 
-    'chatID':
-    'avatar':
-    'name': the other user's name
-    'UID': the other user's UID
-    'comment': last_message
-    'datetime': datetime of last_message, format in %Y-%m-%d %H:%M:%S
-    'messages': [{'UID', 'message'}*], sorted
-  }*]
-  */
+  const [isRefreshChat, setRefreshChat] = useState(false);
 
- const [taskList, setTaskList] = useState([
-  {
-      publisher: 'Dongyao',
-      publisherUID: 7,
-      receiverUID: 7,
-      taskID: 0,
-      avatar: 'https://avatars1.githubusercontent.com/u/23393819?s=400&u=7a3a81849ae6c9ef83bb35c31d6826224f8b6528&v=4',
-      title: 'none',
-      description: 'HelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHello',
-      img: ['https://avatars1.githubusercontent.com/u/23393819?s=400&u=7a3a81849ae6c9ef83bb35c31d6826224f8b6528&v=4',
-          'https://avatars1.githubusercontent.com/u/23393819?s=400&u=7a3a81849ae6c9ef83bb35c31d6826224f8b6528&v=4',
-          'https://avatars1.githubusercontent.com/u/23393819?s=400&u=7a3a81849ae6c9ef83bb35c31d6826224f8b6528&v=4',
-          'https://avatars1.githubusercontent.com/u/23393819?s=400&u=7a3a81849ae6c9ef83bb35c31d6826224f8b6528&v=4'],
-      isCompleted: false
-  },
-  {
-      publisher: 'Wing',
-      publisherUID: 7,
-      receiverUID: 8,
-      taskID:1,
-      avatar: 'https://avatars3.githubusercontent.com/u/22208368?s=400&u=3d3f94c135f0c3b6de1601bce6b24c48ee735a44&v=4',
-      title: 'yes',
-      description: 'HelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHello',
-      img: ['https://avatars1.githubusercontent.com/u/23393819?s=400&u=7a3a81849ae6c9ef83bb35c31d6826224f8b6528&v=4'],
-      isCompleted: true
-   },
-   {
-    publisher: 'Wing',
-    publisherUID: 8,
-    receiverUID: 7,
-    taskID:1,
-    avatar: 'https://avatars3.githubusercontent.com/u/22208368?s=400&u=3d3f94c135f0c3b6de1601bce6b24c48ee735a44&v=4',
-    title: 'yes',
-    description: 'HelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHello',
-    img: ['https://avatars1.githubusercontent.com/u/23393819?s=400&u=7a3a81849ae6c9ef83bb35c31d6826224f8b6528&v=4'],
-    isCompleted: false
- }
-])
+  /**
+   *  @private
+   *  @name taskList
+   *  @type {Object[]} 
+   *  taskList = [task*]
+   *  task =  {
+   *          publisher: String,
+   *          publisherUID: number,
+   *          receiverUID: number,
+   *          taskID: number,
+   *          avatar: string,
+   *          rating: number,
+   *          coins: number,
+   *          cost: number,
+   *          datetime: datetime,
+   *          title: string,
+   *          description: string,
+   *          img: string[],
+   *     }
+   */
+  const [taskList, setTaskList] = useState([])
 
+  /**
+   *  @private
+   *  @name socket
+   *  @type {WebSocket} 
+   */
   const [socket, setSocket] = useState();
 
+  /**
+   *  @private
+   *  @name sendMessage
+   * 
+   *  This function sends a string to the server, and the server will forward the string to the socket of the corresponding recevierUID.
+   */
   let sendMessage = useCallback(([newMessage, receiverUID]) => {
     //console.log(chatList)
     // --- find chat
 
     let chat_index = -1;
     chatList.forEach((chat, i) => {
-      if (chat['UID'] == receiverUID) {
+      if (chat['UID'] === receiverUID) {
         chat_index = i;
       }
     })
@@ -87,12 +120,7 @@ export default function App() {
       console.log("chat_index: " + chat_index);
       //move this chat to top
       if (chat_index != 0) {
-        setChatList(chatList => {
-          chatList = [chatList[chat_index]]
-                     .concat(chatList.slice(0, chat_index))
-                     .concat(chatList.slice(chat_index + 1));
-          return [...chatList];
-        })
+        setChatList(swapChat(chatList, 0, chat_index));
       }
       //update state
       let length = chatList[0]['messages'].length;
@@ -142,7 +170,28 @@ export default function App() {
     }
   }, [user, chatList])
 
-  let refreshChatList = useCallback((UID=user.UID) => {
+
+   /**
+   *  @private
+   *  @name addNewChat
+   * 
+   *  This function constructs a new chat object and inserts the new chat at index 0 of chatList.
+   *  And it will redirect to the new chatPage.
+   */
+  let addNewChat = useCallback(([contact_name, contact_UID, avatar, last_message, date_time, navigation]) => {
+    let newChatList = [...chatList];
+    newChatList = newChatList.concat(newChat(-1, contact_name, contact_UID, avatar, last_message, date_time));
+    setChatList(newChatList);
+    navigation.navigate('ChatPage', {chat: newChatList[newChatList.length-1]});
+  }, [chatList])
+
+  /**
+   *  @private
+   *  @name refreshChatList
+   * 
+   *  This function will clean and refresh the contact chat list from the server.
+   */
+  let refreshChatList = useCallback(async (UID=user.UID) => {
     if (UID == -1) {
       alert("uid = -1?");
       return;
@@ -165,14 +214,11 @@ export default function App() {
           else {
             avatar = chat['avatarURL'];
           }
-          newChatList = newChatList.concat({
-            name: chat['name'], avatar: avatar, 
-            comment: chat['last_message'], chatID: chat['chatID'], 
-            datetime: chat['datetime'], messages: [],
-            updating: false, UID: chat['UID']
-          });
+          newChatList = newChatList.concat(newChat(chat['chatID'], chat['name'], chat['UID'],
+                                                   avatar, chat['last_message'], chat['datetime']));
         })
         setChatList(newChatList);
+        setRefreshChat(true);
       }
       else {
         alert("ERROR: can not load chat list");
@@ -180,7 +226,13 @@ export default function App() {
     }) 
   }, []);
 
-  let refreshChat = useCallback((chatID) => {
+   /**
+   *  @private
+   *  @name refreshChat
+   * 
+   *  This function will clean and refresh chat message of each chatList object.
+   */
+  let refreshChat = useCallback(async (chatID) => {
     //find chatID
     let chat_index = -1;
     chatList.forEach((chat, i) => {
@@ -252,6 +304,12 @@ export default function App() {
     }
   }, [user, chatList]);
 
+   /**
+   *  @private
+   *  @name processNewMessage
+   * 
+   *  This function will construct and append the new message if it receives the new message from the server through the WebSocket.
+   */
   let processNewMessage = useCallback((event) => {
     let newMessage = JSON.parse(event.data);
     console.log("received message: " + newMessage['message']);
@@ -265,58 +323,125 @@ export default function App() {
       new_avatar = newMessage['avatar'];
     }
 
+     //if (chatList[0]['messages'].length == 0) {return;}
     let chat_index = -1;
     chatList.forEach((chat, i) => {
-      if (chat['chatID'] == newMessage['chatID']) {
+      if (chat['chatID'] == newMessage['chatID'] || chat['UID'] == newMessage['UID']) {
         chat_index = i;
       }
     })
     console.log(chat_index);
     //create a new chat if not exist
+    let newChatList = [...chatList];
     if (chat_index == -1) {
-      setChatList(chatList => {
-        chatList.unshift({
-            name: newMessage['name'], avatar: new_avatar, 
-            comment: newMessage['message'], chatID: newMessage['chatID'], 
-            datetime: newMessage['datetime'], 
-            updating: false, UID: newMessage['UID'],
-            messages: [],
-        });
-        return [...chatList];
-      })
+      newChatList.unshift(
+          newChat(newMessage['chatID'], newMessage['name'], newMessage['UID'],
+                    new_avatar, newMessage['message'], newMessage['datetime'])
+        );
       chat_index = 0;
     }
-
     //move it to top as newest chat
-    if (chat_index != 0) {
-      setChatList(chatList => {
-        chatList = [chatList[chat_index]]
-                      .concat(chatList.slice(0, chat_index))
-                      .concat(chatList.slice(chat_index + 1));
-        return [...chatList];
-      })
+    else if (chat_index != 0) {
+      newChatList = swapChat(newChatList, 0, chat_index);
     }
 
-
-    //if (chatList[0]['messages'].length == 0) {return;}
     let u;
-    u = {
-      _id: newMessage['UID'],
-      avatar: new_avatar,
-      name: newMessage['name'],
+     u = {
+       _id: newMessage['UID'],
+       avatar: new_avatar,
+       name: newMessage['name'],
+     }
+     let m = {
+       _id: newChatList[0]['messages'].length + 1,
+       text: newMessage['message'],
+       user: u
+     };
+
+    if(newChatList[0]['chatID'] == -1) {
+      newChatList[0]['chatID'] = newMessage['chatID'];
     }
-    let m = {
-      _id: chatList[0]['messages'].length + 1,
-      text: newMessage['message'],
-      user: u
-    };
-    setChatList(chatList => {
-      chatList[0]['messages'].unshift(m);
-      return [...chatList];
-    });
+    newChatList[0]['comment'] = newMessage['message'];
+    newChatList[0]['messages'].unshift(m);
+    setChatList(newChatList);
   }, [chatList]);
 
-  let changeUser = useCallback((newName, newPhotoUrl, newEmail, newUID) => {
+  /**
+   *  @private
+   *  @name refreshTaskList
+   * 
+   *  This function will clean and refresh the task list from the server.
+   */
+  let refreshTaskList = useCallback(async () => {
+    fetch('http://34.94.101.183/WeHelp/', {
+      method: 'POST',
+      body: JSON.stringify({
+        func: 'getActiveTask'
+      })
+    }).then(async (resp) => {
+      let found = await resp.json();
+      //alert(found['chatList'])
+      if (found['success'] == 1) {
+        let newTaskList = [];
+        found['taskList'].forEach((task) => {
+          newTask(task['UID'], task['acceptorUID'], task['taskID'],
+              task['cost'], task['datetime'], task['title'], task['body'], task['images'])
+          .then((new_task) => {
+            if(new_task != null) {
+              newTaskList = newTaskList.concat(new_task);
+              newTaskList.sort((a, b) => {return a['taskID'] < b['taskID']});
+              setTaskList(newTaskList);
+            }
+          })
+        })
+      }
+      else {
+        alert("ERROR: can not load task list");
+      }
+    }) 
+  }, [user])
+
+  /**
+   *  @private
+   *  @name updateUser
+   * 
+   *  This function will refresh and update the current user's information.
+   */
+  let updateUser = useCallback(() => {
+    fetch('http://34.94.101.183:80/WeHelp/', 
+    {
+      method:'POST',
+      body: JSON.stringify({
+        func:'getUser', UID: user.UID
+      })})
+      .then(async (resp)=>{
+        let found = await resp.json();
+        found['contributions'].forEach((the_date, i) => {
+          found['contributions'][i] = {date: the_date};
+        });
+        setUser({
+          signedIn: true,
+          name: found['name'],
+          photoUrl: found['avatar'],
+          UID: user['UID'],
+          email: found['email'],
+          coins: found['coins'],
+          rating: found['rating'],
+          publish_count: found['publish_count'],
+          finish_count: found['finish_count'],
+          contributions: found['contributions']
+        });
+      }).catch(() => {
+        alert('Fetch failed');
+    });
+  }, [user])
+
+   /**
+   *  @private
+   *  @name changeUser
+   * 
+   *  This function will change and signin the new user's information.
+   */
+  let changeUser = useCallback((newName, newPhotoUrl, newEmail, newUID, newCoins, newRating, newPublishCount, newFinishCount, newContributions) => {
     let url;
     if (newPhotoUrl.startsWith('media')) {
       url = 'http://34.94.101.183/' + newPhotoUrl;
@@ -324,15 +449,121 @@ export default function App() {
     else {
       url = newPhotoUrl;
     }
+    newContributions.forEach((the_date, i) => {
+      newContributions[i] = {date: the_date};
+    });
     setUser({
       signedIn: true,
       name: newName,
       photoUrl: url,
       UID: newUID,
-      email: newEmail
+      email: newEmail,
+      coins: newCoins,
+      rating: newRating,
+      publish_count: newPublishCount,
+      finish_count: newFinishCount,
+      contributions: newContributions
     });
     refreshChatList(newUID);
+    refreshTaskList();
   }, []);
+
+  /**
+   *  @private
+   *  @name signOutUser
+   * 
+   *  This function will signout and empty the current user's information.
+   */
+  let signOutUser = useCallback(() => {
+    setUser({
+          signedIn: false,
+          name: '',
+          photoUrl: '',
+          UID: -1,
+          email: '',
+          coins:0,
+          rating:0,
+          publish_count:0,
+          finish_count:0,
+          contributions:[]
+        })
+    setChatList([]);
+    setTaskList([]);
+    if(socket) {
+      socket.close();
+      setSocket();
+    }
+  }, [socket])
+
+  /**
+   *  @private
+   *  @name iconChanged
+   * 
+   *  This function will change the current user's avatar.
+   */
+  let iconChanged = useCallback((newUrl) => {
+    let url;
+    if (newUrl.startsWith('media')) {
+      url = 'http://34.94.101.183/' + newUrl;
+    }
+    else {
+      url = newUrl;
+    }
+    setUser(prev => ({
+      ...prev,
+      photoUrl: url,
+    }));
+  }, [user])
+
+  /**
+   *  @private
+   *  @name editTask
+   * 
+   *  This function will edit and update the task states such as accept, cancel, delete, and finish states.
+   */
+  let editTask = useCallback(([func, UID, taskID]) => {
+    fetch('http://34.94.101.183/WeHelp/', {
+      method: 'POST',
+      body: JSON.stringify({
+          func: func, UID: UID, taskID: taskID
+      })
+    }).then(async (resp) => {
+        let found = await resp.json();
+        if (found['success'] != 0) {
+          let task_index = -1;
+          let newTaskList = [...taskList];
+          newTaskList.forEach((task, i) => {
+            if(task.taskID == taskID) {
+              task_index = i;
+            }
+          })
+          if(taskList == -1) {
+            return;
+          }
+          if(func === 'finishTask' || func === 'deleteTask') {
+            newTaskList.splice(task_index, 1);
+            updateUser();
+          }
+          else if(func === 'cancelAccept') {
+            newTaskList[task_index].receiverUID = -1;
+          }
+          else if(func === 'acceptTask') {
+            newTaskList[task_index].receiverUID = user.UID;
+          }
+          setTaskList(newTaskList);
+        }
+        else {
+            alert(func+" failed");
+        }
+    })
+  }, [user, taskList])
+  
+
+  /**
+   *  @private
+   * 
+   *  Thie following useEffect hooks are for setting up the WebSocket and EventListeners
+   */
 
   useEffect(() => {
     if(user.signedIn && !socket) {
@@ -347,63 +578,64 @@ export default function App() {
     }
   }, [chatList, socket])
 
-  let signOutUser = useCallback(() => {
-    setUser({
-          signedIn: false,
-          name: '',
-          photoUrl: '',
-          UID: -1,
-          email: ''
-        })
-    setChatList([]);
-    if(socket) {
-      socket.close();
-      setSocket();
+  useEffect(() => {
+    const updateUserListener = EventRegister.addEventListener('updateUser', updateUser)
+    return function cleanup() {
+      EventRegister.removeEventListener(updateUserListener);
     }
-  }, [socket])
+  }, [user])
 
-  let iconChanged = useCallback((newUrl) => {
-    let url;
-    if (newUrl.startsWith('media')) {
-      url = 'http://34.94.101.183/' + newUrl;
+  useEffect(() => {
+    const signOutUserListener = EventRegister.addEventListener('signOutUser', signOutUser)
+    return function cleanup() {
+      EventRegister.removeEventListener(signOutUserListener);
     }
-    else {
-      url = newUrl;
-    }
-    setUser(prev => ({
-      ...prev,
-      photoUrl: url,
-    }));
-  }, [])
+  }, [socket]);
 
-  useEffect(() => {EventRegister.addEventListener('signOutUser', signOutUser)}, [socket]);
   useEffect(() => {EventRegister.addEventListener('iconChanged', iconChanged)}, []);
+
   useEffect(() => {
     const sendMessageListener = EventRegister.addEventListener('sendMessage', sendMessage)
     return function cleanup() {
       EventRegister.removeEventListener(sendMessageListener);
     }
   }, [user, chatList]);
+
+  useEffect(() => {
+    const addNewChatListener = EventRegister.addEventListener('addNewChat', addNewChat)
+    return function cleanup() {
+      EventRegister.removeEventListener(addNewChatListener);
+    }
+  }, [user, chatList]);
+
+  useEffect(() => {
+    const editTaskListener = EventRegister.addEventListener('editTask', editTask)
+    return function cleanup() {
+      EventRegister.removeEventListener(editTaskListener);
+    }
+  }, [user, taskList]);
+
+  useEffect(() => {
+    if(isRefreshChat) {
+      chatList.forEach((chat) => {
+        refreshChat(chat['chatID']);
+      });
+      setRefreshChat(false);
+    }
+  }, [isRefreshChat]);
+
+  useEffect(() => {
+    const refreshTaskListener = EventRegister.addEventListener('refreshTaskList', refreshTaskList)
+    return function cleanup() {
+      EventRegister.removeEventListener(refreshTaskListener);
+    }
+  }, [user, taskList]);
   
-  // useEffect(() => {
-  //   const refreshChatListListener = EventRegister.addEventListener('refreshChatList', refreshChatList)
-
-  //   return function cleanup() {
-  //     EventRegister.removeEventListener(refreshChatListListener);
-  //   }
-  // }, [user])
-
-   useEffect(() => {
-     const refreshChatListener = EventRegister.addEventListener('refreshChat', refreshChat)
-     return function cleanup() {
-       EventRegister.removeEventListener(refreshChatListener);
-     }
-   }, [user, chatList]);
   
 
   if (user.signedIn) {
     return (
-      <UserContext.Provider value={[{...user}, chatList, [...taskList]]}>
+      <UserContext.Provider value={[{...user}, [...chatList], [...taskList]]}>
           <PageNavigation/>
       </UserContext.Provider>
       );  
@@ -411,4 +643,93 @@ export default function App() {
   else {
     return <LoginPage changeUser={changeUser} />;
   }
+}
+
+/**
+   *  @private
+   *  @name swapChat
+   * 
+   *  This function swaps the chats at index1 and index2 of chatList.
+   */
+function swapChat(chatList, index1, index2) {
+  return [chatList[index2]].concat(chatList.slice(index1, index2))
+                           .concat(chatList.slice(index2 + 1));
+}
+
+  /**
+   *  @private
+   *  @name newChat
+   * 
+   *  This function cosntruct a new chat object.
+   */
+function newChat (chat_ID, contact_name, contact_UID, avatar, last_message, date_time) {
+  let temp_avatar;
+  if (avatar.startsWith('media')){
+    temp_avatar = 'http://34.94.101.183/' + avatar;
+  }
+  else {
+    temp_avatar = avatar;
+  }
+  let chat = {
+    chatID: chat_ID,
+    name: contact_name,
+    UID: contact_UID,
+    avatar: temp_avatar,
+    comment: last_message,
+    datetime: date_time,
+    messages: [],
+    updating: false
+  }
+  return chat;
+}
+
+/**
+   *  @private
+   *  @name newTask
+   * 
+   *  This function cosntruct a new task object.
+   */
+async function newTask(publisherUID, receiverUID, taskID, cost, datetime, title, description, images) {
+  let task = null;
+  await fetch('http://34.94.101.183/WeHelp/', {
+        method: 'POST',
+        body: JSON.stringify({
+            func: 'getUser', UID: publisherUID
+        })
+        }).then(async (resp) => {
+        let found = await resp.json();
+        //alert(found['chatList'])
+        if (found['success'] != 0) {
+            if (found['avatar'].startsWith('media')){
+                found['avatar'] = 'http://34.94.101.183/' + found['avatar'];
+            }
+
+            images.forEach((img, i) => {
+              if (img.startsWith('media')){
+                images[i] = 'http://34.94.101.183/' + img;
+              }
+            })
+
+            task = {
+              publisher: found['name'],
+              publisherUID: publisherUID,
+              receiverUID: receiverUID,
+              taskID: taskID,
+              avatar: found['avatar'],
+              rating: found['rating'],
+              coins: found['coins'],
+              cost: cost,
+              datetime: datetime,
+              title: title,
+              description: description,
+              img: images,
+            }
+          }
+        else {
+            alert("ERROR: can not find user"+props.task['publisherUID']);
+            return;
+        }
+    }) 
+  // console.log(task);
+  return task;
 }

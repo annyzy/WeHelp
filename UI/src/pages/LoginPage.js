@@ -2,7 +2,15 @@ import React, { useCallback } from 'react';
 import { Button, View, Text, Image } from 'react-native';
 import { PageHeader } from '../components/PageHeader';
 import * as Google from 'expo-google-app-auth';
-
+/**
+ * LoginPage is a page component that contains a button which will invokes the Google App Auth API
+ * to acquire user information from user's Google account.
+ * After the Google Auth API return the user information sucessfully, LoginPage will update the user information
+ * using the callback function named changeUser declared in App.js
+ * @export
+ * @param {{changeUser: Function}} props props.changeUser is a callback function from App.js which can be used to change login user's properties.
+ * @return {Component} => Render a LoginPage to redirect the user to login using Google account
+ */
 export function LoginPage (props) {
   let signIn = useCallback(async () => {
     let name;
@@ -28,7 +36,7 @@ export function LoginPage (props) {
           .then(async (resp)=>{
             let found = await resp.json();
             alert('hello ' + name + ' UID:' + found['UID'] + ' photoUrl:' + found['icon']);
-            props.changeUser(name, found['icon'], email, found['UID']);
+            props.changeUser(name, found['icon'], email, found['UID'], found['coins'], found['rating'], found['publish_count'], found['finish_count'], found['contributions']);
           }).catch(() => {
             alert('Fetch failed');
         });

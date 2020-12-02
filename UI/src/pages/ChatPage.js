@@ -4,19 +4,53 @@ import { PageHeader } from '../components/PageHeader';
 import { ChatBox } from '../components/ChatBox'
 import { UserContext } from '../components/UserContext';
 import { MapObject } from '../components/MapObject';
+import * as expoLocation from 'expo-location';
 
+/**
+ *
+ * ChatPage will is an extended page of HomePage, TaskDetailPage, and MessagePage.
+ * It shows the MapObject and ChatBox for interactive user chatting experience.
+ * It is also an observer that will rerender if the chatList in the App.js changed.
+ *
+ * @export
+ * @param {{route: {params: {chat: Object}}}} props <br>
+ * props.route.params.chat = {
+ *           'updating': boolean
+ *           'chatID': number
+ *           'avatar': string
+ *           'name': string, the other user's name
+ *           'UID': number, the other user's UID
+ *           'comment': string, last_message
+ *           'datetime': datetime of last_message, format in %Y-%m-%d %H:%M:%S
+ *           'messages': [{'UID', 'message'}*], sorted
+ *          }
+ * @return {Component} => Render a ChatPage Component that consists of a MapObject and a ChatBox
+ */
 export function ChatPage(props) {
     const {chat} = props.route.params;
+    const [origin, setOrigin] = useState();
+    const [loading, setLoading] = useState(false);
+    const [user, chatList, taskList] = useContext(UserContext);
 
     return (
         <View style={{flex: 1, justifyContent: 'flex-start', backgroundColor: 'white'}}>
             <PageHeader 
                 leftComp={<Button title='Back' onPress={() => props.navigation.goBack()} />}
-                centerComp={<Text>{chat.name}</Text>} />
+                centerComp={<Text>{chat.name}</Text>}
+                rightComp={<Button title='Share Location' onPress={async () => {
+                    if(checkLocationPermission()) {
+                        setLoading(true);
+                        let location = await expoLocation.getCurrentPositionAsync({});
+                        setOrigin(location);
+                        setLoading(false);
+                    }
+                }}/>}    
+            />
+                
             <View style={{flex:1}}>
                 <View style={{flex:3, borderWidth:2, justifyContent:"center", alignItems:"center"}}>
-                    {/* <MapObject origin={{latitude: 34.0689122, longitude: -118.4478093}} destination={{latitude: 34.067057, longitude: -118.441606}}/> */}
-                    <MapObject origin={{latitude: 37.871789, longitude: -122.259076}} destination={{latitude: 34.067057, longitude: -118.441606}}/>
+                    {!loading && <MapObject origin={origin} originAvatar={user.photoUrl} detinationAvatar={chat.avatar}/>}
+                    {loading && <Text>Loading</Text>}
 
                 </View>
                 <View style={{flex:7}}>
@@ -26,3 +60,20 @@ export function ChatPage(props) {
         </View>
     );
 }
+
+/**
+ *
+ * It will check whether the application is allowed to acess location in the device.
+ * @param {none}
+ * @return {boolean} 
+ */
+let checkLocationPermission = async () => {
+    if (Platform.OS !== 'web') {
+      const {status} = await expoLocation.requestPermissionsAsync();
+      if (status !== 'granted') {
+        alert('Location permission is required');
+        return false;
+      }
+    }
+    return true;
+  };
