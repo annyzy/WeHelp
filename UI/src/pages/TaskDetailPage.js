@@ -39,6 +39,7 @@ export function TaskDetailPage(props) {
     const isAcceptedTask = (task['receiverUID'] === user['UID']);
     const [isModalVisiable, setIsModalVisiable] = useState(false);
     const [refreshing, setRefreshing] = React.useState(false);
+    const [newRating, setNewRating] = useState(0);
     const wait = useCallback((timeout) => {
         return new Promise(resolve => {
           setTimeout(resolve, timeout);
@@ -50,11 +51,22 @@ export function TaskDetailPage(props) {
         wait(2000).then(() => setRefreshing(false));
     }, []);
 
+    const sendRating = useCallback((UID, rating) => {
+        fetch('http://34.94.101.183/WeHelp/', {
+        method: 'POST',
+        body: JSON.stringify({
+          func: 'sendRating', 
+          UID: UID, 
+          rating: rating
+        })
+      })
+    }, [])
+
     return (
         <View style={{flex: 1, justifyContent: 'space-between', backgroundColor: 'white'}}>
             <Modal isVisible={isModalVisiable}
                     onBackdropPress={() => setIsModalVisiable(false)}>
-                    <View style={{backgroundColor:'white', height: '20%', justifyContent:'space-around'}}>
+                    <View style={{backgroundColor:'white', height: '20%', justifyContent:'space-around', alignItems: 'center'}}>
                         <Text>Please rate your helper</Text>
                         <Rating
                             type='heart'
@@ -63,8 +75,13 @@ export function TaskDetailPage(props) {
                             fractions={1}
                             startingValue={0}
                             showRating
+                            onFinishRating={(rating) => {setNewRating(rating)}}
                         />
-                        <Button title='Confirm' onPress={() => setIsModalVisiable(false)}/>
+                        <Button title='Confirm' onPress={() => {
+                            sendRating(task.receiverUID, newRating);
+                            setIsModalVisiable(false);
+                            props.navigation.goBack();
+                        }}/>
                     </View>
             </Modal>
             <PageHeader style={{flex: 1}}
@@ -146,7 +163,6 @@ export function TaskDetailPage(props) {
                                     onPress={() => {
                                         EventRegister.emit('editTask', ['finishTask', user.UID, task.taskID])
                                         setIsModalVisiable(true);
-                                        props.navigation.goBack()
                                     }}
                             />}
                             {isMyTask && task.receiverUID === -1 && <MaterialButton text="❌ Delete" 

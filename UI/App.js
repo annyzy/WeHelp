@@ -121,7 +121,7 @@ export default function App() {
       //move this chat to top
       if (chat_index != 0) {
         setChatList(swapChat(chatList, 0, chat_index));
-      }
+      } 
       //update state
       let length = chatList[0]['messages'].length;
       setChatList(chatList => {
@@ -312,57 +312,68 @@ export default function App() {
    */
   let processNewMessage = useCallback((event) => {
     let newMessage = JSON.parse(event.data);
-    console.log("received message: " + newMessage['message']);
-    console.log('chat list length: ' + chatList.length);
-
-    let new_avatar;
-    if (newMessage['avatar'].startsWith('media')){
-      new_avatar = 'http://34.94.101.183/' + newMessage['avatar'];
-    }
-    else {
-      new_avatar = newMessage['avatar'];
-    }
-
-     //if (chatList[0]['messages'].length == 0) {return;}
-    let chat_index = -1;
-    chatList.forEach((chat, i) => {
-      if (chat['chatID'] == newMessage['chatID'] || chat['UID'] == newMessage['UID']) {
-        chat_index = i;
+    console.log(newMessage['func']);
+    if(newMessage['func'] === 'message') {
+      let new_avatar;
+      if (newMessage['avatar'].startsWith('media')){
+        new_avatar = 'http://34.94.101.183/' + newMessage['avatar'];
       }
-    })
-    console.log(chat_index);
-    //create a new chat if not exist
-    let newChatList = [...chatList];
-    if (chat_index == -1) {
-      newChatList.unshift(
-          newChat(newMessage['chatID'], newMessage['name'], newMessage['UID'],
-                    new_avatar, newMessage['message'], newMessage['datetime'])
-        );
-      chat_index = 0;
+      else {
+        new_avatar = newMessage['avatar'];
+      }
+  
+       //if (chatList[0]['messages'].length == 0) {return;}
+      let chat_index = -1;
+      chatList.forEach((chat, i) => {
+        if (chat['chatID'] == newMessage['chatID'] || chat['UID'] == newMessage['UID']) {
+          chat_index = i;
+        }
+      })
+      console.log(chat_index);
+      //create a new chat if not exist
+      let newChatList = [...chatList];
+      if (chat_index == -1) {
+        newChatList.unshift(
+            newChat(newMessage['chatID'], newMessage['name'], newMessage['UID'],
+                      new_avatar, newMessage['message'], newMessage['datetime'])
+          );
+        chat_index = 0;
+      }
+      //move it to top as newest chat
+      else if (chat_index != 0) {
+        newChatList = swapChat(newChatList, 0, chat_index);
+      }
+  
+      let u;
+       u = {
+         _id: newMessage['UID'],
+         avatar: new_avatar,
+         name: newMessage['name'],
+       }
+       let m = {
+         _id: newChatList[0]['messages'].length + 1,
+         text: newMessage['message'],
+         user: u
+       };
+  
+      if(newChatList[0]['chatID'] == -1) {
+        newChatList[0]['chatID'] = newMessage['chatID'];
+      }
+      newChatList[0]['comment'] = newMessage['message'];
+      newChatList[0]['messages'].unshift(m);
+      setChatList(newChatList);
     }
-    //move it to top as newest chat
-    else if (chat_index != 0) {
-      newChatList = swapChat(newChatList, 0, chat_index);
+    else if(newMessage['func'] === 'location') {
+      console.log(newMessage)
+      let newChatList = chatList;
+      newChatList.forEach((chat, i) => {
+        if(chat['UID'] === newMessage['UID']) {
+          newChatList[i]['destination'] = {latitude: newMessage['latitude'], longitude: newMessage['longitude']};
+          setChatList(newChatList);
+          return;
+        }
+      })
     }
-
-    let u;
-     u = {
-       _id: newMessage['UID'],
-       avatar: new_avatar,
-       name: newMessage['name'],
-     }
-     let m = {
-       _id: newChatList[0]['messages'].length + 1,
-       text: newMessage['message'],
-       user: u
-     };
-
-    if(newChatList[0]['chatID'] == -1) {
-      newChatList[0]['chatID'] = newMessage['chatID'];
-    }
-    newChatList[0]['comment'] = newMessage['message'];
-    newChatList[0]['messages'].unshift(m);
-    setChatList(newChatList);
   }, [chatList]);
 
   /**
@@ -678,7 +689,8 @@ function newChat (chat_ID, contact_name, contact_UID, avatar, last_message, date
     comment: last_message,
     datetime: date_time,
     messages: [],
-    updating: false
+    updating: false,
+    destination: null
   }
   return chat;
 }

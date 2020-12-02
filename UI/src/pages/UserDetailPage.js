@@ -96,11 +96,11 @@ export function UserDetailPage(props) {
                 />
               </View>
               <View style={{top:10, borderBottomWidth: 12, borderBottomColor: '#D3D3D3'}}>
-                <Text style={{fontSize:25, padding: 10, borderBottomWidth: 0.5}}>Current Tasks</Text>
+                <Text style={{fontSize:25, padding: 10, borderBottomWidth: 0.5}}>Publish Tasks</Text>
             <Text style={{fontSize:25, padding: 10, borderBottomWidth: 0.5}}>{user.publish_count}</Text>
               </View>
               <View style={{top:10, borderBottomWidth: 12, borderBottomColor: '#D3D3D3'}}>
-                <Text style={{fontSize:25, padding: 10, borderBottomWidth: 0.5}}>Past Tasks</Text>
+                <Text style={{fontSize:25, padding: 10, borderBottomWidth: 0.5}}>Finish Tasks</Text>
                 <Text style={{fontSize:25, padding: 10, borderBottomWidth: 0.5}}>{user.finish_count}</Text>
               </View>
             </ScrollView>

@@ -21,19 +21,20 @@ export function MapObject( props ) {
     const [region, setRegion] = useState({latitude: 34.067057, longitude: -118.441606, latitudeDelta: 1, longitudeDelta: 1})
     const origin = props.origin;
     const destination = props.destination;
-    const latitudeDis = null;
+    let latitudeDis = null;
     useEffect(() => {
+      console.log(origin)
+      console.log(destination)
       if(origin != null && destination == null) {
-        console.log(region)
-          setRegion({latitude: origin['coords']['latitude'], 
-                            longitude: origin['coords']['longitude'],
+          setRegion({latitude: origin['latitude'], 
+                            longitude: origin['longitude'],
                             latitudeDelta: 0.01,
                             longitudeDelta: 0.01})
       }
       else if(origin != null && destination != null) {
-          latitudeDis = Math.abs(destination['coords']['latitude'] - origin['coords']['latitude']) + Math.abs(props.destination['coords']['longitude'] - props.origin['coords']['longitude']);
-          setRegion({latitude: origin['coords']['latitude'], 
-                            longitude: origin['coords']['longitude'],
+          latitudeDis = Math.abs(destination['latitude'] - origin['latitude']) + Math.abs(props.destination['longitude'] - props.origin['longitude']);
+          setRegion({latitude: origin['latitude'], 
+                            longitude: origin['longitude'],
                             latitudeDelta: latitudeDis,
                             longitudeDelta: latitudeDis * width / height})
       }
@@ -45,18 +46,18 @@ export function MapObject( props ) {
             style={{...StyleSheet.absoluteFillObject}}
             region={region}
             >
-            {origin != null && <MapView.Marker coordinate={{latitude:origin['coords']['latitude'], longitude: origin['coords']['longitude']}}>
+            {origin != null && <MapView.Marker coordinate={{latitude:origin['latitude'], longitude: origin['longitude']}}>
                 <Image style={{width: 25, height:25, borderRadius:10}}
                     source={{uri: props.originAvatar}}/>
             </MapView.Marker>}
-            {destination != null && <MapView.Marker coordinate={{latitude:destination['coords']['latitude'], longitude: destination['coords']['longitude']}}>
+            {destination != null && <MapView.Marker coordinate={{latitude:destination['latitude'], longitude: destination['longitude']}}>
                 <Image style={{width: 25, height:25, borderRadius:10}}
                     source={{uri: props.destinationAvatar}}/>
             </MapView.Marker>}
             {origin != null && destination != null &&
               <MapViewDirections 
-                  origin={{latitude:origin['coords']['latitude'], longitude: origin['coords']['longitude']}}
-                  destination={{latitude:destination['coords']['latitude'], longitude: destination['coords']['longitude']}}
+                  origin={{latitude:origin['latitude'], longitude: origin['longitude']}}
+                  destination={{latitude:destination['latitude'], longitude: destination['longitude']}}
                   apikey={googleAPI}
                   strokeWidth={2}
                   strokeColor='blue'

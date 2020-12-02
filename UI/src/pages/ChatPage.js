@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useCallback } from 'react';
 import { View, Text, Button } from 'react-native';
 import { PageHeader } from '../components/PageHeader';
 import { ChatBox } from '../components/ChatBox'
@@ -28,9 +28,24 @@ import * as expoLocation from 'expo-location';
  */
 export function ChatPage(props) {
     const {chat} = props.route.params;
-    const [origin, setOrigin] = useState();
+    const [origin, setOrigin] = useState(null);
     const [loading, setLoading] = useState(false);
     const [user, chatList, taskList] = useContext(UserContext);
+    
+    const sendLocation = useCallback((the_origin) => {
+        fetch('http://34.94.101.183/WeHelp/', {
+        method: 'POST',
+        body: JSON.stringify({
+          func: 'sendLocation', 
+          senderUID: user.UID, 
+          receiverUID: chat.UID,
+          latitude: the_origin['latitude'],
+          longitude: the_origin['longitude']
+        })
+      })
+    }, [user,chatList])
+
+    
 
     return (
         <View style={{flex: 1, justifyContent: 'flex-start', backgroundColor: 'white'}}>
@@ -41,7 +56,8 @@ export function ChatPage(props) {
                     if(checkLocationPermission()) {
                         setLoading(true);
                         let location = await expoLocation.getCurrentPositionAsync({});
-                        setOrigin(location);
+                        setOrigin({latitude: location['coords']['latitude'], longitude:location['coords']['longitude']});
+                        sendLocation({latitude: location['coords']['latitude'], longitude:location['coords']['longitude']});
                         setLoading(false);
                     }
                 }}/>}    
@@ -49,7 +65,7 @@ export function ChatPage(props) {
                 
             <View style={{flex:1}}>
                 <View style={{flex:3, borderWidth:2, justifyContent:"center", alignItems:"center"}}>
-                    {!loading && <MapObject origin={origin} originAvatar={user.photoUrl} detinationAvatar={chat.avatar}/>}
+                    {!loading && <MapObject origin={origin} destination={chat['destination']} originAvatar={user.photoUrl} destinationAvatar={chat.avatar}/>}
                     {loading && <Text>Loading</Text>}
 
                 </View>
