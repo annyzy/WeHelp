@@ -99,7 +99,7 @@ function publish(title, description, cost, images, userUID) {
     alert("Title or description cannot be empty.");
     return false;
   }
-  if(cost == null || cost > userUID) {
+  if(cost == null) {
     alert("Please select the award for this task.");
     return false;
   }
