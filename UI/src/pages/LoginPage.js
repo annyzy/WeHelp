@@ -53,6 +53,7 @@ export function LoginPage (props) {
       <View style={ {flex:1, justifyContent: 'space-between', backgroundColor: 'white'} }>
         <PageHeader centerComp={<Text style={{fontSize: 18, fontWeight: "bold"}}>Login Page</Text>} />
         <Image source={require('../../assets/icon.png')} style={ {alignSelf: 'center'} }/>
+        <Text style={{fontSize: 30, alignSelf: 'center', top: -185}}>WeHelp</Text>
         <Button title='Sign in with Google' onPress={signIn}/>
         <View></View>
       </View>
