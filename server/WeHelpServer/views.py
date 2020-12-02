@@ -92,12 +92,12 @@ def getUser(body):
 
 
 def sendLocation(body):
-    # body: {'senderUID', 'receiverUID', 'longtitude', 'latitude'}
+    # body: {'senderUID', 'receiverUID', 'longitude', 'latitude'}
 
     try:
         sender = User.objects.get(id=body['senderUID'])
         receiver = User.objects.get(id=body['receiverUID'])
-        longtitude = body['longtitude']
+        longitude = body['longitude']
         latitude = body['latitude']
 
         # send it to receiver client
@@ -106,7 +106,7 @@ def sendLocation(body):
             'type': 'chat.location',
             'UID': sender.id,
             'datetime': timezone.now().strftime("%Y-%m-%d %H:%M:%S"),
-            'longtitude': longtitude,
+            'longitude': longitude,
             'latitude': latitude
         }
         async_to_sync(channel_layer.group_send)(str(receiver.id), event)

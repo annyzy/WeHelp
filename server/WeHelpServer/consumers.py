@@ -51,14 +51,14 @@ class ClientConsumer(WebsocketConsumer):
         # event = {
         #    'UID':
         #    'datetime':
-        #    'longtitude':
+        #    'longitude':
         #    'latitude':
         # }
 
         self.send(text_data=json.dumps({
             'UID': event['UID'],
             'datetime': event['datetime'],
-            'longtitude': event['longtitude'],
+            'longitude': event['longitude'],
             'latitude': event['latitude'],
             'func': 'location'
         }))
