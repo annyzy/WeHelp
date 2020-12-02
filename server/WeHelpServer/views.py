@@ -84,6 +84,35 @@ def getUser(body):
     return JsonResponse(res)
 
 
+def sendLocation(body):
+    # body: {'senderUID', 'receiverUID', 'longtitude', 'latitude'}
+
+    try:
+        sender = User.objects.get(id=body['senderUID'])
+        receiver = User.objects.get(id=body['receiverUID'])
+        longtitude = body['longtitude']
+        latitude = body['latitude']
+
+        # send it to receiver client
+        channel_layer = channels.layers.get_channel_layer()
+        event = {
+            'type': 'chat.location',
+            'UID': sender.id,
+            'datetime': timezone.now().strftime("%Y-%m-%d %H:%M:%S"),
+            'longtitude': longtitude,
+            'latitude': latitude
+        }
+        async_to_sync(channel_layer.group_send)(str(receiver.id), event)
+
+        res = {'success': 1}
+
+    except Exception as e:
+        print(traceback.print_exc())
+        res = {'success': 0}
+
+    return JsonResponse(res)
+
+
 def sendMessage(body):
     # body: {'message', 'senderUID', 'receiverUID'}
 
@@ -576,5 +605,7 @@ def index(request):
         elif (body['func'] == 'finishTask'):
             return finishTask(body)
 
+        elif (body['func'] == 'sendLocation'):
+            return sendLocation(body)
     # avoid "return none" error
     return JsonResponse({'success': 0, 'comment': 'func incorrect'})

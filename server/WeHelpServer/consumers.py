@@ -43,5 +43,22 @@ class ClientConsumer(WebsocketConsumer):
             'name': event['name'],
             'UID': event['UID'],
             'datetime': event['datetime'],
-            'message': event['message']
+            'message': event['message'],
+            'func': 'message'
+        }))
+
+    def chat_location(self, event):
+        # event = {
+        #    'UID':
+        #    'datetime':
+        #    'longtitude':
+        #    'latitude':
+        # }
+
+        self.send(text_data=json.dumps({
+            'UID': event['UID'],
+            'datetime': event['datetime'],
+            'longtitude': event['longtitude'],
+            'latitude': event['latitude'],
+            'func': 'message'
         }))
