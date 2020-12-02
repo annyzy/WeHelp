@@ -4,6 +4,7 @@ import { PageHeader } from '../components/PageHeader';
 import { ChatBox } from '../components/ChatBox'
 import { UserContext } from '../components/UserContext';
 import { MapObject } from '../components/MapObject';
+import { EventRegister } from 'react-native-event-listeners';
 import * as expoLocation from 'expo-location';
 
 /**
@@ -46,7 +47,6 @@ export function ChatPage(props) {
     }, [user,chatList])
 
     
-
     return (
         <View style={{flex: 1, justifyContent: 'flex-start', backgroundColor: 'white'}}>
             <PageHeader 
@@ -55,17 +55,32 @@ export function ChatPage(props) {
                 rightComp={<Button title='My Location' onPress={async () => {
                     if(checkLocationPermission()) {
                         setLoading(true);
-                        let location = await expoLocation.getCurrentPositionAsync({});
-                        setOrigin({latitude: location['coords']['latitude'], longitude:location['coords']['longitude']});
-                        sendLocation({latitude: location['coords']['latitude'], longitude:location['coords']['longitude']});
+                        
+                        if(origin !== null) {
+                            sendLocation(origin);
+                        }
+                        else {
+                            if(user['origin'] !== null) {
+                                setOrigin(user['origin']);
+                                sendLocation(user['origin']);
+                            }
+                            else {
+                                let location = await expoLocation.getCurrentPositionAsync({});
+                                EventRegister.emit('updateOrigin', {latitude: location['coords']['latitude'], longitude:location['coords']['longitude']});
+                                setOrigin({latitude: location['coords']['latitude'], longitude:location['coords']['longitude']});
+                                sendLocation({latitude: location['coords']['latitude'], longitude:location['coords']['longitude']});
+                            }
+                        }
+
                         setLoading(false);
+                        setOrigin({...origin});
                     }
                 }}/>}    
             />
                 
             <View style={{flex:1}}>
                 <View style={{flex:3, borderWidth:2, justifyContent:"center", alignItems:"center"}}>
-                    {!loading && <MapObject origin={origin} destination={chat['destination']} originAvatar={user.photoUrl} destinationAvatar={chat.avatar}/>}
+                    {!loading && <MapObject origin={user['origin']} destination={chat['destination']} originAvatar={user.photoUrl} destinationAvatar={chat.avatar}/>}
                     {loading && <Text>Loading</Text>}
 
                 </View>

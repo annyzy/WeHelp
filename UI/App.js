@@ -365,7 +365,7 @@ export default function App() {
     }
     else if(newMessage['func'] === 'location') {
       console.log(newMessage)
-      let newChatList = chatList;
+      let newChatList = [...chatList];
       newChatList.forEach((chat, i) => {
         if(chat['UID'] === newMessage['UID']) {
           newChatList[i]['destination'] = {latitude: newMessage['latitude'], longitude: newMessage['longitude']};
@@ -473,7 +473,8 @@ export default function App() {
       rating: newRating,
       publish_count: newPublishCount,
       finish_count: newFinishCount,
-      contributions: newContributions
+      contributions: newContributions,
+      origin: null
     });
     refreshChatList(newUID);
     refreshTaskList();
@@ -569,6 +570,11 @@ export default function App() {
     })
   }, [user, taskList])
   
+  let updateOrigin = useCallback((origin) => {
+    let newUser = {...user};
+    newUser['origin'] = origin;
+    setUser(newUser);
+  }, [user])
 
   /**
    *  @private
@@ -642,7 +648,12 @@ export default function App() {
     }
   }, [user, taskList]);
   
-  
+  useEffect(() => {
+    const updateOriginListener = EventRegister.addEventListener('updateOrigin', updateOrigin)
+    return function cleanup() {
+      EventRegister.removeEventListener(updateOriginListener);
+    }
+  }, [user])
 
   if (user.signedIn) {
     return (
