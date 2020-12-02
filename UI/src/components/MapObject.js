@@ -23,8 +23,6 @@ export function MapObject( props ) {
     const destination = props.destination;
     let latitudeDis = null;
     useEffect(() => {
-      console.log(origin)
-      console.log(destination)
       if(origin != null && destination == null) {
           setRegion({latitude: origin['latitude'], 
                             longitude: origin['longitude'],

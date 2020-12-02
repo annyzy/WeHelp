@@ -1,6 +1,7 @@
 import React, { useContext, useCallback } from 'react';
 import Constants from 'expo-constants';
 import { View, Text, ScrollView, StyleSheet, RefreshControl } from 'react-native';
+import { Divider } from 'react-native-elements';
 import { AppleCard } from 'react-native-apple-card-views'
 import { createStackNavigator } from '@react-navigation/stack';
 import { TaskDetailPage } from './TaskDetailPage';
@@ -69,6 +70,7 @@ function TaskMainPage(props) {
                             return (<TaskCard task={t} key={i} navigation={props.navigation}/>);
                         }
                     })}
+                    <View style={{borderBottomWidth: 1, marginTop: 20, marginLeft: 20, marginRight: 20}}></View>
                     <Text style={{fontSize:25, padding: 10, top:10}}>Published Tasks</Text>
                     {taskList.map((t, i) => {
                         if(t.publisherUID == user.UID) {

@@ -93,7 +93,7 @@ function ChatList(props) {
           //onLongPress={()=> {removeContact(i);}}
           >
             <Avatar source={{uri: chat.avatar}} 
-                    onPress={() => {props.navigation.navigate('UserDetailPage', {userUID: 8})}}/>
+                    onPress={() => {props.navigation.navigate('UserDetailPage', {userUID: chat.UID})}}/>
             <ListItem.Content>
               <ListItem.Title>{chat.name}</ListItem.Title>
               <ListItem.Subtitle>{chat.comment}</ListItem.Subtitle>

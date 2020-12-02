@@ -439,7 +439,8 @@ export default function App() {
           rating: found['rating'],
           publish_count: found['publish_count'],
           finish_count: found['finish_count'],
-          contributions: found['contributions']
+          contributions: found['contributions'],
+          origin: null
         });
       }).catch(() => {
         alert('Fetch failed');

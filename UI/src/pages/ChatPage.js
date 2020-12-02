@@ -34,16 +34,19 @@ export function ChatPage(props) {
     const [user, chatList, taskList] = useContext(UserContext);
     
     const sendLocation = useCallback((the_origin) => {
-        fetch('http://34.94.101.183/WeHelp/', {
-        method: 'POST',
-        body: JSON.stringify({
-          func: 'sendLocation', 
-          senderUID: user.UID, 
-          receiverUID: chat.UID,
-          latitude: the_origin['latitude'],
-          longitude: the_origin['longitude']
-        })
-      })
+        if(the_origin != null) {
+            fetch('http://34.94.101.183/WeHelp/', {
+                method: 'POST',
+                body: JSON.stringify({
+                  func: 'sendLocation', 
+                  senderUID: user.UID, 
+                  receiverUID: chat.UID,
+                  latitude: the_origin['latitude'],
+                  longitude: the_origin['longitude']
+                })
+              })
+        }
+        
     }, [user,chatList])
 
     

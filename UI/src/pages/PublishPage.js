@@ -24,8 +24,13 @@ export function PublishPage(props) {
   
   const pickerItems = useMemo(() => {
     let items = []
-    for(let i = 0;i < user.coins+1;i++) {
-      items.push({ label: i.toString(), value: i });
+    if(user.coins <= 0) {
+      items.push({ label: '0', value: 0 });
+    }
+    else {
+      for(let i = 0;i < user.coins+1;i++) {
+        items.push({ label: i.toString(), value: i });
+      }
     }
     return items;
   }, [])

@@ -1,4 +1,4 @@
-import React, { useState, useContext, useCallback } from 'react';
+import React, { useState, useContext, useCallback, useEffect } from 'react';
 import { View, ScrollView, Text, Button, Image, StyleSheet, TouchableOpacity, RefreshControl } from 'react-native';
 import { Rating } from 'react-native-elements';
 import { PageHeader } from '../components/PageHeader';
@@ -40,6 +40,7 @@ export function TaskDetailPage(props) {
     const [isModalVisiable, setIsModalVisiable] = useState(false);
     const [refreshing, setRefreshing] = React.useState(false);
     const [newRating, setNewRating] = useState(0);
+    const [receiver, setReceiver] = useState(-1);
     const wait = useCallback((timeout) => {
         return new Promise(resolve => {
           setTimeout(resolve, timeout);
@@ -62,12 +63,38 @@ export function TaskDetailPage(props) {
       })
     }, [])
 
+    useEffect(() => {
+        if(isMyTask && task.receiverUID != -1) {
+            fetch('http://34.94.101.183/WeHelp/', {
+                method: 'POST',
+                body: JSON.stringify({
+                    func: 'getUser', UID: task.receiverUID
+                })
+                }).then(async (resp) => {
+                let found = await resp.json();
+                console.log(found)
+                //alert(found['chatList'])
+                if (found['success'] != 0) {
+                    setReceiver(found);
+                }
+                else {
+                    alert("ERROR: can not find user"+props.task['publisherUID']);a
+                    return;
+                }
+              }) 
+        }
+    }, []);
+
     return (
         <View style={{flex: 1, justifyContent: 'space-between', backgroundColor: 'white'}}>
             <Modal isVisible={isModalVisiable}
-                    onBackdropPress={() => setIsModalVisiable(false)}>
+                    onBackdropPress={() => {
+                        setIsModalVisiable(false)
+                        props.navigation.goBack();
+                    }}>
                     <View style={{backgroundColor:'white', height: '20%', justifyContent:'space-around', alignItems: 'center'}}>
                         <Text>Please rate your helper</Text>
+                        <Text>{receiver['name']}</Text>
                         <Rating
                             type='heart'
                             ratingCount={5}
@@ -130,7 +157,7 @@ export function TaskDetailPage(props) {
                         <View>
                             <View style={styles.imageVerticalView}>
                                 <View style={styles.imageHorizontalView}>
-                                    {task.img.length >= 1 && <Image source={{ uri: task.img[0] }} style={styles.imageStyle} />}
+                                    {task.img.length >= 1 && task.img[0].length != 0 && <Image source={{ uri: task.img[0] }} style={styles.imageStyle} />}
                                     {task.img.length >= 2 &&<Image source={{ uri: task.img[1] }} style={styles.imageStyle} />}
                                 </View>
                                 <View style={styles.imageHorizontalView}>
@@ -145,18 +172,34 @@ export function TaskDetailPage(props) {
                                             onPress={() => {}}/>
                             <MaterialButton text="💬 Message" style={materialButtonStyle}
                                             onPress={() => {
-                                                    let chat_index = -1;
-                                                    chatList.forEach((chat, i) => {
-                                                        if(chat['UID'] === task['publisherUID']) {
-                                                            chat_index = i;
-                                                            props.navigation.navigate('ChatPage', {chat: chatList[chat_index]});
+                                                    if(isMyTask && task.receiverUID !== -1) {
+                                                        let chat_index = -1;
+                                                        chatList.forEach((chat, i) => {
+                                                            if(chat['UID'] === task['receiverUID']) {
+                                                                chat_index = i;
+                                                                props.navigation.navigate('ChatPage', {chat: chatList[chat_index]});
+                                                            }
+                                                        });
+                                                        if(chat_index == -1) {
+                                                            EventRegister.emit('addNewChat', [task.publisher, task.receiverUID, task.avatar, '', (new Date()).toUTCString(), props.navigation]);
                                                         }
-                                                    });
-                                                    if(chat_index == -1) {
-                                                        EventRegister.emit('addNewChat', [task.publisher, task.publisherUID, task.avatar, '', (new Date()).toUTCString(), props.navigation]);
+                                                    }
+                                                    else {
+                                                        let chat_index = -1;
+                                                        chatList.forEach((chat, i) => {
+                                                            if(chat['UID'] === task['publisherUID']) {
+                                                                chat_index = i;
+                                                                props.navigation.navigate('ChatPage', {chat: chatList[chat_index]});
+                                                            }
+                                                        });
+                                                        if(chat_index == -1) {
+                                                            EventRegister.emit('addNewChat', [task.publisher, task.publisherUID, task.avatar, '', (new Date()).toUTCString(), props.navigation]);
+                                                        }
                                                     }
                                                 }
-                                            }/>
+                                            }
+                                            disabled={isMyTask && task.receiverUID === -1}                
+                            />
                             {isMyTask && task.receiverUID !== -1  && <MaterialButton text="👌 Done" 
                                     style={{container:{...materialButtonStyle.container, borderRightWidth:0},
                                             text: materialButtonStyle.text}}
@@ -186,8 +229,13 @@ export function TaskDetailPage(props) {
                                     onPress={() => {
                                         EventRegister.emit('editTask', ['acceptTask', user.UID, task.taskID])
                                         props.navigation.goBack()
-                                    }}/>}
+                                    }}
+                                disabled={task.receiverUID != -1}        
+                            />}
                         </View>
+                        {isMyTask && task.receiverUID !== -1 && receiver != null && <Text style={{alignSelf: 'center'}}>{receiver['name']} is helping you. Say thanks to her/him.</Text>}
+                        {!isMyTask && !isAcceptedTask &&  task.receiverUID != -1 && <Text style={{alignSelf: 'center'}}>This task is accepted by another user.</Text>}
+
                     </View>
             </ScrollView>
         </View>

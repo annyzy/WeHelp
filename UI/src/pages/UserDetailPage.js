@@ -91,7 +91,7 @@ export function UserDetailPage(props) {
                 <CalendarHeatmap
                   endDate={new Date()}
                   numDays={120}
-                  colorArray={["#eee", "#5099E1"]}
+                  colorArray={["#eee", "#5099E1", "#5099E1", "#5099E1", "#5099E1"]}
                   values={user.contributions}
                 />
               </View>

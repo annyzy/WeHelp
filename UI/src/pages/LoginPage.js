@@ -35,7 +35,7 @@ export function LoginPage (props) {
           })})
           .then(async (resp)=>{
             let found = await resp.json();
-            alert('hello ' + name + ' UID:' + found['UID'] + ' photoUrl:' + found['icon']);
+            // alert('hello ' + name + ' UID:' + found['UID'] + ' photoUrl:' + found['icon']);
             props.changeUser(name, found['icon'], email, found['UID'], found['coins'], found['rating'], found['publish_count'], found['finish_count'], found['contributions']);
           }).catch(() => {
             alert('Fetch failed');

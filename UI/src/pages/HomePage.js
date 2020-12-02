@@ -172,8 +172,10 @@ function CardField(props) {
                         {props.task.img.length != 0 && 
                             <View style={styles.imageView}>
                                 {props.task.img.map((image, i) => {
-                                    return (<Image source={{ uri: image }} style={styles.imageStyle} key={i} />);
-                                })}
+                                    if(image.length != 0) {
+                                        return <Image source={{ uri: image }} style={styles.imageStyle} key={i} />;
+                                    }}
+                                )}
                             </View>
                         }
                     </View>
@@ -194,6 +196,7 @@ function CardField(props) {
                                     }
                                 }
                             }
+                            disabled={props.task.publisherUID === user.UID}
                         />
                         <Button text="🔥 More" style={{container:{...materialButtonStyle.container, borderRightWidth:0},
                                                         text: materialButtonStyle.text}}
