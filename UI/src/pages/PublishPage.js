@@ -109,9 +109,9 @@ function publish(title, description, cost, images, userUID) {
     if(img != null) {
       count++;
       data.append(i.toString(), {
-        uri: img.uri,
+        uri: img,
         type: 'image/jpeg',
-        name: img.uri
+        name: img
       });
     }
   });
