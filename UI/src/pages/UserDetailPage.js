@@ -144,7 +144,7 @@ async function getUser(userUID) {
         })
         }).then(async (resp) => {
         let found = await resp.json();
-        console.log(found)
+        // console.log(found)
         //alert(found['chatList'])
         if (found['success'] != 0) {
             if (found['avatar'].startsWith('media')){

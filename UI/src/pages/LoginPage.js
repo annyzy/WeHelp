@@ -41,7 +41,7 @@ export function LoginPage (props) {
             alert('Fetch failed');
         });
       } else {
-        console.log('cancelled')
+        // console.log('cancelled')
       }
     } catch (e) {
       console.log('error', e)

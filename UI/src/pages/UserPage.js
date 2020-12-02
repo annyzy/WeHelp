@@ -133,7 +133,7 @@ function ImagePicker(props) {
   
       if (!result.cancelled) {
         setImage(result.uri);
-        console.log(result.uri);
+        // console.log(result.uri);
         //need to add more error handling
         const data = new FormData();
           data.append('func', 'changeIcon');
