@@ -2,7 +2,7 @@ import json
 import ast
 import os
 import filecmp
-import websocket
+import websockets
 import asyncio
 import requests
 from django.test import TestCase
@@ -347,22 +347,3 @@ class TaskTestCase(TestCase):
 
         # finally check the task active status
         self.assertFalse(Task.objects.get(id=taskID).active)
-
-
-# this testcase requires the server is up
-class ChannelTestCase(TestCase):
-
-    async def read_websocket(self, UID):
-        uri = "ws://34.94.101.183/ws/WeHelp/" + str(UID) + "/"
-        async with websockets.connect(uri) as ws:
-            while (True):
-                ret = await ws.recv()
-                self.buffer[UID].append(json.dumps(ret))
-
-    def setup():
-
-        self.buffer = []
-
-        # check if server is up
-        # res = requests.post('http://34.94.101.183/WeHelp/',
-                            data = json.dumps({'func': 'getUser', 'UID': 1}))
