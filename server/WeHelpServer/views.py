@@ -86,7 +86,8 @@ def getUser(body):
                'rating': rating, 'name': user.name,
                'publish_count': publish_count,
                'finish_count': finish_count,
-               'contributions': contributions
+               'contributions': contributions,
+               'success': 1
                }
     except ObjectDoesNotExist:
         res = {'success': 0}
@@ -139,7 +140,8 @@ def sendMessage(body):
             chat = Chat.objects.get(a=receiver, b=sender)
 
         else:
-            chat = Chat(a=sender, b=receiver)
+            chat = Chat(a=sender, b=receiver, last_message=None)
+
             chat.save()
 
         # construct the message
@@ -151,17 +153,19 @@ def sendMessage(body):
         chat.save()
 
         # send update to receiver
-        channel_layer = channels.layers.get_channel_layer()
-        event = {
-            'type': 'chat.message',
-            'chatID': chat.id,
-            'avatar': sender.icon,
-            'name': sender.name,
-            'UID': sender.id,
-            'datetime': message.date.strftime("%Y-%m-%d %H:%M:%S"),
-            'message': message.message
-        }
-        async_to_sync(channel_layer.group_send)(str(receiver.id), event)
+        # a lazy way to avoid send update to receiver client when testing without redis server
+        if not 'test' in sys.argv:
+            channel_layer = channels.layers.get_channel_layer()
+            event = {
+                'type': 'chat.message',
+                'chatID': chat.id,
+                'avatar': sender.icon,
+                'name': sender.name,
+                'UID': sender.id,
+                'datetime': message.date.strftime("%Y-%m-%d %H:%M:%S"),
+                'message': message.message
+            }
+            async_to_sync(channel_layer.group_send)(str(receiver.id), event)
 
         res = {'success': 1}
 
@@ -389,18 +393,12 @@ def acceptTask(body):
         task = Task.objects.get(id=body['taskID'])
 
         # check if task is accepted
-        try:
-            acceptor = task.acceptor
+        if ((task.acceptor == None) & (user.id != task.user.id)):
+            task.acceptor = user
+            task.save()
+            res = {'success': 1}
+        else:
             res = {'success': 0}
-
-        # if not, check uid
-        except:
-            if (user.id != task.user.id):
-                task.acceptor = user
-                task.save()
-                res = {'success': 1}
-            else:
-                res = {'success': 0}
 
     except Exception as e:
         print(traceback.print_exc())

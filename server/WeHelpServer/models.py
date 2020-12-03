@@ -29,17 +29,17 @@ class Chat(models.Model):
     b = models.ForeignKey(User, on_delete=models.CASCADE,
                           related_name='user_chat_b')
     last_message = models.ForeignKey(
-        Message, on_delete=models.CASCADE, related_name='message_chat')
+        Message, on_delete=models.CASCADE, related_name='message_chat', null=True, blank=True)
     #message_list = models.CharField(validator=int_list_validator)
 
 
 class Task(models.Model):
     user = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='publish_task')
+        User, on_delete=models.CASCADE, related_name='publish_task', null=True, blank=True)
     title = models.CharField(max_length=128)
     body = models.CharField(max_length=4096)
     acceptor = models.ForeignKey(
-        User, on_delete=models.DO_NOTHING, related_name='accept_task')
+        User, on_delete=models.DO_NOTHING, related_name='accept_task', null=True, blank=True)
     images = models.CharField(max_length=4096)
     datetime = models.DateTimeField()
     active = models.BooleanField()
