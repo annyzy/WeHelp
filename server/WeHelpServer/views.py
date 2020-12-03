@@ -47,6 +47,9 @@ def signIn(body):
                     icon=icon, name=body['name'],
                     last_freecoin=timezone.now()
                     )
+        publish_count = 0
+        finish_count = 0
+        contributions = []
         user.save()
 
     if (user.num_rating == 0):
