@@ -1,8 +1,9 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, Text} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
+import {MaterialIcons} from '@expo/vector-icons'
 import { HomePage } from '../pages/HomePage';
 import { TaskPage } from '../pages/TaskPage';
 import { PublishPage } from '../pages/PublishPage';
@@ -35,7 +36,32 @@ export function PageNavigation() {
 
 function TabNavigator({ navigation }) {
   return (
-    <Tab.Navigator initialRouteName='Home'>
+    <Tab.Navigator initialRouteName='Home'
+          screenOptions={({ route }) => ({
+          tabBarIcon: ({ focused, color, size }) => {
+            let iconName;
+
+            if (route.name === 'Home') {
+              iconName ='home';
+            } else if (route.name === 'Task') {
+              iconName = 'list';
+            } else if (route.name === 'Publish') {
+              iconName = 'add';
+            } else if (route.name === 'Message') {
+              iconName = 'message';
+            } else if (route.name === 'User') {
+              iconName = 'people';
+            }
+
+            // You can return any component that you like here!
+            return <MaterialIcons name={iconName} size={25} color={color} />;
+          },
+        })}
+        tabBarOptions={{
+          activeTintColor: 'black',
+          inactiveTintColor: 'gray',
+        }}
+      >
       <Tab.Screen name='Home' component={HomePage} />
       <Tab.Screen name='Task' component={TaskPage} />
       <Tab.Screen name='Publish' component={ModalPlaceHolder} 
