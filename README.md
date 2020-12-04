@@ -2,12 +2,107 @@
 
 ## Table of Contents
 - [WeHelp](#wehelp)
-  * [How to run this project](#how-to-run-this-project)
-  * [How to debug on server](#how-to-debug-on-server)
-  * [How to Generate Documentation in JavaScript](#how-to-generate-documentation-in-javascript)
-  * [How to Generate Documentation in Python](#how-to-generate-documentation-in-python)
-  * [Front-end API](#front-end-api)
-  * [Back-end API](#back-end-api)
+  - [Table of Contents](#table-of-contents)
+  - [Project Directory Tree](#project-directory-tree)
+  - [How to run this project](#how-to-run-this-project)
+  - [How to debug on server](#how-to-debug-on-server)
+  - [How to Generate Documentation in JavaScript](#how-to-generate-documentation-in-javascript)
+  - [How to Generate Documentation in Python](#how-to-generate-documentation-in-python)
+  - [Front-end API](#front-end-api)
+  - [Back-end API](#back-end-api)
+
+## Project Directory Tree
+
+    .
+    ├── UI
+    │   ├── assets
+    │   │   └── icon.png
+    │   ├── src
+    │   │   ├── components
+    │   │   │   ├── ChatBox.js
+    │   │   │   ├── MapObject.js
+    │   │   │   ├── PageHeader.js
+    │   │   │   ├── PageNavigation.js
+    │   │   │   └── UserContext.js
+    │   │   └── pages
+    │   │       ├── ChatPage.js
+    │   │       ├── HomePage.js
+    │   │       ├── LoginPage.js
+    │   │       ├── MessagePage.js
+    │   │       ├── PublishPage.js
+    │   │       ├── TaskDetailPage.js
+    │   │       ├── TaskPage.js
+    │   │       ├── UserDetailPage.js
+    │   │       └── UserPage.js
+    │   ├── App.js
+    │   ├── app.json
+    │   ├── babel.config.js
+    │   ├── index.js
+    │   ├── metro.config.js
+    │   ├── package-lock.json
+    │   ├── package.json
+    │   ├── styles.js
+    │   └── yarn.lock
+    └── server
+        ├── WeHelpServer
+        │   ├── images
+        │   │   ├── 1.jpg
+        │   │   ├── 2.jpeg
+        │   │   ├── 3.jpeg
+        │   │   ├── 4.jpeg
+        │   │   ├── 5.jpeg
+        │   │   ├── 6.jpeg
+        │   │   ├── 7.png
+        │   │   └── 8.jpg
+        │   ├── migrations
+        │   │   ├── 0001_initial.py
+        │   │   ├── 0002_auto_20201201_0620.py
+        │   │   ├── 0003_auto_20201203_0841.py
+        │   │   ├── 0004_auto_20201203_0843.py
+        │   │   ├── 0005_auto_20201203_0925.py
+        │   │   ├── 0006_auto_20201203_0925.py
+        │   │   └── __init__.py
+        │   ├── __init__.py
+        │   ├── admin.py
+        │   ├── apps.py
+        │   ├── channelTest.py
+        │   ├── consumers.py
+        │   ├── models.py
+        │   ├── routing.py
+        │   ├── tests.py
+        │   └── views.py
+        ├── docs
+        │   └── views.html
+        ├── example
+        │   ├── a.py
+        │   ├── acceptTask.py
+        │   ├── cancelAccept.py
+        │   ├── cat.png
+        │   ├── changeIcon.py
+        │   ├── deleteTask.py
+        │   ├── dog.jpg
+        │   ├── finishTask.py
+        │   ├── getAcceptTask.py
+        │   ├── getActiveTask.py
+        │   ├── getChatList.py
+        │   ├── getMessage.py
+        │   ├── getPublishTask.py
+        │   ├── getUser.py
+        │   ├── sendLocation.py
+        │   ├── sendMessage.py
+        │   ├── sendRating.py
+        │   ├── sendTask.py
+        │   ├── signin.py
+        │   └── ws.py
+        ├── server
+        │   ├── __init__.py
+        │   ├── asgi.py
+        │   ├── settings.py
+        │   ├── urls.py
+        │   └── wsgi.py
+        ├── manage.py
+        └── requirements.txt
+
 
 ## How to run this project
 
