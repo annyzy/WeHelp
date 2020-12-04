@@ -211,3 +211,13 @@ Please refer to [UI/README.md](UI/README.md) to view front-end APIs.
 
 ## Back-end API
 APIs for http requests: [server/docs/views.html](server/docs/views.html) or [view it on our website](http://34.94.101.183/media/views.html)
+
+## How to run backend tests
+1. Test one: From directory server/
+   ```shell
+   python manage.py test
+   ```
+2. Test two: this one should only run on the server node because it requires a running redis server. From directory server/
+   ```shell
+   python manage.py test WeHelpServer.channelTest
+   ```
