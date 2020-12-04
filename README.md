@@ -18,13 +18,13 @@
     │   ├── assets
     │   │   └── icon.png
     │   ├── src
-    │   │   ├── components
+    │   │   ├── components                  #This folder contains the source code of helper components
     │   │   │   ├── ChatBox.js
     │   │   │   ├── MapObject.js
     │   │   │   ├── PageHeader.js
     │   │   │   ├── PageNavigation.js
     │   │   │   └── UserContext.js
-    │   │   └── pages
+    │   │   └── pages                       #This folder contains the source code of each page of our application
     │   │       ├── ChatPage.js
     │   │       ├── HomePage.js
     │   │       ├── LoginPage.js
@@ -34,12 +34,12 @@
     │   │       ├── TaskPage.js
     │   │       ├── UserDetailPage.js
     │   │       └── UserPage.js
-    │   ├── App.js
+    │   ├── App.js                          #App.js is the start point of our development
     │   ├── app.json
     │   ├── babel.config.js
     │   ├── index.js
     │   ├── metro.config.js
-    │   ├── package-lock.json
+    │   ├── package-lock.json               #View and install all the dependencies and packages before starting this project
     │   ├── package.json
     │   ├── styles.js
     │   └── yarn.lock
