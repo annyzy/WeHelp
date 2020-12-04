@@ -5,4 +5,4 @@ import { createContext } from 'react';
 * As soon as this UserContext in App.js changes, all children use this UserContext will rerender.
 * @type {Context}
 */
-export const UserContext = createContext();
+export const UserContext = createContext(); 

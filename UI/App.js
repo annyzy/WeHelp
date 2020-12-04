@@ -159,7 +159,7 @@ export default function App() {
           })
         }
         else {
-          console.log("message sent");
+          // console.log("message sent");
           setChatList(chatList => {
             chatList[0]['messages'][0]['pending'] = false;
             return [...chatList];
@@ -312,7 +312,7 @@ export default function App() {
    */
   let processNewMessage = useCallback((event) => {
     let newMessage = JSON.parse(event.data);
-    console.log(newMessage['func']);
+    // console.log(newMessage['func']);
     if(newMessage['func'] === 'message') {
       let new_avatar;
       if (newMessage['avatar'].startsWith('media')){
@@ -329,7 +329,7 @@ export default function App() {
           chat_index = i;
         }
       })
-      console.log(chat_index);
+      // console.log(chat_index);
       //create a new chat if not exist
       let newChatList = [...chatList];
       if (chat_index == -1) {
@@ -364,7 +364,7 @@ export default function App() {
       setChatList(newChatList);
     }
     else if(newMessage['func'] === 'location') {
-      console.log(newMessage)
+      // console.log(newMessage)
       let newChatList = [...chatList];
       newChatList.forEach((chat, i) => {
         if(chat['UID'] === newMessage['UID']) {

@@ -59,11 +59,11 @@ export function ChatPage(props) {
                     if(checkLocationPermission()) {
                         setLoading(true);
                         
-                        if(origin !== null) {
+                        if(origin != null) {
                             sendLocation(origin);
                         }
                         else {
-                            if(user['origin'] !== null) {
+                            if(user['origin'] != null) {
                                 setOrigin(user['origin']);
                                 sendLocation(user['origin']);
                             }
@@ -76,7 +76,9 @@ export function ChatPage(props) {
                         }
 
                         setLoading(false);
-                        setOrigin({...origin});
+                        if(origin != null) {
+                            setOrigin({...origin});
+                        }
                     }
                 }}/>}    
             />

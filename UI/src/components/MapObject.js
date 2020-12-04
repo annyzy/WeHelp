@@ -30,7 +30,7 @@ export function MapObject( props ) {
                             longitudeDelta: 0.01})
       }
       else if(origin != null && destination != null) {
-          latitudeDis = Math.abs(destination['latitude'] - origin['latitude']) + Math.abs(props.destination['longitude'] - props.origin['longitude']);
+          latitudeDis = (Math.abs(destination['latitude'] - origin['latitude']) + Math.abs(props.destination['longitude'] - props.origin['longitude']))* 2;
           setRegion({latitude: origin['latitude'], 
                             longitude: origin['longitude'],
                             latitudeDelta: latitudeDis,
