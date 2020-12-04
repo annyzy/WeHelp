@@ -565,3 +565,319 @@ Returns **Component** => Render a UserPage to show the information of current lo
 
 ## Back-end API
 [APIs for http requests](server/docs/views.html) or [view it on our website](http://34.94.101.183/media/views.html)
+
+Python: module views 
+
+   
+ **views**
+
+[index](.)  
+[/home/dliang/WeHelp/server/WeHelpServer/views.py](file:/home/dliang/WeHelp/server/WeHelpServer/views.py)
+
+We only provide one endpoint for http requests: /WeHelp/  
+We differ the requests base on the provided 'func' key in json body for regular POST requests or in POST for form-data  
+These are possible 'func' values:  
+1. signIn - User sign in to server using email   
+2. getUser - return infomation of an existing User  
+3. sendLocation - send location to other user  
+4. sendMessage - send message to other user   
+5. getChatList - returns all chat infomation belong to a User   
+6. getMessage - returns all messages of a chat   
+7. getActiveTask - returns infomation of all Task that is open   
+8. getAcceptTask - returns infomation of all Task that is accpeted by given User   
+9. getPublishTask - returns infomation of all Task that is published by given User   
+10. acceptTask - User accpet a Task  
+11. cancelAccept - User cancel accpetion of a Task  
+12. deleteTask - User delete a Task   
+13. finishTask - User confirm a Task is finished  
+14. sendRating - give rating to User  
+15. changeIcon - User change icon/avatar. form-data POST request   
+16. sendTask - User publish a task. form-data POST request
+
+   
+**Functions**
+
+ 
+
+ 
+
+**acceptTask**(body)
+
+Allow users accept tasks only if they are not the publisher and the task is not accepted by someone else  
+   
+Parameters  
+\----------  
+body: {'UID': int, 'taskID': int}  
+   
+Returns  
+\-------  
+JsonResponse({  
+    'success': int,   
+})
+
+**cancelAccept**(body)
+
+Allow users to give up acception of tasks only if they accpeted the tasks  
+   
+Parameters  
+\----------  
+body: {'UID': int, 'taskID': int}  
+   
+Returns  
+\-------  
+JsonResponse({  
+    'success': int,   
+})
+
+**changeIcon**(request)
+
+Allow Users to change their icons/avatars and returns the uri of stored image  
+   
+Parameters  
+\----------  
+request: HttpRequests   
+         whose POST contains {'UID': int}  
+         and FILES contains {'file': a image file stream}  
+   
+Returns  
+\-------  
+JsonResponse({'success': int, 'uri': string})
+
+**deleteTask**(body)
+
+Allow users to remove tasks only if they are the publisher of tasks and tasks are not yet finished.  
+   
+Parameters  
+\----------  
+body: {'UID': int, 'taskID': int}  
+   
+Returns  
+\-------  
+JsonResponse({  
+    'success': int,   
+})
+
+**finishTask**(body)
+
+Allow users to confirm tasks are finish only if they are the publisher of tasks and tasks are accepted by someone.  
+   
+Parameters  
+\----------  
+body: {'UID': int, 'taskID': int}  
+   
+Returns  
+\-------  
+JsonResponse({  
+    'success': int,   
+})
+
+**getAcceptTask**(body)
+
+returns infomation of all Task that is accepted by the given User  
+   
+Parameters  
+\----------  
+body: {'UID': int}  
+   
+Returns  
+\-------  
+JsonResponse({  
+    'success': int,   
+    'taskList': \[{   
+        'taskID': int, 'UID': int,   
+        'acceptorUID: int, 'title': string,  
+        'body': string, 'cost': int,  
+        'datetime': string, 'images': \[string\*\]  
+    }\]   
+})
+
+**getActiveTask**(body)
+
+returns infomation of all Task that is open  
+   
+Parameters  
+\----------  
+body: {}  
+   
+Returns  
+\-------  
+JsonResponse({  
+    'success': int,   
+    'taskList': \[{   
+        'taskID': int, 'UID': int,   
+        'acceptorUID: int, 'title': string,  
+        'body': string, 'cost': int,  
+        'datetime': string, 'images': \[string\*\]  
+    }\]   
+})
+
+**getChatList**(body)
+
+returns all chat infomation belong to a User.  
+   
+Parameters  
+\----------  
+body: {'UID': int}  
+   
+Returns  
+\-------  
+JsonResponse({  
+    'success': int,   
+    'chatList': \[{   
+        'chatID': int, 'avatarURL': string,   
+        'name': string, 'last\_message': string,   
+        'datetime': string   
+    }\]   
+})
+
+**getMessage**(body)
+
+returns all messages inside a chat  
+   
+Parameters  
+\----------  
+body: {'chatID': int}  
+   
+Returns  
+\-------  
+JsonResponse({  
+    'success': int,   
+    'messageList': \[{   
+        'UID': int, 'message': string,   
+        'datetime': string   
+    }\]   
+})
+
+**getPublishTask**(body)
+
+returns infomation of all Task that is published by the given User  
+   
+Parameters  
+\----------  
+body: {'UID': int}  
+   
+Returns  
+\-------  
+JsonResponse({  
+    'success': int,   
+    'taskList': \[{   
+        'taskID': int, 'UID': int,   
+        'acceptorUID: int, 'title': string,  
+        'body': string, 'cost': int,  
+        'datetime': string, 'images': \[string\*\]  
+    }\]   
+})
+
+**getUser**(body)
+
+return infomation of an existing User  
+   
+Parameters  
+\----------  
+body: {'UID': int}  
+   
+Returns  
+\-------  
+JsonResponse({  
+    'UID': int, 'coins': int,  
+    'icon': string, 'rating': int,  
+    'publish\_count': int,   
+    'finish\_count': int,  
+    'contributions': \[string\*\],  
+    'success': int  
+    })
+
+**index**(request)
+
+A top level function to determine what kind of request is making base on the 'func' key  
+   
+Parameters  
+\----------  
+request: HttpRequests   
+   
+Returns  
+\-------  
+JsonResponse({})
+
+**sendLocation**(body)
+
+send location to other user through channel\_layer  
+   
+Parameters  
+\----------  
+body: {'senderUID': int, 'receiverUID': int,   
+       'longitude': double, 'latitude': double}  
+   
+Returns  
+\-------  
+JsonResponse({'success': int})
+
+**sendMessage**(body)
+
+send message to other user.   
+Stores the message into chat and send to receiver client through channel\_layer  
+   
+Parameters  
+\----------  
+body: {'senderUID': int, 'receiverUID': int, 'message': string}  
+   
+Returns  
+\-------  
+JsonResponse({'success': int})
+
+**sendRating**(body)
+
+give rating to a User.  
+   
+Parameters  
+\----------  
+body: {'UID': int, 'rating': double}  
+   
+Returns  
+\-------  
+JsonResponse({  
+    'success': int,   
+})
+
+**sendTask**(request)
+
+Allow Users to publish task  
+   
+Parameters  
+\----------  
+request: HttpRequests   
+         whose POST contains {'UID': int, 'body': string, 'title': string, 'cost': int, 'image\_count': int}  
+         and FILES contains number of files depends on image\_count: {'0': image file stream, '1': image file stream, ...}  
+   
+Returns  
+\-------  
+JsonResponse({'success': int})
+
+**signIn**(body)
+
+User sign in to server using email  
+   
+Parameters  
+\----------  
+body: {'email': string, 'name': string, 'icon': string}  
+   
+Returns  
+\-------  
+JsonResponse({  
+    'UID': int, 'coins': int,  
+    'icon': string, 'rating': int,  
+    'publish\_count': int, 'finish\_count': int,  
+    'contributions': \[string\*\]  
+    })
+
+**upload**(request)
+
+interface to handle requests that are 'multipart/form-data' content type.  
+   
+Parameters  
+\----------  
+request: HttpRequests object  
+   
+Returns  
+\-------  
+JsonResponse
