@@ -8,7 +8,7 @@
   - [How to debug on server](#how-to-debug-on-server)
   - [How to Generate Documentation in JavaScript](#how-to-generate-documentation-in-javascript)
   - [How to Generate Documentation in Python](#how-to-generate-documentation-in-python)
-  - [How to run backend tests](#How to run backend tests)
+  - [How to run backend tests](#how-to-run-backend-tests)
   - [Front-end API](#front-end-api)
   - [Back-end API](#back-end-api)
 
