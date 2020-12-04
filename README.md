@@ -45,8 +45,8 @@
     │   ├── styles.js
     │   └── yarn.lock
     └── server
-        ├── WeHelpServer
-        │   ├── images
+        ├── WeHelpServer                    #App top module
+        │   ├── images                      #images for test
         │   │   ├── 1.jpg
         │   │   ├── 2.jpeg
         │   │   ├── 3.jpeg
@@ -55,7 +55,7 @@
         │   │   ├── 6.jpeg
         │   │   ├── 7.png
         │   │   └── 8.jpg
-        │   ├── migrations
+        │   ├── migrations                  #database migrations
         │   │   ├── 0001_initial.py
         │   │   ├── 0002_auto_20201201_0620.py
         │   │   ├── 0003_auto_20201203_0841.py
@@ -66,15 +66,16 @@
         │   ├── __init__.py
         │   ├── admin.py
         │   ├── apps.py
-        │   ├── channelTest.py
-        │   ├── consumers.py
-        │   ├── models.py
-        │   ├── routing.py
-        │   ├── tests.py
-        │   └── views.py
-        ├── docs
+        │   ├── channelTest.py               #channel_layer test written in django.test
+        │   ├── consumers.py                 #handles websocket connection
+        │   ├── models.py                    #describe database tables
+        │   ├── routing.py                   #routes websocket connection
+        │   ├── tests.py                     #generic test written in django.test
+        │   └── views.py                     #the main module to handle http requests
+        ├── docs                             #documentations for backend
         │   └── views.html
-        ├── example
+        │   ├── consumers.html
+        ├── example                          #examples for accessing APIs
         │   ├── a.py
         │   ├── acceptTask.py
         │   ├── cancelAccept.py
