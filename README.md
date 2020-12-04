@@ -55,7 +55,7 @@
         │   │   ├── 6.jpeg
         │   │   ├── 7.png
         │   │   └── 8.jpg
-        │   ├── migrations                  #database migrations
+        │   ├── migrations                   #database migrations
         │   │   ├── 0001_initial.py
         │   │   ├── 0002_auto_20201201_0620.py
         │   │   ├── 0003_auto_20201203_0841.py
@@ -66,16 +66,16 @@
         │   ├── __init__.py
         │   ├── admin.py
         │   ├── apps.py
-        │   ├── channelTest.py               #channel_layer test written in django.test
-        │   ├── consumers.py                 #handles websocket connection
-        │   ├── models.py                    #describe database tables
-        │   ├── routing.py                   #routes websocket connection
-        │   ├── tests.py                     #generic test written in django.test
-        │   └── views.py                     #the main module to handle http requests
-        ├── docs                             #documentations for backend
+        │   ├── channelTest.py                #channel_layer test written in django.test
+        │   ├── consumers.py                  #handles websocket connection
+        │   ├── models.py                     #describe database tables
+        │   ├── routing.py                    #routes websocket connection
+        │   ├── tests.py                      #generic test written in django.test
+        │   └── views.py                      #the main module to handle http requests
+        ├── docs                              #documentations for backend
         │   └── views.html
         │   ├── consumers.html
-        ├── example                          #examples for accessing APIs
+        ├── example                           #examples for accessing APIs
         │   ├── a.py
         │   ├── acceptTask.py
         │   ├── cancelAccept.py
