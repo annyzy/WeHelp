@@ -59,7 +59,7 @@ class Chat(models.Model):
     last_message = models.ForeignKey(
         Message, on_delete=models.CASCADE, related_name='message_chat', null=True, blank=True)
 
-
+# === Task ===
 class Task(models.Model):
     """
     The Task class defines the components of a posted task
