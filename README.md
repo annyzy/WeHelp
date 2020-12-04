@@ -106,7 +106,7 @@ if you want to rerun it:
 
 
 ## Front-end API
-Please refer to [UI/README.md](README.md) to view front-end APIs.
+Please refer to [UI/README.md](UI/README.md) to view front-end APIs.
 
 
 ## Back-end API
