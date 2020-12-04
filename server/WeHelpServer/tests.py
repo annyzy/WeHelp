@@ -6,7 +6,6 @@ import websockets
 import asyncio
 import requests
 from django.test import TestCase
-from unittest import skipIf, skip
 from django.http import JsonResponse
 from django.http import HttpRequest
 

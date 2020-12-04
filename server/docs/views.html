@@ -1,0 +1,266 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module views</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>views</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/dliang/WeHelp/server/WeHelpServer/views.py">/home/dliang/WeHelp/server/WeHelpServer/views.py</a></font></td></tr></table>
+    <p><tt>We&nbsp;only&nbsp;provide&nbsp;one&nbsp;endpoint&nbsp;for&nbsp;http&nbsp;requests:&nbsp;/WeHelp/<br>
+We&nbsp;differ&nbsp;the&nbsp;requests&nbsp;base&nbsp;on&nbsp;the&nbsp;provided&nbsp;'func'&nbsp;key&nbsp;in&nbsp;json&nbsp;body&nbsp;for&nbsp;regular&nbsp;POST&nbsp;requests&nbsp;or&nbsp;in&nbsp;POST&nbsp;for&nbsp;form-data<br>
+These&nbsp;are&nbsp;possible&nbsp;'func'&nbsp;values:<br>
+1.&nbsp;signIn&nbsp;-&nbsp;User&nbsp;sign&nbsp;in&nbsp;to&nbsp;server&nbsp;using&nbsp;email&nbsp;<br>
+2.&nbsp;getUser&nbsp;-&nbsp;return&nbsp;infomation&nbsp;of&nbsp;an&nbsp;existing&nbsp;User<br>
+3.&nbsp;sendLocation&nbsp;-&nbsp;send&nbsp;location&nbsp;to&nbsp;other&nbsp;user<br>
+4.&nbsp;sendMessage&nbsp;-&nbsp;send&nbsp;message&nbsp;to&nbsp;other&nbsp;user&nbsp;<br>
+5.&nbsp;getChatList&nbsp;-&nbsp;returns&nbsp;all&nbsp;chat&nbsp;infomation&nbsp;belong&nbsp;to&nbsp;a&nbsp;User&nbsp;<br>
+6.&nbsp;getMessage&nbsp;-&nbsp;returns&nbsp;all&nbsp;messages&nbsp;of&nbsp;a&nbsp;chat&nbsp;<br>
+7.&nbsp;getActiveTask&nbsp;-&nbsp;returns&nbsp;infomation&nbsp;of&nbsp;all&nbsp;Task&nbsp;that&nbsp;is&nbsp;open&nbsp;<br>
+8.&nbsp;getAcceptTask&nbsp;-&nbsp;returns&nbsp;infomation&nbsp;of&nbsp;all&nbsp;Task&nbsp;that&nbsp;is&nbsp;accpeted&nbsp;by&nbsp;given&nbsp;User&nbsp;<br>
+9.&nbsp;getPublishTask&nbsp;-&nbsp;returns&nbsp;infomation&nbsp;of&nbsp;all&nbsp;Task&nbsp;that&nbsp;is&nbsp;published&nbsp;by&nbsp;given&nbsp;User&nbsp;<br>
+10.&nbsp;acceptTask&nbsp;-&nbsp;User&nbsp;accpet&nbsp;a&nbsp;Task<br>
+11.&nbsp;cancelAccept&nbsp;-&nbsp;User&nbsp;cancel&nbsp;accpetion&nbsp;of&nbsp;a&nbsp;Task<br>
+12.&nbsp;deleteTask&nbsp;-&nbsp;User&nbsp;delete&nbsp;a&nbsp;Task&nbsp;<br>
+13.&nbsp;finishTask&nbsp;-&nbsp;User&nbsp;confirm&nbsp;a&nbsp;Task&nbsp;is&nbsp;finished<br>
+14.&nbsp;sendRating&nbsp;-&nbsp;give&nbsp;rating&nbsp;to&nbsp;User<br>
+15.&nbsp;changeIcon&nbsp;-&nbsp;User&nbsp;change&nbsp;icon/avatar.&nbsp;form-data&nbsp;POST&nbsp;request&nbsp;<br>
+16.&nbsp;sendTask&nbsp;-&nbsp;User&nbsp;publish&nbsp;a&nbsp;task.&nbsp;form-data&nbsp;POST&nbsp;request</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-acceptTask"><strong>acceptTask</strong></a>(body)</dt><dd><tt>Allow&nbsp;users&nbsp;accept&nbsp;tasks&nbsp;only&nbsp;if&nbsp;they&nbsp;are&nbsp;not&nbsp;the&nbsp;publisher&nbsp;and&nbsp;the&nbsp;task&nbsp;is&nbsp;not&nbsp;accepted&nbsp;by&nbsp;someone&nbsp;else<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+body:&nbsp;{'UID':&nbsp;int,&nbsp;'taskID':&nbsp;int}<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+JsonResponse({<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'success':&nbsp;int,&nbsp;<br>
+})</tt></dd></dl>
+ <dl><dt><a name="-cancelAccept"><strong>cancelAccept</strong></a>(body)</dt><dd><tt>Allow&nbsp;users&nbsp;to&nbsp;give&nbsp;up&nbsp;acception&nbsp;of&nbsp;tasks&nbsp;only&nbsp;if&nbsp;they&nbsp;accpeted&nbsp;the&nbsp;tasks<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+body:&nbsp;{'UID':&nbsp;int,&nbsp;'taskID':&nbsp;int}<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+JsonResponse({<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'success':&nbsp;int,&nbsp;<br>
+})</tt></dd></dl>
+ <dl><dt><a name="-changeIcon"><strong>changeIcon</strong></a>(request)</dt><dd><tt>Allow&nbsp;Users&nbsp;to&nbsp;change&nbsp;their&nbsp;icons/avatars&nbsp;and&nbsp;returns&nbsp;the&nbsp;uri&nbsp;of&nbsp;stored&nbsp;image<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+request:&nbsp;HttpRequests&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;whose&nbsp;POST&nbsp;contains&nbsp;{'UID':&nbsp;int}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;and&nbsp;FILES&nbsp;contains&nbsp;{'file':&nbsp;a&nbsp;image&nbsp;file&nbsp;stream}<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+JsonResponse({'success':&nbsp;int,&nbsp;'uri':&nbsp;string})</tt></dd></dl>
+ <dl><dt><a name="-deleteTask"><strong>deleteTask</strong></a>(body)</dt><dd><tt>Allow&nbsp;users&nbsp;to&nbsp;remove&nbsp;tasks&nbsp;only&nbsp;if&nbsp;they&nbsp;are&nbsp;the&nbsp;publisher&nbsp;of&nbsp;tasks&nbsp;and&nbsp;tasks&nbsp;are&nbsp;not&nbsp;yet&nbsp;finished.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+body:&nbsp;{'UID':&nbsp;int,&nbsp;'taskID':&nbsp;int}<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+JsonResponse({<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'success':&nbsp;int,&nbsp;<br>
+})</tt></dd></dl>
+ <dl><dt><a name="-finishTask"><strong>finishTask</strong></a>(body)</dt><dd><tt>Allow&nbsp;users&nbsp;to&nbsp;confirm&nbsp;tasks&nbsp;are&nbsp;finish&nbsp;only&nbsp;if&nbsp;they&nbsp;are&nbsp;the&nbsp;publisher&nbsp;of&nbsp;tasks&nbsp;and&nbsp;tasks&nbsp;are&nbsp;accepted&nbsp;by&nbsp;someone.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+body:&nbsp;{'UID':&nbsp;int,&nbsp;'taskID':&nbsp;int}<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+JsonResponse({<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'success':&nbsp;int,&nbsp;<br>
+})</tt></dd></dl>
+ <dl><dt><a name="-getAcceptTask"><strong>getAcceptTask</strong></a>(body)</dt><dd><tt>returns&nbsp;infomation&nbsp;of&nbsp;all&nbsp;Task&nbsp;that&nbsp;is&nbsp;accepted&nbsp;by&nbsp;the&nbsp;given&nbsp;User<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+body:&nbsp;{'UID':&nbsp;int}<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+JsonResponse({<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'success':&nbsp;int,&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'taskList':&nbsp;[{&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'taskID':&nbsp;int,&nbsp;'UID':&nbsp;int,&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'acceptorUID:&nbsp;int,&nbsp;'title':&nbsp;string,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'body':&nbsp;string,&nbsp;'cost':&nbsp;int,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'datetime':&nbsp;string,&nbsp;'images':&nbsp;[string*]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}]&nbsp;<br>
+})</tt></dd></dl>
+ <dl><dt><a name="-getActiveTask"><strong>getActiveTask</strong></a>(body)</dt><dd><tt>returns&nbsp;infomation&nbsp;of&nbsp;all&nbsp;Task&nbsp;that&nbsp;is&nbsp;open<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+body:&nbsp;{}<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+JsonResponse({<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'success':&nbsp;int,&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'taskList':&nbsp;[{&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'taskID':&nbsp;int,&nbsp;'UID':&nbsp;int,&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'acceptorUID:&nbsp;int,&nbsp;'title':&nbsp;string,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'body':&nbsp;string,&nbsp;'cost':&nbsp;int,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'datetime':&nbsp;string,&nbsp;'images':&nbsp;[string*]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}]&nbsp;<br>
+})</tt></dd></dl>
+ <dl><dt><a name="-getChatList"><strong>getChatList</strong></a>(body)</dt><dd><tt>returns&nbsp;all&nbsp;chat&nbsp;infomation&nbsp;belong&nbsp;to&nbsp;a&nbsp;User.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+body:&nbsp;{'UID':&nbsp;int}<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+JsonResponse({<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'success':&nbsp;int,&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'chatList':&nbsp;[{&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'chatID':&nbsp;int,&nbsp;'avatarURL':&nbsp;string,&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'name':&nbsp;string,&nbsp;'last_message':&nbsp;string,&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'datetime':&nbsp;string&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}]&nbsp;<br>
+})</tt></dd></dl>
+ <dl><dt><a name="-getMessage"><strong>getMessage</strong></a>(body)</dt><dd><tt>returns&nbsp;all&nbsp;messages&nbsp;inside&nbsp;a&nbsp;chat<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+body:&nbsp;{'chatID':&nbsp;int}<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+JsonResponse({<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'success':&nbsp;int,&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'messageList':&nbsp;[{&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'UID':&nbsp;int,&nbsp;'message':&nbsp;string,&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'datetime':&nbsp;string&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}]&nbsp;<br>
+})</tt></dd></dl>
+ <dl><dt><a name="-getPublishTask"><strong>getPublishTask</strong></a>(body)</dt><dd><tt>returns&nbsp;infomation&nbsp;of&nbsp;all&nbsp;Task&nbsp;that&nbsp;is&nbsp;published&nbsp;by&nbsp;the&nbsp;given&nbsp;User<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+body:&nbsp;{'UID':&nbsp;int}<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+JsonResponse({<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'success':&nbsp;int,&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'taskList':&nbsp;[{&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'taskID':&nbsp;int,&nbsp;'UID':&nbsp;int,&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'acceptorUID:&nbsp;int,&nbsp;'title':&nbsp;string,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'body':&nbsp;string,&nbsp;'cost':&nbsp;int,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'datetime':&nbsp;string,&nbsp;'images':&nbsp;[string*]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}]&nbsp;<br>
+})</tt></dd></dl>
+ <dl><dt><a name="-getUser"><strong>getUser</strong></a>(body)</dt><dd><tt>return&nbsp;infomation&nbsp;of&nbsp;an&nbsp;existing&nbsp;User<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+body:&nbsp;{'UID':&nbsp;int}<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+JsonResponse({<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'UID':&nbsp;int,&nbsp;'coins':&nbsp;int,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'icon':&nbsp;string,&nbsp;'rating':&nbsp;int,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'publish_count':&nbsp;int,&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'finish_count':&nbsp;int,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'contributions':&nbsp;[string*],<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'success':&nbsp;int<br>
+&nbsp;&nbsp;&nbsp;&nbsp;})</tt></dd></dl>
+ <dl><dt><a name="-index"><strong>index</strong></a>(request)</dt><dd><tt>A&nbsp;top&nbsp;level&nbsp;function&nbsp;to&nbsp;determine&nbsp;what&nbsp;kind&nbsp;of&nbsp;request&nbsp;is&nbsp;making&nbsp;base&nbsp;on&nbsp;the&nbsp;'func'&nbsp;key<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+request:&nbsp;HttpRequests&nbsp;<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+JsonResponse({})</tt></dd></dl>
+ <dl><dt><a name="-sendLocation"><strong>sendLocation</strong></a>(body)</dt><dd><tt>send&nbsp;location&nbsp;to&nbsp;other&nbsp;user&nbsp;through&nbsp;channel_layer<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+body:&nbsp;{'senderUID':&nbsp;int,&nbsp;'receiverUID':&nbsp;int,&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'longitude':&nbsp;double,&nbsp;'latitude':&nbsp;double}<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+JsonResponse({'success':&nbsp;int})</tt></dd></dl>
+ <dl><dt><a name="-sendMessage"><strong>sendMessage</strong></a>(body)</dt><dd><tt>send&nbsp;message&nbsp;to&nbsp;other&nbsp;user.&nbsp;<br>
+Stores&nbsp;the&nbsp;message&nbsp;into&nbsp;chat&nbsp;and&nbsp;send&nbsp;to&nbsp;receiver&nbsp;client&nbsp;through&nbsp;channel_layer<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+body:&nbsp;{'senderUID':&nbsp;int,&nbsp;'receiverUID':&nbsp;int,&nbsp;'message':&nbsp;string}<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+JsonResponse({'success':&nbsp;int})</tt></dd></dl>
+ <dl><dt><a name="-sendRating"><strong>sendRating</strong></a>(body)</dt><dd><tt>give&nbsp;rating&nbsp;to&nbsp;a&nbsp;User.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+body:&nbsp;{'UID':&nbsp;int,&nbsp;'rating':&nbsp;double}<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+JsonResponse({<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'success':&nbsp;int,&nbsp;<br>
+})</tt></dd></dl>
+ <dl><dt><a name="-sendTask"><strong>sendTask</strong></a>(request)</dt><dd><tt>Allow&nbsp;Users&nbsp;to&nbsp;publish&nbsp;task<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+request:&nbsp;HttpRequests&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;whose&nbsp;POST&nbsp;contains&nbsp;{'UID':&nbsp;int,&nbsp;'body':&nbsp;string,&nbsp;'title':&nbsp;string,&nbsp;'cost':&nbsp;int,&nbsp;'image_count':&nbsp;int}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;and&nbsp;FILES&nbsp;contains&nbsp;number&nbsp;of&nbsp;files&nbsp;depends&nbsp;on&nbsp;image_count:&nbsp;{'0':&nbsp;image&nbsp;file&nbsp;stream,&nbsp;'1':&nbsp;image&nbsp;file&nbsp;stream,&nbsp;...}<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+JsonResponse({'success':&nbsp;int})</tt></dd></dl>
+ <dl><dt><a name="-signIn"><strong>signIn</strong></a>(body)</dt><dd><tt>User&nbsp;sign&nbsp;in&nbsp;to&nbsp;server&nbsp;using&nbsp;email<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+body:&nbsp;{'email':&nbsp;string,&nbsp;'name':&nbsp;string,&nbsp;'icon':&nbsp;string}<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+JsonResponse({<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'UID':&nbsp;int,&nbsp;'coins':&nbsp;int,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'icon':&nbsp;string,&nbsp;'rating':&nbsp;int,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'publish_count':&nbsp;int,&nbsp;'finish_count':&nbsp;int,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'contributions':&nbsp;[string*]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;})</tt></dd></dl>
+ <dl><dt><a name="-upload"><strong>upload</strong></a>(request)</dt><dd><tt>interface&nbsp;to&nbsp;handle&nbsp;requests&nbsp;that&nbsp;are&nbsp;'multipart/form-data'&nbsp;content&nbsp;type.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+request:&nbsp;HttpRequests&nbsp;object<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+JsonResponse</tt></dd></dl>
+</td></tr></table>
+</body></html>
