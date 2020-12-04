@@ -104,6 +104,11 @@ if you want to rerun it:
     
 ## How to Generate Documentation in Python
 
+1. This will generate views.html file for views.py, then you need to move it to server/docs
+    ```shell
+    pydoc -w server/WeHelpServer/views.py
+    ```
+
 
 ## Front-end API
 Please refer to [UI/README.md](UI/README.md) to view front-end APIs.
