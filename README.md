@@ -564,7 +564,7 @@ Returns **Component** => Render a UserPage to show the information of current lo
 
 
 ## Back-end API
-[APIs for http requests](server/docs/views.html) or [view it on our website](http://34.94.101.183/media/views.html)
+APIs for http requests: [server/docs/views.html](server/docs/views.html) or [view it on our website](http://34.94.101.183/media/views.html)
 
 Python: module views 
 
