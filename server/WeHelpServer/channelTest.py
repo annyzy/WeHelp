@@ -55,7 +55,7 @@ class ChannelTestCase(TestCase):
 
     def test_message_direction(self):
         if (self.server_up == False):
-            self.skipTest()
+            self.skipTest('not on server')
 
         self.buffer = []
         # open 10 websocket connect to server, with different UID
@@ -90,7 +90,7 @@ class ChannelTestCase(TestCase):
 
     def test_one_user_multiple_client(self):
         if (self.server_up == False):
-            self.skipTest()
+            self.skipTest('not on server')
 
         self.buffer = []
         # open 10 websocket connect to server, with same UID
