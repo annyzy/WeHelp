@@ -225,3 +225,4 @@ Please refer to [UI/README.md](UI/README.md) to view front-end APIs.
 
 ## Back-end API
 APIs for http requests: [server/docs/views.html](server/docs/views.html) or [view it on our website](http://34.94.101.183/media/views.html)
+Documentation for websocket connections: [server/docs/consumers.html](server/docs/consumers.html) or [view it on our website](http://34.94.101.183/media/consumers.html)
