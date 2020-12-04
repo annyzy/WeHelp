@@ -5,59 +5,8 @@
   * [How to run this project](#how-to-run-this-project)
   * [How to debug on server](#how-to-debug-on-server)
   * [How to Generate Documentation in JavaScript](#how-to-generate-documentation-in-javascript)
+  * [How to Generate Documentation in Python](#how-to-generate-documentation-in-python)
   * [Front-end API](#front-end-api)
-      - [Table of Contents](#table-of-contents)
-    + [App](#app)
-      - [Parameters](#parameters)
-    + [ChatBox](#chatbox)
-      - [Parameters](#parameters-1)
-    + [MapObject](#mapobject)
-      - [Parameters](#parameters-2)
-    + [PageHeader](#pageheader)
-      - [Parameters](#parameters-3)
-    + [PageNavigation](#pagenavigation)
-      - [Parameters](#parameters-4)
-    + [UserContext](#usercontext)
-    + [ChatPage](#chatpage)
-      - [Parameters](#parameters-5)
-    + [checkLocationPermission](#checklocationpermission)
-      - [Parameters](#parameters-6)
-    + [HomePage](#homepage)
-      - [Parameters](#parameters-7)
-    + [HomeMainPage](#homemainpage)
-      - [Parameters](#parameters-8)
-    + [SearchField](#searchfield)
-      - [Parameters](#parameters-9)
-    + [CardField](#cardfield)
-      - [Parameters](#parameters-10)
-    + [LoginPage](#loginpage)
-      - [Parameters](#parameters-11)
-    + [MessagePage](#messagepage)
-      - [Parameters](#parameters-12)
-    + [ChatList](#chatlist)
-      - [Parameters](#parameters-13)
-    + [PublishPage](#publishpage)
-      - [Parameters](#parameters-14)
-    + [publish](#publish)
-      - [Parameters](#parameters-15)
-    + [checkImagePermission](#checkimagepermission)
-      - [Parameters](#parameters-16)
-    + [ImagePicker](#imagepicker)
-      - [Parameters](#parameters-17)
-    + [TaskDetailPage](#taskdetailpage)
-      - [Parameters](#parameters-18)
-    + [TaskPage](#taskpage)
-      - [Parameters](#parameters-19)
-    + [TaskMainPage](#taskmainpage)
-      - [Parameters](#parameters-20)
-    + [TaskCard](#taskcard)
-      - [Parameters](#parameters-21)
-    + [UserDetailPage](#userdetailpage)
-      - [Parameters](#parameters-22)
-    + [getUser](#getuser)
-      - [Parameters](#parameters-23)
-    + [UserPage](#userpage)
-      - [Parameters](#parameters-24)
   * [Back-end API](#back-end-api)
 
 ## How to run this project
@@ -141,7 +90,7 @@ if you want to rerun it:
     }
     ```
 
-3.  Generate the documentations and append them to README.md
+3.  Generate the documentation and append them to README.md
 
     Execute the following command under the directory where contains README.md
     
@@ -152,6 +101,9 @@ if you want to rerun it:
     ```shell
     documentation readme app.js src/pages/* src/components/* -s "Front-end API" -g
     ```
+    
+## How to Generate Documentation in Python
+
 
 ## Front-end API
 Please refer to [UI/README.md](README.md) to view front-end APIs.
