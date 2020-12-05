@@ -208,7 +208,7 @@ export function TaskDetailPage(props) {
                                         setIsModalVisiable(true);
                                     }}
                             />}
-                            {isMyTask && task.receiverUID === -1 && <MaterialButton text="❌ Delete" 
+                            {isMyTask && task.receiverUID === -1 && <MaterialButton text="🗑 Delete" 
                                     style={{container:{...materialButtonStyle.container, borderRightWidth:0},
                                             text: materialButtonStyle.text}}
                                     onPress={() => {
