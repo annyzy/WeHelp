@@ -1,5 +1,5 @@
-import React, { useState, useContext, useCallback } from 'react';
-import { View, Text, Button } from 'react-native';
+import React, { useState, useContext, useCallback, Component } from 'react';
+import { View, Text, ActivityIndicator, StyleSheet, Button} from 'react-native';
 import { PageHeader } from '../components/PageHeader';
 import { ChatBox } from '../components/ChatBox'
 import { UserContext } from '../components/UserContext';
@@ -86,7 +86,7 @@ export function ChatPage(props) {
             <View style={{flex:1}}>
                 <View style={{flex:3, borderWidth:2, justifyContent:"center", alignItems:"center"}}>
                     {!loading && <MapObject origin={user['origin']} destination={chat['destination']} originAvatar={user.photoUrl} destinationAvatar={chat.avatar}/>}
-                    {loading && <Text>Loading</Text>}
+                    {loading && <ActivityIndicator color="#0000ff" />}
 
                 </View>
                 <View style={{flex:7}}>
